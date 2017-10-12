@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topie.ssocenter.freamwork.authorization.dao.UserMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.topie.ssocenter.freamwork.authorization.model.UserMenu" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="CHECKED" property="checked" jdbcType="BIT" />
+    <result column="DETAIL" property="detail" jdbcType="VARCHAR" />
+    <result column="ICON" property="icon" jdbcType="VARCHAR" />
+    <result column="ISSHOW" property="isshow" jdbcType="BIT" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="OPEN" property="open" jdbcType="BIT" />
+    <result column="SEQ" property="seq" jdbcType="BIGINT" />
+    <result column="MENUURL" property="menuurl" jdbcType="VARCHAR" />
+    <result column="PID" property="pid" jdbcType="BIGINT" />
+    <result column="ISCOMMON" property="iscommon" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="BaseColumn">
+  	id,CHECKED,DETAIL,ICON,ISSHOW,NAME,OPEN,SEQ,MENUURL,PID,ISCOMMON
+  </sql>
+  <select id="selectMenusByRoleCode" resultMap="BaseResultMap">
+  	select 
+  	<include refid="BaseColumn"></include>
+  	from t_user_menu m left join t_role_menu rm on 
+  	m.id = rm.MENU_CODE
+  	where rm.ROLE_CODE = #{code}
+  	order by SEQ
+  </select>
+</mapper>

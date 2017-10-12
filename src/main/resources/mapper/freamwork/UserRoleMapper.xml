@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topie.ssocenter.freamwork.authorization.dao.UserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.topie.ssocenter.freamwork.authorization.model.UserRole" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="DETAIL" property="detail" jdbcType="VARCHAR" />
+    <result column="enabled" property="enabled" jdbcType="BIT" />
+    <result column="HOMEPAGE" property="homepage" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SEQ" property="seq" jdbcType="BIGINT" />
+  </resultMap>
+  
+    <insert id="insertRoleMenu">
+        insert into t_user_role_menu (ROLE_CODE,MENU_CODE) values(#{roleId,jdbcType=VARCHAR},#{menuId,jdbcType=BIGINT});
+    </insert>
+    <select id="findRoleMatchUpMenus" resultType="java.util.Map">
+        select
+        f.MENUURL as function,r.CODE as role
+        from  t_user_role r
+        join t_role_menu rf
+        on r.CODE=rf.ROLE_CODE
+        join t_user_menu f
+        on f.id=rf.MENU_CODE
+        order by f.SEQ
+    </select>
+</mapper>

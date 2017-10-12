@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+    <http pattern="/" security="none"/>
+    <http pattern="/security/login" security="none"/>
+    <http pattern="/error/**" security="none"/>
+    <http pattern="/assets/**" security="none"/>
+    <http pattern="/favicon.ico" security="none"/>
+
+    <http use-expressions="true" entry-point-ref="osAuthenticationEntryPoint">
+        <intercept-url pattern="/security/**" access="permitAll"/>
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <!-- session管理-->
+        <session-management session-authentication-strategy-ref="sessionAuthenticationStrategy"
+                            invalid-session-url="${security.login}"/>
+
+        <!--自定义登录filter -->
+        <custom-filter ref="osLoginFilter" position="FORM_LOGIN_FILTER"/>
+
+        <!--session过期相关 -->
+        <custom-filter ref="concurrencyFilter" position="CONCURRENT_SESSION_FILTER"/>
+
+        <!--登出相关 -->
+        <logout invalidate-session="true"
+                logout-url="${security.logout}"
+                success-handler-ref="osLogoutSuccessHandler"/>
+
+        <!--权限拦截handler -->
+        <access-denied-handler ref="osAccessDeniedHandler"/>
+
+        <!--自定义异常处理Filter 清除ajax请求的saveRequest -->
+        <custom-filter ref="osExceptionTranslationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
+
+        <!--加载功能相关 -->
+        <custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR"/>
+
+        <!--记住登录 -->
+        <remember-me user-service-ref="orangeSideUserService" key="osAppKey"/>
+
+    </http>
+
+
+    <authentication-manager erase-credentials="false" alias="authenticationManager">
+        <authentication-provider ref="authenticationProvider">
+        </authentication-provider>
+    </authentication-manager>
+
+    <beans:bean id="authenticationProvider"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideCaptchaDaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="orangeSideUserService"/>
+        <beans:property name="hideUserNotFoundExceptions" value="false"/>
+        <beans:property name="passwordEncoder" ref="encoder"/>
+        <!--<beans:property name="userCache" ref="orangeUserCache"/>-->
+    </beans:bean>
+
+    <beans:bean id="encoder"
+    	class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
+<!--                 class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/> -->
+
+    <!-- 加载用户相关 -->
+    <beans:bean id="orangeSideUserService"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideUserServiceImpl"/>
+
+    <beans:bean id="orangeUserCache"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideUserCache">
+        <beans:property name="cache" ref="redisCache"/>
+    </beans:bean>
+
+    <beans:bean id="redisCache" class="com.topie.ssocenter.common.cache.redis.cache.RedisCache"/>
+
+    <!-- 资源国际化 -->
+    <beans:bean id="messageSource"
+                class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename"
+                        value="classpath:/config/properties/messages_zh_CN"/>
+    </beans:bean>
+
+    <!-- 自定义验证成功后处理的拦截器 -->
+    <beans:bean id="filterSecurityInterceptor"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityInterceptor">
+        <beans:property name="securityMetadataSource" ref="orangeSideSecurityMetadataSource"/>
+        <beans:property name="accessDecisionManager"
+                        ref="orangeSideAccessDecisionManager"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+    </beans:bean>
+
+    <beans:bean id="orangeSideAccessDecisionManager"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideAccessDecisionManager"/>
+
+    <beans:bean id="orangeSideSecurityMetadataSource"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityMetadataSourceImpl">
+        <beans:constructor-arg ref="securityService"/>
+    </beans:bean>
+
+    <!-- 登录相关开始 -->
+    <!-- 入口 -->
+    <beans:bean id="osAuthenticationEntryPoint"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideLoginUrlAuthenticationEntryPoint">
+        <beans:constructor-arg value="${security.login}"/>
+    </beans:bean>
+
+    <!-- 登录Filter -->
+    <beans:bean id="osLoginFilter" class=
+            "com.topie.ssocenter.freamwork.authorization.security.OrangeSideUsernamePasswordAuthenticationFilter">
+        <beans:property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="authenticationSuccessHandler" ref="osAuthenticationSuccessHandler"/>
+        <beans:property name="authenticationFailureHandler" ref="osAuthenticationFailureHandler"/>
+        <beans:property name="rememberMeServices" ref="rememberMeServices"/>
+        <beans:property name="authenticationDetailsSource" ref="osAuthenticationDetailsSource"/>
+    </beans:bean>
+
+    <beans:bean id="osAuthenticationDetailsSource"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideCaptchaAuthenticationDetailsSource"/>
+    <!-- 自定义登录成功handler -->
+    <beans:bean id="osAuthenticationSuccessHandler"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideSavedRequestAwareAuthenticationSuccessHandler">
+        <beans:property name="securityService" ref="securityService"/>
+        <beans:property name="defaultTargetUrl" value="${security.default.target}"/>
+    </beans:bean>
+
+    <!-- 自定义登录失败handler -->
+    <beans:bean id="osAuthenticationFailureHandler"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideSimpleUrlAuthenticationFailureHandler">
+        <beans:property name="defaultFailureUrl" value="${security.login}?error=true"/>
+    </beans:bean>
+
+    <!--记住登录 -->
+    <beans:bean id="rememberMeServices"
+                class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+        <beans:constructor-arg name="key" value="osAppKey"/>
+        <beans:constructor-arg name="userDetailsService" ref="orangeSideUserService"/>
+        <beans:property name="tokenValiditySeconds" value="604800"/>
+    </beans:bean>
+
+    <!-- 登录相关结束 -->
+
+    <!--自定义退出登录成功handler -->
+    <beans:bean id="osLogoutSuccessHandler"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideLogoutSuccessHandler">
+        <beans:property name="defaultTargetUrl" value="${security.login}"/>
+    </beans:bean>
+
+    <!--自定义权限拦截handler -->
+    <beans:bean id="osAccessDeniedHandler"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideAccessDeniedHandler">
+        <beans:property name="errorPage" value="${security.denied}"/>
+    </beans:bean>
+
+    <!--session过期相关开始 -->
+    <beans:bean id="concurrencyFilter"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideConcurrentSessionFilter">
+        <beans:property name="sessionRegistry" ref="sessionRegistry"/>
+        <beans:property name="expiredUrl" value="${security.login}"/>
+    </beans:bean>
+
+    <beans:bean id="sessionAuthenticationStrategy"
+                class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:ref bean="concurrentSessionControlAuthenticationStrategy"/>
+                <beans:bean
+                        class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy"/>
+                <beans:bean
+                        class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+                    <beans:constructor-arg ref="sessionRegistry"/>
+                </beans:bean>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <beans:bean id="concurrentSessionControlAuthenticationStrategy"
+                class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+        <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+        <beans:property name="maximumSessions" value="1"/>
+    </beans:bean>
+
+    <beans:bean id="sessionRegistry"
+                class="org.springframework.security.core.session.SessionRegistryImpl"/>
+    <!--session过期相关结束 -->
+
+    <!--自定义异常处理Filter 清除ajax请求的saveRequest -->
+    <beans:bean id="osExceptionTranslationFilter"
+                class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideExceptionTranslationFilter">
+        <beans:constructor-arg name="authenticationEntryPoint" ref="osAuthenticationEntryPoint"/>
+        <beans:property name="accessDeniedHandler" ref="osAccessDeniedHandler"/>
+    </beans:bean>
+
+</beans:beans>
