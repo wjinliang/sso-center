@@ -17,89 +17,11 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="<%=basePath%>/assets/css/common.css">
     <link rel="stylesheet" href="<%=basePath%>/assets/css/style.css">
+    <script type="text/javascript">var root = "<%=path%>";</script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.SuperSlide.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/index.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $(".sideMenu li").click(function () {
-                $(".sideMenu li.on").removeClass("on");
-                $(this).addClass("on");
-            });
-
-            $('.sideMenu h3').click(function () {
-                var $ul = $(this).next('ul');
-                $('.sideMenu').find('ul').slideUp();
-                $(".sideMenu h3.on").removeClass("on");
-                if ($ul.is(':visible')) {
-                    $(this).next('ul').slideUp();
-                } else {
-                    $(this).next('ul').slideDown();
-                    $(this).addClass("on");
-                }
-            });
-            $('.sideMenu h3.on').next('ul').slideDown();
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            $(".sideMenu").slide({
-                titCell: "h3",
-                targetCell: "ul",
-                defaultIndex: 0,
-                effect: 'slideDown',
-                delayTime: '500',
-                trigger: 'click',
-                triggerTime: '150',
-                defaultPlay: true,
-                returnDefault: false,
-                easing: 'easeInQuint',
-                endFun: function () {
-                    scrollWW();
-                }
-            });
-            $(window).resize(function () {
-                scrollWW();
-            });
-        });
-
-        function scrollWW() {
-            if ($(".side").height() < $(".sideMenu").height()) {
-                $(".scroll").show();
-                var pos = $(".sideMenu ul:visible").position().top - 38;
-                $('.sideMenu').animate({top: -pos});
-            } else {
-                $(".scroll").hide();
-                $('.sideMenu').animate({top: 0});
-                n = 1;
-            }
-        }
-
-        var n = 1;
-
-        function menuScroll(num) {
-            var Scroll = $('.sideMenu');
-            var ScrollP = $('.sideMenu').position();
-            /*alert(n);
-            alert(ScrollP.top);*/
-            if (num == 1) {
-                Scroll.animate({top: ScrollP.top - 38});
-                n = n + 1;
-            } else {
-                if (ScrollP.top > -38 && ScrollP.top != 0) {
-                    ScrollP.top = -38;
-                }
-                if (ScrollP.top < 0) {
-                    Scroll.animate({top: 38 + ScrollP.top});
-                } else {
-                    n = 1;
-                }
-                if (n > 1) {
-                    n = n - 1;
-                }
-            }
-        }
-    </script>
+    
     <title>后台首页</title>
 </head>
 <body>
@@ -129,8 +51,8 @@
     </div>
 </div>
 <div class="side">
-    <div class="sideMenu" style="margin:0 auto">
-        <h3 class="on">导航菜单</h3>
+    <div class="sideMenu" id="side-menu" style="margin:0 auto">
+        <!-- <h3 class="on">导航菜单</h3>
         <ul>
             <li><a href="http://baidu.com" target="rightMain">百度</a></li>
             <li class="on"><a href="./main.html" target="rightMain">列表</a></li>
@@ -142,10 +64,11 @@
             <li>导航菜单</li>
             <li>导航菜单</li>
             <li>导航菜单</li>
-        </ul>
+        </ul> -->
     </div>
 </div>
 <div class="main">
+<iframe name="rightMain" src="${mainPage }"></iframe>
 
 </div>
 <div class="bottom">

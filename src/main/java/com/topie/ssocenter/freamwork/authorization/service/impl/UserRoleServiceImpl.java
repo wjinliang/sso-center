@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.dao.UserRoleMapper;
 import com.topie.ssocenter.freamwork.authorization.model.UserRole;
 import com.topie.ssocenter.freamwork.authorization.service.UserRoleService;
@@ -49,4 +51,12 @@ public class UserRoleServiceImpl extends BaseService<UserRole> implements UserRo
     public List<Map> findUserRoleMatchUpFunctions() {
         return roleMapper.findRoleMatchUpMenus();
     }
+
+	@Override
+	public PageInfo<UserRole> findUserRoleList(int pageNum, int pageSize,
+			UserRole role) {
+		PageHelper.startPage(pageNum, pageSize);
+		List<UserRole> list = this.roleMapper.select(role);
+		return new PageInfo(list);
+	}
 }

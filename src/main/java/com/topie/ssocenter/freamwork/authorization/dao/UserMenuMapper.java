@@ -9,4 +9,8 @@ import com.topie.ssocenter.freamwork.authorization.model.UserMenu;
 public interface UserMenuMapper extends Mapper<UserMenu> {
 
 	List<UserMenu> selectMenusByRoleCode(String code);
+
+	List<UserMenu> findMenuList(UserMenu menu);
+
+	List<UserMenu> findMenusByUserId(String id);
 }

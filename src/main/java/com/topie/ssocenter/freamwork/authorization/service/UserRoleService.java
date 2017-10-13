@@ -3,6 +3,7 @@ package com.topie.ssocenter.freamwork.authorization.service;
 import java.util.List;
 import java.util.Map;
 
+import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.model.UserRole;
 import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
@@ -22,4 +23,6 @@ public interface UserRoleService extends IService<UserRole> {
     int insertUserRoleFunction(String roleId, Long functionId);
 
     List<Map> findUserRoleMatchUpFunctions();
+
+	PageInfo<UserRole> findUserRoleList(int pageNum, int pageSize, UserRole role);
 }

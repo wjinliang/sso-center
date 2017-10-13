@@ -2,6 +2,7 @@ package com.topie.ssocenter.freamwork.authorization.service;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.model.UserMenu;
 import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
@@ -13,9 +14,13 @@ public interface UserMenuService extends IService<UserMenu> {
 
     int updateUserMenu(UserMenu function);
 
-    UserMenu findFuntionById(Long id);
+    UserMenu findUserMenuById(Long id);
 
     int deleteUserMenuById(Long id);
 
 	List<UserMenu> selectMenusByRoleCode(String code);
+
+	PageInfo<UserMenu> findUserMenuList(int pageNum, int pageSize, UserMenu menu);
+
+	List<UserMenu> findMenusByUserId(String id);
 }

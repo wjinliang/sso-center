@@ -43,10 +43,10 @@
         if (subMenus.length > 0) {
             ele += "<ul>";
             $.each(subMenus, function (i, m) {
-                ele += ('<li data-level="sub">'
-                + '<a data-url="' + m.url
+                ele += ('<li >'
+                + '<a href="' +root+ m.url
                 + '" data-title="' + m.name
-                + '" href="javascript:void(0);"><i class="' + (m.icon == null ? "glyphicon glyphicon-list" : m.icon) + '"></i> '
+                + '" target="rightMain"><i class="' + (m.icon == null ? "" : m.icon) + '"></i> '
                 + m.name
                 + '</a>');
                 var sMenus = getSubMenu(menus, m.id);
@@ -57,11 +57,11 @@
         return ele;
     }
 
-    function initMenu(ul) {
+    function initMenu(div) {
         $.ajax(
             {
                 type: 'GET',
-                url: "./security/menu",
+                url: "./menu",
                 contentType: "application/json",
                 dataType: "json",
                 success: function (result) {
@@ -70,57 +70,77 @@
                         
                         var topMenus = getTopMenu(menus);
                         $.each(topMenus, function (i, m) {
-                            var ele = '<li data-level="top">'
-                                + '<a data-url="' + m.url
-                                + '" data-title="' + m.name
-                                + '" href="javascript:void(0);"><i class="' + (m.icon == null ? "glyphicon glyphicon-list" : m.icon) + '"></i> '
-                                + m.name
-                                + '</a>';
+                        	var class_="";
+                        	if(i==0){
+                        		class_ = "on";
+                        	}
+                            var ele = '<h3 class="'+class_+'">' + m.name
+                                + '</h3>';
                             var subMenus = getSubMenu(menus, m.id);
                             if (subMenus.length > 0) {
                                 ele = recursionMenu(ele, menus, subMenus);
                             }
-                            ele += '</li>';
-                            var li = $(ele);
-                            li.find("li[data-level=sub]").parents("li[data-level=top]").addClass("submenu").find("a:eq(0)").append('<span class="caret pull-right"></span>');
-                            $(ul).append(li);
+                            var h3 = $(ele);
+                            
+                            $(div).append(h3);
                         });
-                        $(ul).find("li.submenu > a").click(function (e) {
-                            e.preventDefault();
-                            var $li = $(this).parent("li");
-                            var $ul = $(this).next("ul");
-                            if ($li.hasClass("open")) {
-                                $ul.slideUp(150);
-                                $li.removeClass("open");
+                        
+                            $(".sideMenu").slide({
+                                titCell: "h3",
+                                targetCell: "ul",
+                                defaultIndex: 0,
+                                effect: 'slideDown',
+                                delayTime: '500',
+                                trigger: 'click',
+                                triggerTime: '150',
+                                defaultPlay: true,
+                                returnDefault: false,
+                                easing: 'easeInQuint',
+                                endFun: function () {
+                                    scrollWW();
+                                }
+                            });
+                            $(window).resize(function () {
+                                scrollWW();
+                            });
+
+                        function scrollWW() {
+                            if ($(".side").height() < $(".sideMenu").height()) {
+                                $(".scroll").show();
+                                var pos = $(".sideMenu ul:visible").position().top - 38;
+                                $('.sideMenu').animate({top: -pos});
                             } else {
-                                if ($li.parent("ul").hasClass("nav")) {
-                                    $(".nav > li > ul").slideUp(150);
-                                    $(".nav > li").removeClass("open");
-                                }
-                                $ul.slideDown(150);
-                                $li.addClass("open");
+                                $(".scroll").hide();
+                                $('.sideMenu').animate({top: 0});
+                                n = 1;
                             }
-                        });
+                        }
 
-                        $(ul).find("li[class!=submenu] > a").click(function (e) {
-                            e.preventDefault();
-                            var $li = $(this).parent("li");
-                            if ($li.parent("ul").hasClass("nav")) {
-                                $(".nav > li > ul").slideUp(150);
-                                $(".nav > li").removeClass("open");
-                            }
-                            $(ul).find("li.current").removeClass("current");
-                            $(this).parents("li").addClass("current");
-                            $li.parent("ul").parent("li").addClass("open");
-                        });
+                        var n = 1;
 
-                        $(ul).find("li[class!=submenu] > a")
-                            .each(function () {
-                                    var url = $(this).attr("data-url");
-                                   
+                        function menuScroll(num) {
+                            var Scroll = $('.sideMenu');
+                            var ScrollP = $('.sideMenu').position();
+                            /*alert(n);
+                            alert(ScrollP.top);*/
+                            if (num == 1) {
+                                Scroll.animate({top: ScrollP.top - 38});
+                                n = n + 1;
+                            } else {
+                                if (ScrollP.top > -38 && ScrollP.top != 0) {
+                                    ScrollP.top = -38;
                                 }
-                            );
-                        refreshHref(ul);
+                                if (ScrollP.top < 0) {
+                                    Scroll.animate({top: 38 + ScrollP.top});
+                                } else {
+                                    n = 1;
+                                }
+                                if (n > 1) {
+                                    n = n - 1;
+                                }
+                            }
+                        }
+                       
                     } else if (result.code === 401) {
                         alert("token失效,请登录!");
                         window.location.href = './login';

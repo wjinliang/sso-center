@@ -18,7 +18,7 @@
     <result column="ISCOMMON" property="iscommon" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="BaseColumn">
-  	id,CHECKED,DETAIL,ICON,ISSHOW,NAME,OPEN,SEQ,MENUURL,PID,ISCOMMON
+  	m.id,m.CHECKED,m.DETAIL,m.ICON,m.ISSHOW,m.NAME,m.OPEN,m.SEQ,m.MENUURL,m.PID,m.ISCOMMON
   </sql>
   <select id="selectMenusByRoleCode" resultMap="BaseResultMap">
   	select 
@@ -27,5 +27,31 @@
   	m.id = rm.MENU_CODE
   	where rm.ROLE_CODE = #{code}
   	order by SEQ
+  </select>
+  <select id="findMenuList" resultMap="BaseResultMap">
+  	select 
+  	<include refid="BaseColumn"></include>
+  	from t_user_menu m
+  	<where>
+  		<if test="name!=null and name!=''">
+  			NAME=#{name}
+  		</if>
+  	</where>
+  	order by SEQ
+  </select>
+  <select id="findMenusByUserId" resultMap="BaseResultMap">
+  	select 
+  	<include refid="BaseColumn"></include>
+  	from t_user_menu m
+  	left join t_role_menu rm
+  	on m.id=rm.MENU_CODE
+  	left join t_user_role r
+  	on rm.ROLE_CODE = r.CODE
+  	left join t_user_account_role ur
+  	on ur.ROLE_CODE=r.CODE
+  	where ur.USER_CODE=#{id}
+	GROUP BY m.id
+	ORDER BY m.SEQ
+  	
   </select>
 </mapper>

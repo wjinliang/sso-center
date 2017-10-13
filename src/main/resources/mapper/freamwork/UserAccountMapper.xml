@@ -67,7 +67,7 @@
 
     </resultMap>
     <sql id="Base_Column_List">
-        EMAIL,ENABLED,HEADPIC,NAME,PASSWORD,SEQ,headphoto_id,org_id,LOGINNAME,MOBILEPHONE,
+        CODE,EMAIL,ENABLED,HEADPIC,NAME,PASSWORD,SEQ,headphoto_id,org_id,LOGINNAME,MOBILEPHONE,
         USERTYPE,LASTLOGINTIME,LOGINCOUNT,MOBILE,REMOTEIPADDR,ACCOUNT_EXPIRED,LOCKED,PASSWORD_EXPIRED,
         SPECIALACTION,ugroup_id,SYNPASSWORD,DTYPE,merge_uuid,origin_id,school_age,title,speciality,
         create_date,create_user,bizphone_no,fax_no,address,duty,birthday,gender,user_type,system_id,
