@@ -47,7 +47,8 @@
     </div>
     <div id="side_here">
         <div id="side_here_l" class="fl"></div>
-        <div id="here_area" class="fl">当前位置:</div>
+        <div id="here_area" class="fl">
+<input id="Button2" class="ext_btn" type="button" value="后退" onclick="document.getElementById('rightMain').contentWindow.history.back();" /> <input id="Button1" class="ext_btn" type="button" value="前进" onclick="document.getElementById('rightMain').contentWindow.history.forward();" /></div>
     </div>
 </div>
 <div class="side">
@@ -68,7 +69,7 @@
     </div>
 </div>
 <div class="main">
-<iframe name="rightMain" src="${mainPage }"></iframe>
+<iframe name="rightMain" id="rightMain" src="${mainPage }" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
 
 </div>
 <div class="bottom">
