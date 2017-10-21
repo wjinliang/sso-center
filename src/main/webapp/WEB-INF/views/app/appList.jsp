@@ -121,7 +121,7 @@ td {
 							<td><a class="ext_btn" href="javascript:viewItem('${app.id}')">查看
 							</a> <a class="ext_btn ext_btn_success" href="javascript:editItem('${app.id}')">  修改
 							</a> <a class="ext_btn ext_btn_error" href="javascript:deleteItem('${app.id}')">删除
-							</a> <c:choose>
+							</a> <c:choose> 
 									<c:when test="${app.status=='1'}">
 										<a class="ext_btn" href="javascript:stopApp('${app.id}')"> 禁用
 										</a>
