@@ -120,7 +120,7 @@ td {
 									</c:otherwise>
 								</c:choose></td>
 							<td><a class="ext_btn" href="javascript:viewItem('${app.id}')">查看
-							</a> <a class="ext_btn ext_btn_success" href="javascript:editItem('${app.id}')">  修改
+							</a> <a class="ext_btn ext_btn_success" href="javascript:window.location.href='./form/update?appid=${app.id}'">  修改
 							</a> <a class="ext_btn ext_btn_error" href="javascript:deleteItem('${app.id}')">删除
 							</a> <c:choose> 
 									<c:when test="${app.status=='1'}">

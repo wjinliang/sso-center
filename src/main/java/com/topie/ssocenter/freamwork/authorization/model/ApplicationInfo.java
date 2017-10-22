@@ -1,10 +1,12 @@
 package com.topie.ssocenter.freamwork.authorization.model;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "app_applicationinfo")
 public class ApplicationInfo {
+	@Id
     private String id;
 
     @Column(name = "app_name")

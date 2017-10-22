@@ -83,19 +83,21 @@ public class ApplicationInfoController {
 		}
 
 		@RequestMapping({ "/saveApp" })
-		public void saveApp(ModelAndView model, ApplicationInfo app) {
+		public ModelAndView saveApp(ModelAndView model, ApplicationInfo app) {
 			String uuid = UUIDUtil.getUUID();
 			app.setId(uuid);
 			app.setStatus("1");
 			this.appService.save(app);
 			model.setViewName("redirect:listApp");
+			return model;
 		}
 
 		@RequestMapping({ "/updateApp" })
-		public void updateApp(ModelAndView model, ApplicationInfo app) {
+		public ModelAndView updateApp(ModelAndView model, ApplicationInfo app) {
 			//ApplicationInfo one = this.appService.selectByKey(app.getId());
 			this.appService.updateNotNull(app);
 			model.setViewName("redirect:/syn/listApp");
+			return model;
 		}
 
 		@RequestMapping({ "/checkunique" })
