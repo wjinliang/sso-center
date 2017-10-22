@@ -18,6 +18,7 @@
 <script type="text/javascript"
 	src="<%=basePath%>/assets/js/colResizable-1.3.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/js/common.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/layer.js"></script>
 <style>
 td {
 	text-align: center;
@@ -141,6 +142,7 @@ td {
 </body>
 <script type="text/javascript">
 	function nextPage(pageNum){
+		layer.alert(pageNum);
 		$("#pageNum").val(pageNum);
 		$("#serchForm").submit();
 		
