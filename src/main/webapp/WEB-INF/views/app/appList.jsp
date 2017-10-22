@@ -75,7 +75,7 @@ td {
 				</div>
 				
 				<div id="button" class="mt10">
-			<input type="button" name="button" class="btn btn82 btn_add"
+			<input type="button" onclick="javascript:window.location.href='./form/new'" name="button" class="btn btn82 btn_add"
 				value="新增"> <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
 			<input type="button" name="button" class="btn btn82 btn_del" value="删除"> 

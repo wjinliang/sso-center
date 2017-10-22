@@ -69,7 +69,7 @@ public class ApplicationInfoController {
 		}
 
 		@RequestMapping({ "/form/{mode}" })
-		public void gotoCreateAppPage(ModelAndView model,
+		public ModelAndView gotoCreateAppPage(ModelAndView model,
 				@PathVariable String mode,
 				@RequestParam(value = "appid", required = false) String appid) {
 			if ((mode != null) && (!mode.equals("new"))) {
@@ -77,8 +77,9 @@ public class ApplicationInfoController {
 				model.addObject("appInfo", appInfo);
 				model.setViewName("/app/viewAppPage");
 			} else {
-				model.setViewName("/page/createAppPage");
+				model.setViewName("/app/createAppPage");
 			}
+			return model;
 		}
 
 		@RequestMapping({ "/saveApp" })
