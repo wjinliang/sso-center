@@ -26,3 +26,4 @@ target*
 .settings*
 .classpath
 .project
+src/main/resources/config/properties/jdbc.properties
