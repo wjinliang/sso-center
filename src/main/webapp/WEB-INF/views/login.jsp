@@ -19,6 +19,11 @@
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.min.js"></script>
     <title>后台登陆</title>
 </head>
+<script type="text/javascript">
+        if (self!=top){
+             window.top.location.replace(self.location); //打开自己网站的页面
+            }
+</script>
 <body>
 <div id="login_top">
     <div id="welcome">

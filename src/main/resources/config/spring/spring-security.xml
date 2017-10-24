@@ -122,6 +122,7 @@
                 class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideSavedRequestAwareAuthenticationSuccessHandler">
         <beans:property name="securityService" ref="securityService"/>
         <beans:property name="defaultTargetUrl" value="${security.default.target}"/>
+        <beans:property name="alwaysUseDefaultTargetUrl" value="${security.isAlwaysUseDefaultTargetUrl}"></beans:property>
     </beans:bean>
 
     <!-- 自定义登录失败handler -->
