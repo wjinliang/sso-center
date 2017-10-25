@@ -110,8 +110,13 @@
                  <tr>
                    <td class="td_right">&nbsp;</td>
                    <td class="">
+                   <c:if test="${param.detail=='1' }">
+                   	<input type="button" name="button" onclick="javascript:window.location.href='../listApp'" class="btn btn82 btn_save2" value="返回"> 
+                   </c:if>
+                   <c:if test="${!(param.detail=='1')}">
                      <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
                     <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
+                   </c:if>
                    </td>
                  </tr>
                </table>
@@ -122,8 +127,27 @@
      </div>
    </div> 
 </div>
-<script type="text/javascript" src="<%=basePath%>assets/plugin/jquery.validate/jquery.validate.min.js"></script>
-<script type="text/javascript" src="<%=basePath%>assets/plugin/jquery.validate/additional-methods.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
 </body>
+<script type="text/javascript">
+	var detail = ${param.detail=="1"};
+	$(function(){
+		if(detail){
+			$("table").find('input').each(function(){
+				if($(this).attr('name')!='button')
+					$(this).attr("disabled","true");
+			});
+			$("table").find('select').each(function(){
+				$(this).attr("disabled","true");
+			});
+			$("table").find('textarea').each(function(){
+				$(this).attr("disabled","true");
+			});
+		}
+		
+	});
+</script>
 
 </html>

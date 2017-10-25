@@ -1,6 +1,8 @@
 package com.topie.ssocenter.freamwork.authorization.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table(name = "t_user_account")
 public class UserAccount {
@@ -678,4 +680,29 @@ public class UserAccount {
     public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
     }
+
+	@Override
+	public String toString() {
+		return "UserAccount [code=" + code + ", email=" + email + ", enabled="
+				+ enabled + ", headpic=" + headpic + ", name=" + name
+				+ ", password=" + password + ", seq=" + seq + ", headphotoId="
+				+ headphotoId + ", orgId=" + orgId + ", loginname=" + loginname
+				+ ", mobilephone=" + mobilephone + ", usertype=" + usertype
+				+ ", lastlogintime=" + lastlogintime + ", logincount="
+				+ logincount + ", mobile=" + mobile + ", remoteipaddr="
+				+ remoteipaddr + ", accountExpired=" + accountExpired
+				+ ", locked=" + locked + ", passwordExpired=" + passwordExpired
+				+ ", specialaction=" + specialaction + ", ugroupId=" + ugroupId
+				+ ", synpassword=" + synpassword + ", dtype=" + dtype
+				+ ", mergeUuid=" + mergeUuid + ", originId=" + originId
+				+ ", schoolAge=" + schoolAge + ", title=" + title
+				+ ", speciality=" + speciality + ", createDate=" + createDate
+				+ ", createUser=" + createUser + ", bizphoneNo=" + bizphoneNo
+				+ ", faxNo=" + faxNo + ", address=" + address + ", duty="
+				+ duty + ", birthday=" + birthday + ", gender=" + gender
+				+ ", userType=" + userType + ", systemId=" + systemId
+				+ ", oldLoginname=" + oldLoginname + ", isDelete=" + isDelete
+				+ "]";
+	}
+    
 }

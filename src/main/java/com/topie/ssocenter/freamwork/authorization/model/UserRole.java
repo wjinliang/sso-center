@@ -1,6 +1,8 @@
 package com.topie.ssocenter.freamwork.authorization.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table(name = "t_user_role")
 public class UserRole {
@@ -105,4 +107,12 @@ public class UserRole {
     public void setSeq(Long seq) {
         this.seq = seq;
     }
+
+	@Override
+	public String toString() {
+		return "UserRole [code=" + code + ", detail=" + detail + ", enabled="
+				+ enabled + ", homepage=" + homepage + ", name=" + name
+				+ ", seq=" + seq + "]";
+	}
+    
 }

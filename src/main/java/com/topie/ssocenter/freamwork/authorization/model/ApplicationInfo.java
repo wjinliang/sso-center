@@ -258,4 +258,17 @@ public class ApplicationInfo {
     public void setSeq(Integer seq) {
         this.seq = seq;
     }
+
+	@Override
+	public String toString() {
+		return "ApplicationInfo [id=" + id + ", appName=" + appName
+				+ ", appCode=" + appCode + ", appPath=" + appPath
+				+ ", appPath1=" + appPath1 + ", synType=" + synType
+				+ ", synPath=" + synPath + ", description=" + description
+				+ ", packagename=" + packagename + ", status=" + status
+				+ ", opLevel=" + opLevel + ", userLevel=" + userLevel
+				+ ", paramName=" + paramName + ", seq=" + seq + "]";
+	}
+    
+    
 }

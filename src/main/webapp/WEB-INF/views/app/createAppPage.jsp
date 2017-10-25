@@ -127,8 +127,9 @@
      </div>
    </div> 
 </div>
-<script type="text/javascript" src="<%=basePath%>assets/plugin/jquery.validate/jquery.validate.min.js"></script>
-<script type="text/javascript" src="<%=basePath%>assets/plugin/jquery.validate/additional-methods.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
 </body>
 
 </html>

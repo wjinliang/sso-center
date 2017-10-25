@@ -18,23 +18,8 @@
 <script type="text/javascript"
 	src="<%=basePath%>/assets/js/colResizable-1.3.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/js/common.js"></script>
-<script type="text/javascript" src="<%=basePath%>/assets/plugin/layer.js"></script>
-<style>
-td {
-	text-align: center;
-}
-</style>
-<script type="text/javascript">
-      $(function(){  
-        $(".list_table").colResizable({
-          liveDrag:true,
-          gripInnerHtml:"<div class='grip'></div>", 
-          draggingClass:"dragging", 
-          minWidth:30
-        }); 
-        
-      }); 
-   </script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/js/commonAction.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -76,15 +61,16 @@ td {
 				</div>
 				
 				<div id="button" class="mt10">
-			<input type="button" onclick="javascript:window.location.href='./form/new'" name="button" class="btn btn82 btn_add"
-				value="新增"> <input type="button" name="button"
+			<input type="button" onclick="javascript:openPage('./form/new');" name="button" class="btn btn82 btn_add"
+				value="新增">
+		<!-- <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
-			<input type="button" name="button" class="btn btn82 btn_del" value="删除"> 
+			 <input type="button" name="button" class="btn btn82 btn_del" value="删除"> 
        <input type="button" name="button" class="btn btn82 btn_config" value="配置"> 
        <input type="button" name="button" class="btn btn82 btn_checked" value="全选"> 
        <input type="button" name="button" class="btn btn82 btn_nochecked" value="取消"> 
        <input type="button" name="button" class="btn btn82 btn_export" value="导出">
-       <input type="button" name="button" class="btn btn82 btn_recycle" value="回收站">
+       <input type="button" name="button" class="btn btn82 btn_recycle" value="回收站"> -->
 		</div>
 			</div>
 		</div>
@@ -119,16 +105,16 @@ td {
 										<font color="red">禁用</font>
 									</c:otherwise>
 								</c:choose></td>
-							<td><a class="ext_btn" href="javascript:viewItem('${app.id}')">查看
-							</a> <a class="ext_btn ext_btn_success" href="javascript:window.location.href='./form/update?appid=${app.id}'">  修改
-							</a> <a class="ext_btn ext_btn_error" href="javascript:deleteItem('${app.id}')">删除
+							<td><a class="ext_btn" href="javascript:viewPage('./form/update?appid=${app.id}')">查看
+							</a> <a class="ext_btn ext_btn_success" href="javascript:openPage('./form/update?appid=${app.id }');">  修改
+							</a> <a class="ext_btn ext_btn_error" href="javascript:deleteAction('./delete?appid=${app.id}')">删除
 							</a> <c:choose> 
 									<c:when test="${app.status=='1'}">
-										<a class="ext_btn" href="javascript:stopApp('${app.id}')"> 禁用
+										<a class="ext_btn" href="javascript:postAction('./stopApp?appid=${app.id}')"> 禁用
 										</a>
 									</c:when>
 									<c:otherwise>
-										<a class="ext_btn ext_btn_submit" href="javascript:startApp('${app.id}')">启用
+										<a class="ext_btn ext_btn_submit" href="javascript:postAction('./startApp?appid=${app.id}')">启用
 										</a>
 									</c:otherwise>
 								</c:choose>
@@ -140,14 +126,5 @@ td {
 			</div>
 		</div>
 </body>
-<script type="text/javascript">
-	function nextPage(pageNum){
-		layer.alert(pageNum);
-		$("#pageNum").val(pageNum);
-		$("#serchForm").submit();
-		
-	}
-
-</script>
 
 </html>

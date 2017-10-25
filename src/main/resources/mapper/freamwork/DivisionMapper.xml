@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topie.ssocenter.freamwork.authorization.dao.DivisionMapper" >
+  <resultMap id="BaseResultMap" type="com.topie.ssocenter.freamwork.authorization.model.Division" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FULLNAME" property="fullname" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="BIGINT" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="REGIONSOURCETYPE" property="regionsourcetype" jdbcType="INTEGER" />
+    <result column="BIGDIVISION" property="bigdivision" jdbcType="VARCHAR" />
+    <result column="BUILDERCODE" property="buildercode" jdbcType="INTEGER" />
+    <result column="CREATETIME" property="createtime" jdbcType="VARCHAR" />
+    <result column="ISDELETE" property="isdelete" jdbcType="INTEGER" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="ISNONSTANDARD" property="isnonstandard" jdbcType="INTEGER" />
+    <result column="ISPROVINCEMANAGECOUNTY" property="isprovincemanagecounty" jdbcType="INTEGER" />
+    <result column="EXREGIONGUID" property="exregionguid" jdbcType="VARCHAR" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

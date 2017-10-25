@@ -86,7 +86,6 @@ public class ApplicationInfoController {
 		public ModelAndView saveApp(ModelAndView model, ApplicationInfo app) {
 			String uuid = UUIDUtil.getUUID();
 			app.setId(uuid);
-			app.setStatus("1");
 			this.appService.save(app);
 			model.setViewName("redirect:listApp");
 			return model;
