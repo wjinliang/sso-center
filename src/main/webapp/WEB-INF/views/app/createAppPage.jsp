@@ -26,7 +26,7 @@
           <div class="box_border">
             <div class="box_top"><b class="pl15">表单</b></div>
             <div class="box_center">
-              <form action="../saveApp" method="post" class="jqtransform">
+              <form id="form1" action="../saveApp" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
                   <td class="td_right">系统名称：</td>
@@ -130,6 +130,32 @@
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
+<script>
+$.validator.setDefaults({
+    submitHandler: function() {
+      alert("提交事件!");
+    }
+});
+
+$().ready(function() {
+	// 提交时验证表单
+	var validator = $("#form1").validate({
+		errorPlacement: function(error, element) {
+			// Append error within linked label
+			layer.tips(error, $( element ));
+				
+		},
+		errorElement: "span",
+		messages: {
+			appName: {
+				required: " (必需字段)",
+				minlength: " (不能少于 3 个字母)"
+			}
+		}
+	});
+});
+</script>
+
 </body>
 
 </html>

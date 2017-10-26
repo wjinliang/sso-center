@@ -116,7 +116,7 @@ public class DivisionController {
 				division.setCreatetime(DmDateUtil.Current());
 				division.setId(id);
 				divisionService.updateAll(division);
-				model.setViewName("redirect:form/edit?divisionid="+division.getId());
+				model.setViewName("redirect:division/form/edit?divisionid="+division.getId());
 			}
 			return model;
 	}
