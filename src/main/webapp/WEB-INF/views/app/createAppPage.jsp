@@ -86,6 +86,7 @@
                       <div class="select_border"> 
                         <div class="select_containers "> 
                         <select name="userLevel" class="select"> 
+                        <option value="">请选择</option> 
                         <option value="0">部</option> 
                         <option value="1">省</option> 
                         <option value="2">市</option> 
@@ -107,8 +108,10 @@
                  <tr>
                   <td class="td_right">状态：</td>
                   <td class="">
-                    <input type="radio" name="status" value="1"> 可用
-                    <input type="radio" name="status" value="0"> 禁用
+                  	<span>
+	                    <input type="radio" name="status" value="1"> 可用
+	                    <input type="radio" name="status" value="0"> 禁用
+                    </span>
                   </td>
                  </tr>
                 
@@ -128,29 +131,23 @@
    </div> 
 </div>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
-<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
-<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
-<script>
-$.validator.setDefaults({
-    submitHandler: function() {
-      alert("提交事件!");
-    }
-});
-
+<%@include file="../include/formValidate.jsp"%>
+				
+<script type="text/javascript">
 $().ready(function() {
 	// 提交时验证表单
 	var validator = $("#form1").validate({
-		errorPlacement: function(error, element) {
-			// Append error within linked label
-			layer.tips(error, $( element ));
-				
-		},
-		errorElement: "span",
-		messages: {
-			appName: {
-				required: " (必需字段)",
-				minlength: " (不能少于 3 个字母)"
-			}
+		rules: {
+		      appName:  {
+		        required: true,
+		        minlength: 2
+		      },
+		      appCode:  {
+			        required: true,
+			        minlength: 2
+			      },
+			      userLevel:{required:true},
+			      status:'required'
 		}
 	});
 });

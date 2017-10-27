@@ -123,6 +123,7 @@
 					</c:forEach>
 				</table>
 				<%@include file="../include/pageinfo.jsp"%>
+				
 			</div>
 		</div>
 </body>
