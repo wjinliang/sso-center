@@ -380,3 +380,54 @@ input.ext_btn_big,button.ext_btn_big{
 .ext_btn_error:active{
 	background-position:0 -441px
 }
+
+.row {
+ 
+}
+.col_1, .col_2, .col_3, .col_4, .col_5, .col_6, .col_7, .col_8, .col_9, .col_10, .col_11, .col_12 {
+  position: relative;
+  min-height: 1px;
+}
+.col_1, .col_2, .col_3, .col_4, .col_5, .col_6, .col_7, .col_8, .col_9, .col_10, .col_11, .col_12 {
+  float: left;
+}
+.col_12 {
+  width: 100%;
+}
+.col_11 {
+  width: 91.66666667%;
+}
+.col_10 {
+  width: 83.33333333%;
+}
+.col_9 {
+  width: 75%;
+}
+.col_8 {
+  width: 66.66666667%;
+}
+.col_7 {
+  width: 58.33333333%;
+}
+.col_6 {
+  width: 50%;
+}
+.col_5 {
+  width: 41.66666667%;
+}
+.col_4 {
+  width: 33.33333333%;
+}
+.col_3 {
+  width: 25%;
+}
+.col_2 {
+  width: 16.66666667%;
+}
+.col_1 {
+  width: 8.33333333%;
+}
+
+
+
+

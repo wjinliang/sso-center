@@ -1,5 +1,6 @@
 package com.topie.ssocenter.freamwork.authorization.controller;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.common.utils.UUIDUtil;
@@ -52,9 +54,36 @@ public class DivisionController {
 				}
 				ml.add(m);
 			}
-			model.addObject("divisionStr", ml);
-			model.setViewName("/division/list");
+			JSONArray arr = new JSONArray(ml);
+			model.addObject("divisionStr", arr.toJSONString());
+			model.setViewName("/division/divisionList");
 			return model;
+	}
+	@RequestMapping({ "/loadSonDivision" })
+	@ResponseBody
+	public Object loadSonDivision(
+			ModelAndView model,
+			HttpServletResponse httpServletResponse,
+			@RequestParam(value = "divisionid", required = false) String divisionid) {
+			List ml = new ArrayList();
+				List<Division> divisionList = this.divisionService
+						.findByPid(divisionid);
+				for (Division d : divisionList) {
+					Map u = new HashMap();
+					String orgId = d.getId();
+					String orgName = d.getName();
+					String parentId = d.getParentId()==null?"":d.getParentId();
+
+					u.put("id", orgId);
+					u.put("pId", parentId);
+					u.put("name", orgName);
+					List<Division> sonList =this.divisionService.findByPid(orgId);
+					if (sonList != null && sonList.size() > 0) {
+						u.put("isParent", "true");
+					}
+					ml.add(u);
+				}
+				return ml;
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
