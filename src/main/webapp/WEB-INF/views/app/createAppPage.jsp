@@ -144,11 +144,20 @@ $().ready(function() {
 		      },
 		      appCode:  {
 			        required: true,
-			        minlength: 2
+			        minlength: 2,
+			        remote:function(value,ele,param){
+			        	alert(value+"==="+ele+"---"+param);
+			        }
 			      },
-			      userLevel:{required:true},
-			      status:'required'
-		}
+		      synType:{required:true},
+		      packagename:{required:true},
+		      synPath:{required:true},
+		      appPath:{required:true},
+		      opLevel:{required:true},
+		      userLevel:{required:true},
+		      status:'required'
+		},
+		messages:{appCode:{remote:"编码重复，请重新填写！"}}
 	});
 });
 </script>

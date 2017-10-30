@@ -26,7 +26,7 @@
           <div class="box_border">
             <div class="box_top"><b class="pl15">表单</b></div>
             <div class="box_center">
-              <form action="../updateApp" method="post" class="jqtransform">
+              <form id="form1" action="../updateApp" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
                   <td class="td_right">系统名称：</td>
@@ -128,8 +128,7 @@
    </div> 
 </div>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
-<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
-<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
+<%@include file="../include/formValidate.jsp"%>
 </body>
 <script type="text/javascript">
 	var detail = ${param.detail=="1"};
@@ -146,6 +145,31 @@
 				$(this).attr("disabled","true");
 			});
 		}
+		// 提交时验证表单
+		var validator = $("#form1").validate({
+			rules: {
+			      appName:  {
+			        required: true,
+			        minlength: 2
+			      },
+			      appCode:  {
+				        required: true,
+				        minlength: 2,
+				        remote:function(value,ele,param){
+				        	var id = $("input['name'='id']").val();
+				        	alert(value+"==="+id+"==="+ele+"---"+param);
+				        }
+				      },
+			      synType:{required:true},
+			      packagename:{required:true},
+			      synPath:{required:true},
+			      appPath:{required:true},
+			      opLevel:{required:true},
+			      userLevel:{required:true},
+			      status:'required'
+			},
+			messages:{appCode:{remote:"编码重复，请重新填写！"}}
+		});
 		
 	});
 </script>

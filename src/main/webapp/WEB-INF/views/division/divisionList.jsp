@@ -84,7 +84,7 @@ ul.ztree {
 							<b class="pl15">区划树</b>
 						</div>
 						<div class="box_center">
-							<div class="ztree" id="divisionTree"></div>
+							<div class="ztree" id="divisionTree" style="height: 500px;overflow-y: auto;"></div>
 						</div>
 						<div id="rMenu">
 			<ul class="dropdown-menu dropdown-context">
@@ -104,13 +104,102 @@ ul.ztree {
 							<b class="pl15">编辑</b>
 						</div>
 						<div class="box_center">
-							<div class="ztree" id="divisionTree"></div>
+							<form id="form1" action="saveOrUpdate" method="post" class="jqtransform">
+               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+                  <td class="td_right">区划全称：</td>
+                  <td class=""> 
+                  <input type="hidden" name="id">
+                  <input type="hidden" name="parentId">
+                  
+                    <input type="text" name="fullname" class="input-text lh30" size="40">
+                  </td></tr>
+                <tr >
+                  <td class="td_right">区划简称：</td><td><input type="text" name="name" class="input-text lh30" size="40"></td>
+                </tr>
+                <tr>
+                  <td class="td_right">同步类型：</td>
+                  <td class=""> 
+					<span class="fl">
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                        <select name="type" class="select"> 
+                        	<option value="0">中央</option>
+							<option value="1">省级</option>
+							<option value="2">直辖市</option>
+							<option value="3">计划单列市</option>
+							<option value="4">市级</option>
+							<option value="5">区县</option>
+							<option value="6">乡镇</option>
+							<option value="7">村</option>
+						</select>
+                        </div> 
+                      </div> 
+                    </span>
+                  </td></tr>
+                <tr >
+                  <td class="td_right">行政编码：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
+                  </tr>
+                <tr >
+                  <td class="td_right">所属大区：</td>
+                  <td class="">
+ 
+                    <span class="fl">
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                        <select name="bigDivision" class="select"> 
+                        	<option value="1" >华北</option>
+							<option value="2" >东北</option>
+							<option value="3" >华东</option>
+							<option value="4" >华中</option>
+							<option value="5" >西南</option>
+							<option value="6" >西北</option>
+							<option value="7" >华南</option>
+							<option value="8" >港澳台地区</option>
+							<option value="9" >兵团</option>
+						</select>
+                        </div> 
+                      </div> 
+                    </span>
+                  </td></tr>
+                <tr >
+                  <td class="td_right">区划等级：</td>
+                  <td class="">
+ 
+                    <span class="fl">
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                        <select name="level" class="select"> 
+                        	<option value="0" >0</option>
+							<option value="1" >1</option>
+							<option value="2" >2</option>
+							<option value="3" >3</option>
+							<option value="4" >4</option>
+							<option value="5" >5</option>
+                        </select> 
+                        </div> 
+                      </div> 
+                    </span>
+                  </td>
+                 </tr>
+                 <tr>
+                   <td class="td_right">&nbsp;</td>
+                   <td class="">
+                   
+                     <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
+                    <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
+                   
+                   </td>
+                 </tr>
+               </table>
+               </form>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<%@include file="../include/formValidate.jsp"%>
 	<script type="text/javascript">
 	var zNodes =${divisionStr};
 	var COOKIE_LASRNODEID = "LAST_DIVISION_ID_7";
@@ -134,6 +223,28 @@ ul.ztree {
 		}
 		//console.log(node);
 		zTree.expandNode(node, true, false);//指定选中ID节点展开  
+		// 提交时验证表单
+		var validator = $("#form1").validate({
+			rules: {
+			      fullname:  {
+			        required: true,
+			        minlength: 2
+			      },
+			      name:  {
+				        required: true,
+				        minlength: 2
+				      },
+			      code:{required:true,
+				        remote:function(ele){
+				        	var id = $("input[name='id']").val();
+				        	console.log($(ele).val());
+				        	layer.tips('编码重复，请重新填写！',ele,{tipsMore: true});
+				        }},
+			      level:{required:true},
+			      bigDivision:{required:true},
+			      type:{required:true}
+			}
+		});
 	});
 	var zTree;
 	var rMenu;
@@ -356,11 +467,11 @@ function showRMenu(type, x, y) {
 	$("body").bind("mousedown", onBodyMouseDown);
 }
 function hideRMenu() {
-	if (rMenu)
+	/* if (rMenu)
 		rMenu.css({
 			"visibility" : "hidden"
 		});
-	$("body").unbind("mousedown", onBodyMouseDown);
+	$("body").unbind("mousedown", onBodyMouseDown); */
 }
 function onBodyMouseDown(event) {
 	if (!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length > 0)) {
@@ -386,21 +497,20 @@ function addMenu() {
 	hideRMenu();
 	if (zTree.getSelectedNodes()[0]) {
 		var orgid = zTree.getSelectedNodes()[0].id;
-		openPage('form/new?orgid=' + orgid);
+		newDivsion(orgid);
 	} else {
 		alert("请选中父区划节点");
 	}
 }
 function addTopMenu() {
 	hideRMenu();
-	openPage('form/new?orgid=' + orgid);
+	newDivsion('');
 }
 function editMenu() {
 	hideRMenu();
 	if (zTree.getSelectedNodes()[0]) {
 		var orgid = zTree.getSelectedNodes()[0].id;
-		opendg('<%=basePath%>division/form/edit?orgid=' + orgid, 900,
-				630);
+		editDivsion(orgid);
 	}
 }
 function viewMenu(){
@@ -448,6 +558,29 @@ function deleteMenu() {
 		}
 	});
 }
+
+var form = $("#form1");
+function newDivsion(pid){
+	form[0].reset();
+	form.find("input[name='parentId']").val(pid);	
+	form.find("input[name='id']").val('');	
+}
+function editDivsion(id){
+	form[0].reset();
+	//form.setForm({fullname:'北京市朝阳区',name:'朝阳区',level:'5'});
+	$.ajax({
+		url:"",
+		type:'get',
+		success:function(res){
+			if(res.code="200"){
+				
+				form.setForm(res.data);
+			}
+		}
+	})
+}
+
+
 	</script>
 </body>
 
