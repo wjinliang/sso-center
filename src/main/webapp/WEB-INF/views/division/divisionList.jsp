@@ -104,7 +104,7 @@ ul.ztree {
 							<b class="pl15">编辑</b>
 						</div>
 						<div class="box_center">
-							<form id="form1" action="saveOrUpdate" method="post" class="jqtransform">
+							<form id="form1" action="save" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
                   <td class="td_right">区划全称：</td>
@@ -117,8 +117,11 @@ ul.ztree {
                 <tr >
                   <td class="td_right">区划简称：</td><td><input type="text" name="name" class="input-text lh30" size="40"></td>
                 </tr>
+                <tr >
+                  <td class="td_right">行政编码：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
+                  </tr>
                 <tr>
-                  <td class="td_right">同步类型：</td>
+                  <td class="td_right">区划级别：</td>
                   <td class=""> 
 					<span class="fl">
                       <div class="select_border"> 
@@ -138,16 +141,13 @@ ul.ztree {
                     </span>
                   </td></tr>
                 <tr >
-                  <td class="td_right">行政编码：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
-                  </tr>
-                <tr >
                   <td class="td_right">所属大区：</td>
                   <td class="">
  
                     <span class="fl">
                       <div class="select_border"> 
                         <div class="select_containers "> 
-                        <select name="bigDivision" class="select"> 
+                        <select name="bigdivision" class="select"> 
                         	<option value="1" >华北</option>
 							<option value="2" >东北</option>
 							<option value="3" >华东</option>
@@ -235,15 +235,19 @@ ul.ztree {
 				        minlength: 2
 				      },
 			      code:{required:true,
-				        remote:function(ele){
-				        	var id = $("input[name='id']").val();
-				        	console.log($(ele).val());
-				        	layer.tips('编码重复，请重新填写！',ele,{tipsMore: true});
-				        }},
+			    	  remote:{  
+		                url: "checkCode",  
+		                cache: false,  
+		                data: {  
+		                    code: function () { return $("input[name='code']").val(); } ,
+		                    id:function(){return $("input[name='id']").val(); }
+		                }  
+		            }  },
 			      level:{required:true},
 			      bigDivision:{required:true},
 			      type:{required:true}
-			}
+			},
+			messages:{code:{remote:"编码重复，请重新填写！"}}
 		});
 	});
 	var zTree;
@@ -569,11 +573,10 @@ function editDivsion(id){
 	form[0].reset();
 	//form.setForm({fullname:'北京市朝阳区',name:'朝阳区',level:'5'});
 	$.ajax({
-		url:"",
+		url:"loadOne?divisionId="+id,
 		type:'get',
 		success:function(res){
 			if(res.code="200"){
-				
 				form.setForm(res.data);
 			}
 		}

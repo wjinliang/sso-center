@@ -1,6 +1,5 @@
 package com.topie.ssocenter.freamwork.authorization.controller;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -86,7 +84,7 @@ public class DivisionController {
 				return ml;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	/*@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping("/load")
 	@ResponseBody
 	public Object load(HttpServletResponse response) {
@@ -104,9 +102,9 @@ public class DivisionController {
 				ml.add(m);
 			}
 			return ml;
-	}
+	}*/
 
-	@RequestMapping("/form/{mode}")
+	/*@RequestMapping("/form/{mode}")
 	public ModelAndView form(HttpServletRequest request, ModelAndView model,
 			@PathVariable String mode,
 			@RequestParam(value = "divisionId", required = false) String divisionId) {
@@ -134,7 +132,7 @@ public class DivisionController {
 			model.setViewName("/division/form");
 			return model;
 	}
-
+*/
 	@RequestMapping("/save")
 	public ModelAndView save(ModelAndView model, Division division) {
 			Division o = new Division();
@@ -144,10 +142,31 @@ public class DivisionController {
 				String id = UUIDUtil.getUUID();
 				division.setCreatetime(DmDateUtil.Current());
 				division.setId(id);
-				divisionService.updateAll(division);
-				model.setViewName("redirect:division/form/edit?divisionid="+division.getId());
+				o = this.divisionService.selectByKey(division.getParentId());
+				if(o!=null)
+					division.setLevel(o.getLevel()+1);
+				divisionService.save(division);
+				model.setViewName("redirect:list");
 			}
 			return model;
+	}
+	@RequestMapping("/loadOne")
+	@ResponseBody
+	public Object loadOne(@RequestParam(value = "divisionId", required = true) String divisionId) {
+		Division o = divisionService.selectByKey(divisionId); 
+			return ResponseUtil.success(o);
+	}
+	@RequestMapping("/checkCode")
+	@ResponseBody
+	public Object checkCode(Division d) {
+			List<Division> list = divisionService.selectByExample(d);
+			for(Division tmp:list){
+				if(tmp.getId().equals(d.getId())){
+					continue;
+				}
+				return ResponseUtil.success(false);
+			}
+			return ResponseUtil.success(true);
 	}
 
 	/*@RequestMapping("/setseq")
