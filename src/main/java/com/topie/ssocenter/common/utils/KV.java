@@ -9,14 +9,10 @@ public class KV extends HashMap<String, Object>{
 	}
 	
 	public KV add(String key,Object val){
-		this.add(key, val);
+		this.put(key, val);
 		return this;
 	}
 	public KV append(String key,Object val){
-		this.add(key, val);
-		return this;
-	}
-	public KV put(String key,Object val){
 		this.add(key, val);
 		return this;
 	}

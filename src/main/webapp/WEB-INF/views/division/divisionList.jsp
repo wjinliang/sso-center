@@ -105,94 +105,94 @@ ul.ztree {
 						</div>
 						<div class="box_center">
 							<form id="form1" action="save" method="post" class="jqtransform">
-               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
-                 <tr>
-                  <td class="td_right">区划全称：</td>
-                  <td class=""> 
-                  <input type="hidden" name="id">
-                  <input type="hidden" name="parentId">
-                  
-                    <input type="text" name="fullname" class="input-text lh30" size="40">
-                  </td></tr>
-                <tr >
-                  <td class="td_right">区划简称：</td><td><input type="text" name="name" class="input-text lh30" size="40"></td>
-                </tr>
-                <tr >
-                  <td class="td_right">行政编码：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
-                  </tr>
-                <tr>
-                  <td class="td_right">区划级别：</td>
-                  <td class=""> 
-					<span class="fl">
-                      <div class="select_border"> 
-                        <div class="select_containers "> 
-                        <select name="type" class="select"> 
-                        	<option value="0">中央</option>
-							<option value="1">省级</option>
-							<option value="2">直辖市</option>
-							<option value="3">计划单列市</option>
-							<option value="4">市级</option>
-							<option value="5">区县</option>
-							<option value="6">乡镇</option>
-							<option value="7">村</option>
-						</select>
-                        </div> 
-                      </div> 
-                    </span>
-                  </td></tr>
-                <tr >
-                  <td class="td_right">所属大区：</td>
-                  <td class="">
- 
-                    <span class="fl">
-                      <div class="select_border"> 
-                        <div class="select_containers "> 
-                        <select name="bigdivision" class="select"> 
-                        	<option value="1" >华北</option>
-							<option value="2" >东北</option>
-							<option value="3" >华东</option>
-							<option value="4" >华中</option>
-							<option value="5" >西南</option>
-							<option value="6" >西北</option>
-							<option value="7" >华南</option>
-							<option value="8" >港澳台地区</option>
-							<option value="9" >兵团</option>
-						</select>
-                        </div> 
-                      </div> 
-                    </span>
-                  </td></tr>
-                <tr >
-                  <td class="td_right">区划等级：</td>
-                  <td class="">
- 
-                    <span class="fl">
-                      <div class="select_border"> 
-                        <div class="select_containers "> 
-                        <select name="level" class="select"> 
-                        	<option value="0" >0</option>
-							<option value="1" >1</option>
-							<option value="2" >2</option>
-							<option value="3" >3</option>
-							<option value="4" >4</option>
-							<option value="5" >5</option>
-                        </select> 
-                        </div> 
-                      </div> 
-                    </span>
-                  </td>
-                 </tr>
-                 <tr>
-                   <td class="td_right">&nbsp;</td>
-                   <td class="">
-                   
-                     <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
-                    <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
-                   
-                   </td>
-                 </tr>
-               </table>
-               </form>
+				               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
+				                 <tr>
+				                  <td class="td_right">区划全称：</td>
+				                  <td class=""> 
+				                  <input type="hidden" name="id">
+				                  <input type="hidden" name="parentId">
+				                  
+				                    <input type="text" name="fullname" class="input-text lh30" size="40">
+				                  </td></tr>
+				                <tr >
+				                  <td class="td_right">区划简称：</td><td><input type="text" name="name" class="input-text lh30" size="40"></td>
+				                </tr>
+				                <tr >
+				                  <td class="td_right">行政编码：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
+				                  </tr>
+				                <tr>
+				                  <td class="td_right">区划级别：</td>
+				                  <td class=""> 
+									<span class="fl">
+				                      <div class="select_border"> 
+				                        <div class="select_containers "> 
+				                        <select name="type" class="select"> 
+				                        	<option value="0">中央</option>
+											<option value="1">省级</option>
+											<option value="2">直辖市</option>
+											<option value="3">计划单列市</option>
+											<option value="4">市级</option>
+											<option value="5">区县</option>
+											<option value="6">乡镇</option>
+											<option value="7">村</option>
+										</select>
+				                        </div> 
+				                      </div> 
+				                    </span>
+				                  </td></tr>
+				                <tr >
+				                  <td class="td_right">所属大区：</td>
+				                  <td class="">
+				 
+				                    <span class="fl">
+				                      <div class="select_border"> 
+				                        <div class="select_containers "> 
+				                        <select name="bigdivision" class="select"> 
+				                        	<option value="1" >华北</option>
+											<option value="2" >东北</option>
+											<option value="3" >华东</option>
+											<option value="4" >华中</option>
+											<option value="5" >西南</option>
+											<option value="6" >西北</option>
+											<option value="7" >华南</option>
+											<option value="8" >港澳台地区</option>
+											<option value="9" >兵团</option>
+										</select>
+				                        </div> 
+				                      </div> 
+				                    </span>
+				                  </td></tr>
+				                <tr >
+				                  <td class="td_right">区划等级：</td>
+				                  <td class="">
+				 
+				                    <span class="fl">
+				                      <div class="select_border"> 
+				                        <div class="select_containers "> 
+				                        <select name="level" class="select"> 
+				                        	<option value="0" >0</option>
+											<option value="1" >1</option>
+											<option value="2" >2</option>
+											<option value="3" >3</option>
+											<option value="4" >4</option>
+											<option value="5" >5</option>
+				                        </select> 
+				                        </div> 
+				                      </div> 
+				                    </span>
+				                  </td>
+				                 </tr>
+				                 <tr>
+				                   <td class="td_right">&nbsp;</td>
+				                   <td class="">
+				                   
+				                     <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
+				                    <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
+				                   
+				                   </td>
+				                 </tr>
+				               </table>
+				             </form>
 						</div>
 					</div>
 				</div>
@@ -237,10 +237,9 @@ ul.ztree {
 			      code:{required:true,
 			    	  remote:{  
 		                url: "checkCode",  
-		                cache: false,  
 		                data: {  
-		                    code: function () { return $("input[name='code']").val(); } ,
-		                    id:function(){return $("input[name='id']").val(); }
+		                    'code': function () { return $("input[name='code']").val();},
+		                    'id':function(){return $("input[name='id']").val(); }
 		                }  
 		            }  },
 			      level:{required:true},
@@ -563,21 +562,21 @@ function deleteMenu() {
 	});
 }
 
-var form = $("#form1");
+var form1 = $("#form1");
 function newDivsion(pid){
-	form[0].reset();
-	form.find("input[name='parentId']").val(pid);	
-	form.find("input[name='id']").val('');	
+	form1[0].reset();
+	form1.find("input[name='parentId']").val(pid);	
+	form1.find("input[name='id']").val('');	
 }
 function editDivsion(id){
-	form[0].reset();
+	form1[0].reset();
 	//form.setForm({fullname:'北京市朝阳区',name:'朝阳区',level:'5'});
 	$.ajax({
 		url:"loadOne?divisionId="+id,
 		type:'get',
 		success:function(res){
 			if(res.code="200"){
-				form.setForm(res.data);
+				form1.setForm(res.data);
 			}
 		}
 	})

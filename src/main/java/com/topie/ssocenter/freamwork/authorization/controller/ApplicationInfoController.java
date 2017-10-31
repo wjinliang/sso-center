@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import tk.mybatis.mapper.entity.Example;
+
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.common.utils.KV;
 import com.topie.ssocenter.common.utils.ResponseUtil;
@@ -105,8 +107,10 @@ public class ApplicationInfoController {
 				@RequestParam(value = "param", required = true) String param,
 				@RequestParam(value = "name", required = true) String name,
 				@RequestParam(value = "id", required = false) String id) {
-				List<ApplicationInfo> list = this.appService.selectByExample(new KV(name,param)
-						);
+			
+				Example example =new Example(ApplicationInfo.class);
+				example.createCriteria().andEqualTo(name,param);
+				List<ApplicationInfo> list = this.appService.selectByExample(example);
 				if (id != null && !id.equals("")) {
 					if (list.size() > 1) {
 						return false;

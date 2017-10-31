@@ -150,15 +150,13 @@
 			rules: {
 			      appName:  {
 			        required: true,
-			        minlength: 2
+			        minlength: 2,
+			        remote:{url:"../checkunique",data:{'name':'appName','param':function(){return $("input[name='appName']").val();},'id':function(){return $('input[name="id"]').val();}}}
 			      },
 			      appCode:  {
 				        required: true,
 				        minlength: 2,
-				        remote:function(value,ele,param){
-				        	var id = $("input['name'='id']").val();
-				        	alert(value+"==="+id+"==="+ele+"---"+param);
-				        }
+				        remote:{url:"../checkunique",data:{'name':'appCode','param':function(){return $("input[name='appCode']").val();},'id':function(){return $('input[name="id"]').val();}}}
 				      },
 			      synType:{required:true},
 			      packagename:{required:true},
@@ -168,7 +166,7 @@
 			      userLevel:{required:true},
 			      status:'required'
 			},
-			messages:{appCode:{remote:"编码重复，请重新填写！"}}
+			messages:{appName:{remote:"名称重复，请重新填写！"},appCode:{remote:"编码重复，请重新填写！"}}
 		});
 		
 	});

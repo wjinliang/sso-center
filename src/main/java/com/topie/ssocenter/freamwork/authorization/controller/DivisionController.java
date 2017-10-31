@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import tk.mybatis.mapper.entity.Example;
+
 import com.alibaba.fastjson.JSONArray;
 import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.common.utils.ResponseUtil;
@@ -159,14 +161,16 @@ public class DivisionController {
 	@RequestMapping("/checkCode")
 	@ResponseBody
 	public Object checkCode(Division d) {
-			List<Division> list = divisionService.selectByExample(d);
+		Example ex = new Example(Division.class);
+		ex.createCriteria().andEqualTo("code", d.getCode());
+			List<Division> list = divisionService.selectByExample(ex);
 			for(Division tmp:list){
 				if(tmp.getId().equals(d.getId())){
 					continue;
 				}
-				return ResponseUtil.success(false);
+				return false;
 			}
-			return ResponseUtil.success(true);
+			return true;
 	}
 
 	/*@RequestMapping("/setseq")
