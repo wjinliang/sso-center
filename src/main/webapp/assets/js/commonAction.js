@@ -65,7 +65,9 @@ function viewPage(url){
 					success:function(data){
 						if(data.code==200){
 							layer.msg('操作成功', {icon: 1});	
-							window.location.reload();
+							if(isReload||isReload=='undefined'){
+								window.location.reload();
+							}
 						}
 						else{
 							layer.msg('删除失败', {icon: 1});
@@ -91,7 +93,9 @@ function viewPage(url){
 					success:function(data){
 						if(data.code==200){
 							layer.msg('操作成功', {icon: 1});	
-							window.location.reload();
+							if(isReload||isReload=='undefined'){
+								window.location.reload();
+							}
 						}
 						else{
 							layer.msg('操作失败', {icon: 1});
@@ -116,7 +120,7 @@ function viewPage(url){
 			success:function(data){
 				if(data.code==200){
 					layer.msg('操作成功', {icon: 1});	
-					if(!isReload){
+					if(isReload||isReload=='undefined'){
 						window.location.reload();
 					}
 				}

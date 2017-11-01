@@ -484,18 +484,6 @@ function onBodyMouseDown(event) {
 	}
 }
 
-function opendg(dgurl, dgw, dgh) {
-	$.dialog({
-		title : '',
-		width : dgw,
-		height : dgh,
-		lock : true,
-		max : false,
-		min : false,
-		id : 'menupop',
-		content : 'url:' + dgurl
-	});
-}
 function addMenu() {
 	hideRMenu();
 	if (zTree.getSelectedNodes()[0]) {
@@ -516,14 +504,7 @@ function editMenu() {
 		editDivsion(orgid);
 	}
 }
-function viewMenu(){
-	hideRMenu();
-	if (zTree.getSelectedNodes()[0]) {
-		var orgid = zTree.getSelectedNodes()[0].id;
-		opendg('<%=basePath%>division/form/view?orgid=' + orgid, 600,
-				500);
-	}
-}
+ 
 function refreshorgtree() {
 	$("#alert").show();
 	var zTree2 = $.fn.zTree.getZTreeObj("treeOrg");
@@ -537,29 +518,11 @@ function expandAll(flag){
 	zTree.expandAll(flag);
 }
 function deleteMenu() {
-	hideRMenu();
-	window.parent.bootbox.confirm("确定删除吗？", function(result) {
-		if (result) {
-			if (zTree.getSelectedNodes()[0]) {
-				var orgid = zTree.getSelectedNodes()[0].id;
-				$.ajax({
-					type : "POST",
-					data : "orgid=" + orgid,
-					url : '<%=basePath%>syndivision/delete',
-					success : function(data) {
-						if (data == "ok") {
-							window.location.reload();
-						}else if(data == "false"){
-							alert("删除时出现错误！");
-						}else{
-							alert(data);
-							window.location.reload();
-						}
-					}
-				});
-			}
-		}
-	});
+	if (zTree.getSelectedNodes()[0]) {
+
+		var orgid = zTree.getSelectedNodes()[0].id;
+		deleteAction("delete?divisionId="+orgid);
+	}
 }
 
 var form1 = $("#form1");
