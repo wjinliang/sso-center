@@ -12,10 +12,13 @@ public interface DivisionService extends IService<Division>{
 
 	List<Division> findByPid(String id);
 
-	Integer selectNextSeqByPid(String divisionId);
+//	Integer selectNextSeqByPid(String divisionId);
 
 	List<Division> findByPidAndSeq(String parentId, Integer i);
 	public PageInfo<Division> findPage(int pageNum, int pageSize,
 			Division divison) ;
+
+	void seqList(String currentid, String targetid, String moveType,
+			String moveMode);
 
 }

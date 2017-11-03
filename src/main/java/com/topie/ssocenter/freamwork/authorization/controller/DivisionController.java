@@ -173,18 +173,21 @@ public class DivisionController {
 			return true;
 	}
 
-	/*@RequestMapping("/setseq")
-	public void setseq(
+	@RequestMapping("/setseq")
+	@ResponseBody
+	public Object setseq(
 			HttpServletResponse response,
 			@RequestParam(value = "currentid", required = false) String currentid,
 			@RequestParam(value = "targetid", required = false) String targetid,
 			@RequestParam(value = "moveType", required = false) String moveType,
 			@RequestParam(value = "moveMode", required = false) String moveMode)
-			throws Exception {
-		response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		try {
-			if (currentid != null && targetid != null) {
+			{
+		
+		this.divisionService.seqList( currentid, targetid,  moveType, moveMode);
+		return ResponseUtil.success();
+			}
+			/*if (currentid != null && targetid != null) {
+				
 				Division starto = new Division();
 				Division targeto = new Division();
 				starto = divisionService.selectByKey(currentid);

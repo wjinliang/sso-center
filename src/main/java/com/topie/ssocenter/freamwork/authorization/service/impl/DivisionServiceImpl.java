@@ -43,11 +43,11 @@ public class DivisionServiceImpl extends BaseService<Division> implements Divisi
 		return getMapper().selectByExample(example);
 	}
 
-	@Override
+	/*@Override
 	public Integer selectNextSeqByPid(String divisionId) {
 		
 		return null;
-	}
+	}*/
 
 	@Override
 	public List<Division> findByPidAndSeq(String parentId, Integer i) {
@@ -55,5 +55,47 @@ public class DivisionServiceImpl extends BaseService<Division> implements Divisi
 		ex.setParentId(parentId);
 		ex.setSeq(i);
 		return getMapper().selectByExample(ex);
+	}
+
+
+	@Override
+	public void seqList(String currentid, String targetid, String moveType,
+			String moveMode) {
+		if(currentid==null || targetid==null) return ;
+		Division t2 = this.getMapper().selectByPrimaryKey(currentid);//要移动的项
+		Division t1 = this.getMapper().selectByPrimaryKey(targetid);//基准项
+		if(t1==null || t2==null) return ;
+		if(moveType.equals("inner")){//inner
+			t2.setParentId(targetid);
+			this.getMapper().updateByPrimaryKeySelective(t2);
+			return;
+		}
+		if(moveMode.equals("same")){//同级内移动
+		}else{//垮父级移动
+			t2.setParentId(t1.getParentId());
+		}
+		if(moveType.equals("next")){//当前节点的后面
+			t2.setSeq(t1.getSeq()+1);
+		}else{//当前节点的前面
+			t2.setSeq(t1.getSeq());
+		}
+		
+		List<Division> list = findByPid(t1.getParentId());//order by seq asc
+		int seq = t2.getSeq();
+		for(Division t:list){
+			if(t.getId().equals(t2.getId())){//同级内移动才会出现   出现当前先不处理
+				continue;
+			}
+			if(t.getSeq()>seq){
+				break;
+			}
+			if(t.getSeq()==seq){
+				seq++;
+				t.setSeq(seq);
+				this.getMapper().updateByPrimaryKeySelective(t);
+			}
+		}
+		this.getMapper().updateByPrimaryKeySelective(t2);
+		
 	}
 }
