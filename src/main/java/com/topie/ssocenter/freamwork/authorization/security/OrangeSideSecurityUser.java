@@ -19,7 +19,7 @@ public class OrangeSideSecurityUser extends User {
                                   Collection<GrantedAuthority> userGrantedAuthorities) {
         super(user.getLoginname(), user.getPassword(), user.getEnabled(),
                 user.getAccountExpired(), user.getPasswordExpired(),
-                user.getLocked(), userGrantedAuthorities);
+                !user.getLocked(), userGrantedAuthorities);
         if (user != null) {
             setId(user.getCode());
             setLoginName(user.getLoginname());

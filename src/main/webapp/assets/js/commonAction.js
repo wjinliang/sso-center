@@ -65,16 +65,21 @@ function viewPage(url){
 					success:function(data){
 						if(data.code==200){
 							layer.msg('操作成功', {icon: 1});	
-							if(isReload||isReload=='undefined'){
+							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
 						}
+						else if(data.code==301){
+							window.location.href=root+data.data;
+						}
 						else{
 							layer.msg('删除失败', {icon: 1});
+							//window.location.reload();
 						}
 					},
 					error:function(){
 						layer.msg('操作失败', {icon: 1});
+						//window.location.reload();
 					}
 				});
 			}, function(){
@@ -93,16 +98,21 @@ function viewPage(url){
 					success:function(data){
 						if(data.code==200){
 							layer.msg('操作成功', {icon: 1});	
-							if(isReload||isReload=='undefined'){
+							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
+							}
+						else if(data.code==301){
+							window.location.href=root+data.data;
 						}
 						else{
 							layer.msg('操作失败', {icon: 1});
+							//window.location.reload();
 						}
 					},
 					error:function(){
 						layer.msg('操作失败', {icon: 1});
+						//window.location.reload();
 					}
 				});
 			}, function(){
@@ -119,17 +129,47 @@ function viewPage(url){
 			},
 			success:function(data){
 				if(data.code==200){
-					layer.msg('操作成功', {icon: 1});	
-					if(isReload||isReload=='undefined'){
+					layer.msg('操作成功', {icon: 1});
+					if(isReload||isReload===undefined){
 						window.location.reload();
-					}
+					}}
+				else if(data.code==301){
+					window.location.href=root+data.data;
 				}
 				else{
 					layer.msg('操作失败', {icon: 1});
+					//window.location.reload();
 				}
 			},
 			error:function(){
 				layer.msg('操作失败', {icon: 1});
+				//window.location.reload();
+			}
+		});
+		
+	};
+function getAction(url,success){
+		
+		$.ajax({
+			url:url,
+			type:'post',
+			beforeSend:function(){
+			  layer.msg('请稍后', {icon: 1});
+			},
+			success:function(data){
+				if(data.code==200){
+					success(data);
+				}
+				else if(data.code==301){
+					window.location.href=root+data.data;
+				}else{
+					layer.msg('操作失败', {icon: 1});
+					
+				}
+			},
+			error:function(){
+				layer.msg('操作失败', {icon: 1});
+				//window.location.reload();
 			}
 		});
 		

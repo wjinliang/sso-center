@@ -77,6 +77,7 @@ public class DivisionController {
 					u.put("id", orgId);
 					u.put("pId", parentId);
 					u.put("name", orgName);
+					u.put("level", d.getLevel());
 					List<Division> sonList =this.divisionService.findByPid(orgId);
 					if (sonList != null && sonList.size() > 0) {
 						u.put("isParent", "true");
@@ -140,6 +141,7 @@ public class DivisionController {
 			Division o = new Division();
 			if (division.getId() != null && !division.getId().equals("")) {//更新
 				divisionService.updateNotNull(division);
+				model.setViewName("redirect:list");
 			} else {//新增
 				String id = UUIDUtil.getUUID();
 				division.setCreatetime(DmDateUtil.Current());
@@ -186,165 +188,7 @@ public class DivisionController {
 		this.divisionService.seqList( currentid, targetid,  moveType, moveMode);
 		return ResponseUtil.success();
 			}
-			/*if (currentid != null && targetid != null) {
-				
-				Division starto = new Division();
-				Division targeto = new Division();
-				starto = divisionService.selectByKey(currentid);
-				targeto = divisionService.selectByKey(targetid);
-				Integer start = starto.getSeq();
-				Integer limit = targeto.getSeq();
-				if (!moveType.equals("inner")) {
-					if (moveMode.equals("same")) {
-						if (start > limit) {
-							Integer sl;
-							if (moveType.equals("prev")) {
-								sl = limit;
-							} else {
-								sl = limit + 1;
-							}
-							for (Integer i = start - 1; i >= sl; i--) {
-								List<Division> divisionlist = new ArrayList<Division>();
-								divisionlist = divisionService.findByPidAndSeq(starto.getParentId(),i);
-								for (Division division : divisionlist) {
-									division.setSeq(i + 1);
-									divisionService.updateNotNull(division);
-								}
-							}
-							starto.setSeq(sl);
-							divisionService.updateNotNull(starto);
-						} else if (start < limit) {
-							Integer tl;
-							if (moveType.equals("prev")) {
-								tl = limit - 1;
-							} else {
-								tl = limit;
-							}
-							for (Integer i = start + 1; i <= tl; i++) {
-								List<Division> divisionlist = new ArrayList<Division>();
-								divisionlist = divisionService.findByPidAndSeq(starto.getParentId(),i);
-								for (Division division : divisionlist) {
-									division.setSeq(i - 1);
-									divisionService.updateNotNull(division);
-								}
-							}
-							starto.setSeq(tl);
-							divisionService.updateNotNull(starto);
-						}
-					} else {
-						Integer currentcount;
-						if (starto.getParentId() != null) {
-							currentcount = commonDAO
-									.count("select count(*) from Division o where o.parent.id='"
-											+ starto.getParent().getId()+"'") + 1;
-						} else {
-							currentcount = commonDAO
-									.count("select count(*) from Division o where o.parent is null") + 1;
-						}
-						for (Long i = start + 1; i < currentcount; i++) {
-							Division entity = new Division();
-							List<Division> divisionlist = new ArrayList<Division>();
-							if (starto.getParent() != null) {
-								entity.setParent(starto.getParent());
-								divisionlist = commonDAO.findAll(Division.class,
-										" and t.parent = :parent and t.seq = "
-												+ i, entity);
-							} else {
-								divisionlist = commonDAO.findAll(Division.class,
-										" and t.parent is null and t.seq = "
-												+ i, entity);
-							}
-							for (Division division : divisionlist) {
-								division.setSeq(i - 1);
-								divisionService.updatedivision(division);
-							}
-						}
-
-						// -------------------------------------------------
-
-						Long targetcount;
-						if (targeto.getParent() != null) {
-							targetcount = commonDAO
-									.count("select count(*) from Division o where o.parent.id='"
-											+ targeto.getParent().getId()+"'");
-						} else {
-							targetcount = commonDAO
-									.count("select count(*) from Division o where o.parent is null");
-						}
-						Long startc;
-						if (moveType.equals("prev")) {
-							startc = limit;
-						} else {
-							startc = limit + 1;
-						}
-						for (Long i = targetcount; i >= startc; i--) {
-							Division entity = new Division();
-							List<Division> divisionlist = new ArrayList<Division>();
-							if (targeto.getParent() != null) {
-								entity.setParent(targeto.getParent());
-								divisionlist = commonDAO.findAll(Division.class,
-										" and t.parent = :parent and t.seq = "
-												+ i, entity);
-							} else {
-								divisionlist = commonDAO.findAll(Division.class,
-										" and t.parent is null and t.seq = "
-												+ i, entity);
-							}
-							for (Division division : divisionlist) {
-								division.setSeq(i + 1);
-								divisionService.updatedivision(division);
-							}
-						}
-						starto.setParent(targeto.getParent());
-						starto.setSeq(startc);
-						divisionService.updatedivision(starto);
-					}
-				} else {
-					Long currentcount;
-					if (starto.getParent() != null) {
-						currentcount = commonDAO
-								.count("select count(*) from Division o where o.parent.id= '"
-										+ starto.getParent().getId()+"'") + 1;
-					} else {
-						currentcount = commonDAO
-								.count("select count(*) from Division o where o.parent is null") + 1;
-					}
-					for (Long i = start + 1; i < currentcount; i++) {
-						Division entity = new Division();
-						List<Division> divisionlist = new ArrayList<Division>();
-						if (starto.getParent() != null) {
-							entity.setParent(starto.getParent());
-							divisionlist = commonDAO.findAll(Division.class,
-									" and t.parent = :parent and t.seq = " + i,
-									entity);
-						} else {
-							divisionlist = commonDAO.findAll(Division.class,
-									" and t.parent is null and t.seq = " + i,
-									entity);
-						}
-						for (Division division : divisionlist) {
-							division.setSeq(i - 1);
-							divisionService.updatedivision(division);
-						}
-					}
-					Long count = commonDAO
-							.count("select count(*) from Division o where o.parent.id='"
-									+ targeto.getId()+"'") + 1;
-					starto.setParent(targeto);
-					starto.setSeq(count);
-					divisionService.updatedivision(starto);
-				}
-			}
-			out.write("ok");
-			out.flush();
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			out.write("error");
-			out.flush();
-			out.close();
-		}
-	}*/
+			
 
 	@RequestMapping("/delete")
 	@ResponseBody

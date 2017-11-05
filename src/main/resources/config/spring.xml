@@ -12,6 +12,7 @@
             classpath:config/properties/security.properties,
             classpath:config/properties/jdbc.properties,
             classpath:config/properties/redis.properties,
+            classpath:config/properties/app.properties,
             classpath*:config/properties/business_code.properties"
             ignore-unresolvable="true"/>
     <context:component-scan base-package="com.topie.ssocenter.freamwork.**.service"/>

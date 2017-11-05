@@ -67,6 +67,8 @@ ul.ztree {
 <script type="text/javascript"
 	src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
 <script type="text/javascript"
+	src="<%=basePath%>/assets/plugin/jquery.cookie/jquery.cookie.js"></script>
+<script type="text/javascript"
 	src="<%=basePath%>/assets/js/commonAction.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>/assets/plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
@@ -101,7 +103,7 @@ ul.ztree {
 				<div class="container">
 					<div class="box_border">
 						<div class="box_top">
-							<b class="pl15">编辑</b>
+							<b class="pl15" id='viewTitle'>查看</b>
 						</div>
 						<div class="box_center">
 							<form id="form1" action="save" method="post" class="jqtransform">
@@ -202,27 +204,25 @@ ul.ztree {
 	<%@include file="../include/formValidate.jsp"%>
 	<script type="text/javascript">
 	var zNodes =${divisionStr};
-	var COOKIE_LASRNODEID = "LAST_DIVISION_ID_7";
+	var COOKIE_LASRNODEID = "LAST_DIVISION_ID_7_";
 	var zTree;
+	var autoEx = true;
 	jQuery(document).ready(function() {
 		$.fn.zTree.init($("#divisionTree"), settingMenu, zNodes);
 		zTree = $.fn.zTree.getZTreeObj("divisionTree");
-		 zTree.setting.edit.drag.isCopy = false;
-		zTree.setting.edit.drag.isMove = true;
-		zTree.setting.edit.drag.prev = true;
-		zTree.setting.edit.drag.inner = true;
-		zTree.setting.edit.drag.next = true;
-		
-		var currentTableId = '1';
-		var node = zTree.getNodeByParam('id', currentTableId);//获取id为1的点  
-		//tableTree.selectNode(node);//选择点  
-		if(node){
-			 if(!node.isParent){
-				node = node.getParentNode();
+		setTimeout("autoEx=false;",3000);
+		for(var i =0;i<2;i++){
+			var currentTableId = $.cookie(COOKIE_LASRNODEID+i);
+			var node = zTree.getNodeByParam('id', currentTableId);//获取id为1的点  
+			if(node){
+				 if(!node.isParent){
+					tableTree.selectNode(node);//选择点  
+				}else{
+					zTree.expandNode(node, true, false);//指定选中ID节点展开  
+				}
 			}
+			//console.log(node);
 		}
-		//console.log(node);
-		zTree.expandNode(node, true, false);//指定选中ID节点展开  
 		// 提交时验证表单
 		var validator = $("#form1").validate({
 			rules: {
@@ -259,9 +259,16 @@ ul.ztree {
 			selectedMulti: false
 		},
 	edit: {
-			enable: false,
+			enable: true,
 			showRemoveBtn: false,
-			showRenameBtn: false
+			showRenameBtn: false,
+			drag:{
+				isCopy : false,
+				isMove : true,
+				prev : true,
+				inner : true,
+				next : true
+				}
 	},
 	check : {
 		enable : false
@@ -274,88 +281,49 @@ ul.ztree {
 	async : {
 		<%-- enable : true,
 		dataType : "text",
-		url : "<%=basePath%>division/load",
+		url : "load",
 		autoParam : [ "id", "name", "pId" ] --%>
 		enable: true,
 		url:"loadSonDivision",
 		autoParam:["id=divisionid"]
 	},
 	callback : {
-		onRightClick : OnRightClick,
 		beforeDrag: beforeDrag,
 		beforeDrop: beforeDrop,
 		onDrop: onDrop,
+		onExpand: zTreeOnExpand,
+		onAsyncSuccess: zTreeOnAsyncSuccess,
 		onClick : function(event, treeId, treeNode) {
 			currentTableId = treeNode.id;
-			if(treeNode.pId==1)
-				$.cookie(COOKIE_LASRNODEID,currentTableId,{expires:7});
+			//if(treeNode.pId==1)
+				$.cookie(COOKIE_LASRNODEID+treeNode.level,currentTableId,{expires:7});
+				editDivsion(currentTableId);
 			//alert(currentTableId);
 		}
 	}
 };
-
+	function zTreeOnExpand(event, treeId, treeNode) {
+		currentTableId = treeNode.id;
+		$.cookie(COOKIE_LASRNODEID+treeNode.level,currentTableId,{expires:7});
+	};
+//加载完成后打开上次操作的节点
+	function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+		if(!autoEx){return;}
+		var currentTableId = $.cookie(COOKIE_LASRNODEID+(treeNode.level+1));
+		var node = zTree.getNodeByParam('id', currentTableId);//获取id为1的点  
+		if(node){
+			 if(!node.isParent){
+				zTree.selectNode(node);//选择点  
+			}else{
+				zTree.expandNode(node, true, false);//指定选中ID节点展开  
+			}
+		}
+	};
 function changeGrag(){
 	var fl = document.getElementById("isdrag").checked;
 	zTree.setting.edit.enable=fl;
 }
 
-function addHoverDom(treeId, treeNode) {
-		var sObj = $("#" + treeNode.tId + "_span");
-		if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-		var addStr ="<span class='button2 add' id='addBtn_" + treeNode.tId
-			+ "' title='增加子级区划' onfocus='this.blur();'></span>"+
-			"<span class='button2 edit' id='editBtn_" + treeNode.tId
-			+ "' title='编辑区划' onfocus='this.blur();'></span>"+
-			"<span class='button2 view' id='viewBtn_" + treeNode.tId
-			+ "' title='查看区划' onfocus='this.blur();'></span>"+
-			"<span class='button2 delete' id='removeBtn_" + treeNode.tId
-			+ "' title='删除区划' onfocus='this.blur();'></span>";
-		sObj.after(addStr);
-		var btn = $("#addBtn_"+treeNode.tId);
-		if (btn) btn.bind("click", function(){
-			zTree.selectNode(treeNode);
-			addMenu();
-			return false;
-		});
-		var btn2 = $("#editBtn_"+treeNode.tId);
-		if (btn2) btn2.bind("click", function(){
-			zTree.selectNode(treeNode);
-			editMenu();
-			return false;
-		});
-		var btn3 = $("#removeBtn_"+treeNode.tId);
-		if (btn3) btn3.bind("click", function(){
-			zTree.selectNode(treeNode);
-			deleteMenu();
-			return false;
-		});
-		var btn4 = $("#viewBtn_"+treeNode.tId);
-		if (btn4) btn4.bind("click", function(){
-			zTree.selectNode(treeNode);
-			viewMenu();
-			return false;
-		});
-		var btn5 = $("#upBtn_"+treeNode.tId);
-		if (btn5) btn5.bind("click", function(){
-			zTree.selectNode(treeNode);
-			moveUp();
-			return false;
-		});
-		var btn6 = $("#downBtn_"+treeNode.tId);
-		if (btn6) btn6.bind("click", function(){
-			zTree.selectNode(treeNode);
-			moveDown();
-			return false;
-		});
-}
-function removeHoverDom(treeId, treeNode) {
-		$("#addBtn_"+treeNode.tId).unbind().remove();
-		$("#editBtn_"+treeNode.tId).unbind().remove();
-		$("#removeBtn_"+treeNode.tId).unbind().remove();
-		$("#viewBtn_"+treeNode.tId).unbind().remove();
-		$("#upBtn_"+treeNode.tId).unbind().remove();
-		$("#downBtn_"+treeNode.tId).unbind().remove();
-}
 
 function beforeDrag(treeId, treeNodes) {
 		for (var i=0,l=treeNodes.length; i<l; i++) {
@@ -364,7 +332,7 @@ function beforeDrag(treeId, treeNodes) {
 			}
 		}
 		return true;
-}
+} 
 var moveMode;
 function beforeDrop(treeId, treeNodes, targetNode, moveType) {
 	if(treeNodes[0].getParentNode()!=null&&targetNode.getParentNode()!=null){
@@ -381,22 +349,75 @@ function beforeDrop(treeId, treeNodes, targetNode, moveType) {
 	return targetNode ? targetNode.drop !== false : true;
 		
 }
+
+function addHoverDom(treeId, treeNode) {
+	var sObj = $("#" + treeNode.tId + "_span");
+	if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+	var addStr ="<span class='button2 add' id='addBtn_" + treeNode.tId
+		+ "' title='增加子级区划' onfocus='this.blur();'></span>"+
+		"<span class='button2 edit' id='editBtn_" + treeNode.tId
+		+ "' title='编辑区划' onfocus='this.blur();'></span>"+
+
+		"<span class='button2 delete' id='removeBtn_" + treeNode.tId
+		+ "' title='删除区划' onfocus='this.blur();'></span>"+
+		"<span class='button2 up' id='upBtn_" + treeNode.tId
+		+ "' title='上移' onfocus='this.blur();'></span>"+
+		"<span class='button2 down' id='downBtn_" + treeNode.tId
+		+ "' title='下移' onfocus='this.blur();'></span>";
+	sObj.after(addStr);
+	var btn = $("#addBtn_"+treeNode.tId);
+	if (btn) btn.bind("click", function(){
+		zTree.selectNode(treeNode);
+		addMenu();
+		return false;
+	});
+	var btn2 = $("#editBtn_"+treeNode.tId);
+	if (btn2) btn2.bind("click", function(){
+		zTree.selectNode(treeNode);
+		editMenu();
+		return false;
+	});
+	var btn3 = $("#removeBtn_"+treeNode.tId);
+	if (btn3) btn3.bind("click", function(){
+		zTree.selectNode(treeNode);
+		deleteMenu();
+		return false;
+	});
+	var btn4 = $("#viewBtn_"+treeNode.tId);
+	if (btn4) btn4.bind("click", function(){
+		zTree.selectNode(treeNode);
+		viewMenu();
+		return false;
+	});
+	var btn5 = $("#upBtn_"+treeNode.tId);
+	if (btn5) btn5.bind("click", function(){
+		zTree.selectNode(treeNode);
+		moveUp();
+		return false;
+	});
+	var btn6 = $("#downBtn_"+treeNode.tId);
+	if (btn6) btn6.bind("click", function(){
+		zTree.selectNode(treeNode);
+		moveDown();
+		return false;
+	});
+}
+function removeHoverDom(treeId, treeNode) {
+	$("#addBtn_"+treeNode.tId).unbind().remove();
+	$("#editBtn_"+treeNode.tId).unbind().remove();
+	$("#removeBtn_"+treeNode.tId).unbind().remove();
+	$("#viewBtn_"+treeNode.tId).unbind().remove();
+	$("#upBtn_"+treeNode.tId).unbind().remove();
+	$("#downBtn_"+treeNode.tId).unbind().remove();
+}
 function moveUp() {
 	var Node = zTree.getSelectedNodes()[0];
 	if (Node) {
 		if(Node.isFirstNode){
 			return;
 		}else {
-			$.ajax({
-			type : "POST",
-			data : "currentid=" + Node.id+"&targetid="+Node.getPreNode().id+"&moveType=prev&moveMode=same",
-			url : '<%=basePath%>division/setseq',
-			success : function(data) {
-				if (data == "ok") {
-					refreshorgtree();
-				}
-			}
-		});
+			var url = "setseq?currentid=" + Node.id+"&targetid="+Node.getPreNode().id+"&moveType=prev&moveMode=same";
+			postAction(url);
 		}
 	} 
 }
@@ -408,36 +429,20 @@ function moveDown() {
 		if(Node.isLastNode){
 			return;
 		}else {
-			$.ajax({
-			type : "POST",
-			data : "currentid=" + Node.id+"&targetid="+Node.getNextNode().id+"&moveType=next&moveMode=same",
-			url : '<%=basePath%>division/setseq',
-			success : function(data) {
-				if (data == "ok") {
-					refreshorgtree();
-				}
-			}
-		});
+			var url = "setseq?currentid=" + Node.id+"&targetid="+Node.getNextNode().id+"&moveType=next&moveMode=same";
+			postAction(url);
 		}
 	} 
 }
 
 function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
 	if(targetNode!=null){
-	$.ajax({
-			type : "POST",
-			data : "currentid=" + treeNodes[0].id+"&targetid="+targetNode.id+"&moveType="+moveType+"&moveMode="+moveMode,
-			url : '<%=basePath%>division/setseq',
-			success : function(data) {
-				if (data == "ok") {
-					refreshorgtree();
-				}
-			}
-	});
+		var url = "setseq?currentid=" + treeNodes[0].id+"&targetid="+targetNode.id+"&moveType="+moveType+"&moveMode="+moveMode;
+		postAction(url);	
 	}
 }
 
-function OnRightClick(event, treeId, treeNode) {
+/* function OnRightClick(event, treeId, treeNode) {
 	var x=event.pageX||(event.clientX+(document.documentElement.scrollLeft||document.body.scrollLeft));
 	var y=event.pageY||(event.clientY+(document.documentElement.scrollTop||document.body.scrollTop));
 	if (!treeNode && event.target.tagName.toLowerCase() != "button"
@@ -449,43 +454,10 @@ function OnRightClick(event, treeId, treeNode) {
 		showRMenu("node", x, y);
 	}
 }
-function showRMenu(type, x, y) {
-	$("#rMenu ul").show();
-	if (type == "root") {
-		$("#m_del").hide();
-		$("#m_edit").hide();
-		$("#m_add").hide();
-		$("#m_addroot").show();
-	} else {
-		$("#m_del").show();
-		$("#m_edit").show();
-		$("#m_add").show();
-		$("#m_addroot").hide();
-	}
-// 	rMenu.css({
-// 		"top" : y + "px",
-// 		"left" : x + "px",
-// 		"visibility" : "visible"
-// 	});
-	$("body").bind("mousedown", onBodyMouseDown);
-}
-function hideRMenu() {
-	/* if (rMenu)
-		rMenu.css({
-			"visibility" : "hidden"
-		});
-	$("body").unbind("mousedown", onBodyMouseDown); */
-}
-function onBodyMouseDown(event) {
-	if (!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length > 0)) {
-		rMenu.css({
-			"visibility" : "hidden"
-		});
-	}
-}
+ */
+
 
 function addMenu() {
-	hideRMenu();
 	if (zTree.getSelectedNodes()[0]) {
 		var orgid = zTree.getSelectedNodes()[0].id;
 		newDivsion(orgid);
@@ -494,26 +466,15 @@ function addMenu() {
 	}
 }
 function addTopMenu() {
-	hideRMenu();
 	newDivsion('');
 }
 function editMenu() {
-	hideRMenu();
 	if (zTree.getSelectedNodes()[0]) {
 		var orgid = zTree.getSelectedNodes()[0].id;
 		editDivsion(orgid);
 	}
 }
  
-function refreshorgtree() {
-	$("#alert").show();
-	var zTree2 = $.fn.zTree.getZTreeObj("treeOrg");
-	zTree2.reAsyncChildNodes(null, "refresh");
-	setTimeout("alertHide()",2000);
-}
-function alertHide(){
-	$("#alert").fadeOut();
-}
 function expandAll(flag){
 	zTree.expandAll(flag);
 }
@@ -521,30 +482,26 @@ function deleteMenu() {
 	if (zTree.getSelectedNodes()[0]) {
 
 		var orgid = zTree.getSelectedNodes()[0].id;
-		deleteAction("delete?divisionId="+orgid);
+		deleteAction("delete?divisionid="+orgid);
 	}
 }
 
 var form1 = $("#form1");
 function newDivsion(pid){
+	setTitle('新增');
 	form1[0].reset();
 	form1.find("input[name='parentId']").val(pid);	
 	form1.find("input[name='id']").val('');	
 }
 function editDivsion(id){
+	setTitle('编辑');
 	form1[0].reset();
-	//form.setForm({fullname:'北京市朝阳区',name:'朝阳区',level:'5'});
-	$.ajax({
-		url:"loadOne?divisionId="+id,
-		type:'get',
-		success:function(res){
-			if(res.code="200"){
-				form1.setForm(res.data);
-			}
-		}
-	})
+	var url = "loadOne?divisionId="+id;
+	getAction(url,function(res){form1.setForm(res.data);});
 }
-
+function setTitle(title){
+	$('#viewTitle').html(title);
+}
 
 	</script>
 </body>
