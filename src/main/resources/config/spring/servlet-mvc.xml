@@ -10,7 +10,8 @@
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<context:property-placeholder
-		location="classpath:config/properties/security.properties" />
+		location="classpath:config/properties/security.properties,
+		classpath:config/properties/app.properties" />
 
 	<!-- 开启注解 -->
 	<mvc:annotation-driven>

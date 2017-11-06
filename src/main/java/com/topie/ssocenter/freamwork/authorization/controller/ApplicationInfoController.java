@@ -18,6 +18,7 @@ import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.common.utils.UUIDUtil;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
+import com.topie.ssocenter.freamwork.authorization.utils.R;
 
 @Controller
 @RequestMapping({ "/syn" })
@@ -46,8 +47,8 @@ public class ApplicationInfoController {
 					thispage = Integer.valueOf(0);
 				}
 				PageInfo<ApplicationInfo> page = appService.findApplicationInfoList(thispage, pagesize, app);
-				model.addObject("page", page);
-				model.addObject("app", app);
+				model.addObject(R.PAGE, page);
+				model.addObject(R.SEARCHMODEL, app);
 				model.setViewName("/app/appList");
 				return model;
 		}
@@ -66,7 +67,7 @@ public class ApplicationInfoController {
 					thispage = Integer.valueOf(0);
 				}
 				PageInfo<ApplicationInfo> page = appService.findApplicationInfoList(thispage, pagesize, app);
-				model.addObject("page", page);
+				model.addObject(R.PAGE, page);
 				model.setViewName("/app/userAppList");
 		}
 

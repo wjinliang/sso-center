@@ -53,32 +53,22 @@
 					<div id="search_bar" class="mt10">
 			<div class="box">
 				<div class="box_border">
-					<form action="./listApp" method="get" id="serchForm">
+					<form action="./listOrgs" method="get" id="serchForm">
 					<div class="box_center pt10 pb10">
 						<table class="form_table" border="0" cellpadding="0"
 							cellspacing="0">
-							<input type="hidden" name="divisionid" id="divisionid" value="${seachModel.divisionid}">
+							<input type="hidden" name="divisionid" id="divisionid" value="${searchModel.divisionId}">
+							<input type="hidden" name="id" id="id" value="${searchModel.id}">
 							<input type="hidden" id="pageNum" name="thispage" value="">
 							<input type="hidden" name="pagesize" value="${page.pageSize}">
 							<tr>
 								<td>机构名称</td>
-								<td><input type="text" name="appName" value="${seachModel.appName }" class="input-text lh25"
+								<td><input type="text" name="name" value="${searchModel.name }" class="input-text lh25"
 									size="20"></td>
-								<td>机构代码</td>
-								<td><input type="text" name="appCode" value="${seachModel.appCode }" class="input-text lh25"
-									size="10"></td>
-								<td>系统状态</td>
-								<td><span class="fl">
-										<div class="select_border">
-											<div class="select_containers ">
-												<select name="status" class="select">
-													<option value="">请选择</option>
-													<option <c:if test="${'1' eq seachModel.status}">selected</c:if> value="1">启用</option>
-													<option <c:if test="${'0' eq seachModel.status}">selected</c:if> value="0">禁用</option>
-												</select>
-											</div>
-										</div>
-								</span></td>
+								<td>机构代码</td><%-- 
+								<td><input type="text" name="appCode" value="${seachModel.code }" class="input-text lh25"
+									size="10"></td> --%>
+								
 								<td><input type="button" onclick="nextPage('0')" class="btn btn82 btn_search"
 				value="查询"><td>
 							</tr>
@@ -122,7 +112,7 @@
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${org.name}</td>
 							<td>${org.code}</td>
-							<td><a class="ext_btn" href="${root}/orgAndUser/listSon?orgid=${org.id}&tj=${param.tj}">查看
+							<td><a class="ext_btn" href="javascript:openPage('listOrgs?id=${org.id }&divisionId=${searchModel.divisionId }&systemId=${searchModel.systemId }');">查看
 							</a></td>
 							<td> <a class="ext_btn ext_btn_success" href="${root}/orgAndUser/listSon?orgid=${org.id}&tj=${param.tj}">  查看
 							</a></td>
@@ -152,8 +142,8 @@
 				});
 				jQuery.uniform.update(set);
 			});*/
-			$.fn.zTree.init($("#treeOrg"), settingMenu, zNodesMenu);
-			zTree = $.fn.zTree.getZTreeObj("treeOrg");
+			$.fn.zTree.init($("#divisionTree"), settingMenu, zNodesMenu);
+			zTree = $.fn.zTree.getZTreeObj("divisionTree");
 			selectNodes();
 		});
 		var settingMenu = {
@@ -162,7 +152,7 @@
 				},
 				async: {
 					enable: true,
-					url:"${root}/orgAndUser/loadSonDivision",
+					url:"../division/loadSonDivision",
 					autoParam:["id=divisionid"]
 				},
 			data : {
@@ -171,13 +161,17 @@
 					}
 				},
 			callback : {
-				onClick : goorgpage
+				onClick : function(event, treeId, treeNode) {
+					var id = treeNode.id;
+					openPage("listOrgs?divisionId="+id);
+				}
 			}
 			};
-			var zNodesMenu=${orgStr};
+			var zNodesMenu=${divisionStr};
 		function selectNodes(){
- 				var node = zTree.getNodeByParam("id", "${orgid}", null);
+ 				var node = zTree.getNodeByParam("id", "${searchModel.divisionId}", null);
  				zTree.selectNode(node);
+ 				//zTree.expandNode(node, true, false);//指定选中ID节点展开  
  			}
 	</script>
 </body>

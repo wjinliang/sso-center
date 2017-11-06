@@ -14,6 +14,7 @@ public class OrangeSideSecurityUser extends User {
     private String displayName;
     private String email;
     private String contactPhone;
+    private Long orgId;
     //private Date lastPasswordReset;
     public OrangeSideSecurityUser(com.topie.ssocenter.freamwork.authorization.model.UserAccount user,
                                   Collection<GrantedAuthority> userGrantedAuthorities) {
@@ -26,6 +27,7 @@ public class OrangeSideSecurityUser extends User {
             setDisplayName(user.getName());
             setEmail(user.getEmail());
             setContactPhone(user.getMobile());
+            setOrgId(user.getOrgId());
             //setLastPasswordReset(user.getLastPasswordReset());
         }
     }
@@ -46,7 +48,15 @@ public class OrangeSideSecurityUser extends User {
         this.loginName = loginName;
     }
 
-    public String getDisplayName() {
+    public Long getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Long orgId) {
+		this.orgId = orgId;
+	}
+
+	public String getDisplayName() {
         return displayName;
     }
 

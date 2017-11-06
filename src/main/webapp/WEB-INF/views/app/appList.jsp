@@ -35,10 +35,10 @@
 							<input type="hidden" name="pagesize" value="${page.pageSize}">
 							<tr>
 								<td>系统名称</td>
-								<td><input type="text" name="appName" value="${app.appName }" class="input-text lh25"
+								<td><input type="text" name="appName" value="${searchModel.appName }" class="input-text lh25"
 									size="20"></td>
 								<td>系统编号</td>
-								<td><input type="text" name="appCode" value="${app.appCode }" class="input-text lh25"
+								<td><input type="text" name="appCode" value="${searchModel.appCode }" class="input-text lh25"
 									size="10"></td>
 								<td>系统状态</td>
 								<td><span class="fl">
@@ -46,8 +46,8 @@
 											<div class="select_containers ">
 												<select name="status" class="select">
 													<option value="">请选择</option>
-													<option <c:if test="${'1' eq app.status}">selected</c:if> value="1">启用</option>
-													<option <c:if test="${'0' eq app.status}">selected</c:if> value="0">禁用</option>
+													<option <c:if test="${'1' eq searchModel.status}">selected</c:if> value="1">启用</option>
+													<option <c:if test="${'0' eq searchModel.status}">selected</c:if> value="0">禁用</option>
 												</select>
 											</div>
 										</div>

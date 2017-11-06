@@ -4,43 +4,43 @@
  * @param {obj} 需要给form赋值的json对象
  * @method serializeJson
  * */
-$.fn.setForm = function(jsonValue){
-  var obj = this;
-  $.each(jsonValue,function(name,ival){
-    var $oinput = obj.find("input[name="+name+"]");
-    if($oinput.attr("type")=="checkbox"){
-      if(ival !== null){
-        var checkboxObj = $("[name="+name+"]");
-        var checkArray = ival.split(",");
-        for(var i=0;i<checkboxObj.length;i++){
-          for(var j=0;j<checkArray.length;j++){
-            if(checkboxObj[i].value == checkArray[j]){
-              checkboxObj[i].click();
-            }
-          }
-        }
-      }
-    }
-    else if($oinput.attr("type")=="radio"){
-      $oinput.each(function(){
-        var radioObj = $("[name="+name+"]");
-        for(var i=0;i<radioObj.length;i++){
-          if(radioObj[i].value == ival){
-            radioObj[i].click();
-          }
-        }
-      });
-    }
-    else if($oinput.attr("type")=="textarea"){
-      obj.find("[name="+name+"]").html(ival);
-    }
-    else{
-      obj.find("[name="+name+"]").val(ival);
-    }
-  })
-}
+	$.fn.setForm = function(jsonValue){
+	  var obj = this;
+	  $.each(jsonValue,function(name,ival){
+	    var $oinput = obj.find("input[name="+name+"]");
+	    if($oinput.attr("type")=="checkbox"){
+	      if(ival !== null){
+	        var checkboxObj = $("[name="+name+"]");
+	        var checkArray = ival.split(",");
+	        for(var i=0;i<checkboxObj.length;i++){
+	          for(var j=0;j<checkArray.length;j++){
+	            if(checkboxObj[i].value == checkArray[j]){
+	              checkboxObj[i].click();
+	            }
+	          }
+	        }
+	      }
+	    }
+	    else if($oinput.attr("type")=="radio"){
+	      $oinput.each(function(){
+	        var radioObj = $("[name="+name+"]");
+	        for(var i=0;i<radioObj.length;i++){
+	          if(radioObj[i].value == ival){
+	            radioObj[i].click();
+	          }
+	        }
+	      });
+	    }
+	    else if($oinput.attr("type")=="textarea"){
+	      obj.find("[name="+name+"]").html(ival);
+	    }
+	    else{
+	      obj.find("[name="+name+"]").val(ival);
+	    }
+	  })
+	}
 
-function viewPage(url){
+	function viewPage(url){
 		if(url.indexOf('detail=1')==-1){
 			if(url.indexOf('?')==-1){
 				url+='?detail=1';
@@ -50,6 +50,7 @@ function viewPage(url){
 		}
 		window.location.href=url;
 	}
+	
 	function openPage(url){
 		window.location.href=url;
 	}
@@ -86,7 +87,7 @@ function viewPage(url){
 			  return;
 			});
 	};
-	function conformAction(url,isReload){
+	function confirmAction(url,isReload){
 		layer.confirm('确认操作吗？', {
 			  btn: ['确定','取消'] //按钮
 			}, function(){
