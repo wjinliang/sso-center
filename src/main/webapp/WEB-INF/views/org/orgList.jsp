@@ -58,14 +58,14 @@
 						<table class="form_table" border="0" cellpadding="0"
 							cellspacing="0">
 							<input type="hidden" name="divisionid" id="divisionid" value="${searchModel.divisionId}">
-							<input type="hidden" name="id" id="id" value="${searchModel.id}">
+							<input type="hidden" name="parentId" id="parentId" value="${searchModel.parentId}">
 							<input type="hidden" id="pageNum" name="thispage" value="">
 							<input type="hidden" name="pagesize" value="${page.pageSize}">
 							<tr>
 								<td>机构名称</td>
 								<td><input type="text" name="name" value="${searchModel.name }" class="input-text lh25"
 									size="20"></td>
-								<td>机构代码</td><%-- 
+								<%-- <td>机构代码</td>
 								<td><input type="text" name="appCode" value="${seachModel.code }" class="input-text lh25"
 									size="10"></td> --%>
 								
@@ -78,7 +78,7 @@
 				</div>
 				
 				<div id="button" class="mt10">
-			<input type="button" onclick="javascript:openPage('./form/new');" name="button" class="btn btn82 btn_add"
+			<input type="button" onclick="javascript:openPage('./form/new?divisionId=${searchModel.divisionId}');" name="button" class="btn btn82 btn_add"
 				value="新增">
 		<!-- <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
@@ -112,9 +112,9 @@
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${org.name}</td>
 							<td>${org.code}</td>
-							<td><a class="ext_btn" href="javascript:openPage('listOrgs?id=${org.id }&divisionId=${searchModel.divisionId }&systemId=${searchModel.systemId }');">查看
+							<td><a class="ext_btn" href="javascript:openPage('listOrgs?parentId=${org.id }&divisionId=${org.divisionId }&systemId=${org.systemId }');">查看
 							</a></td>
-							<td> <a class="ext_btn ext_btn_success" href="${root}/orgAndUser/listSon?orgid=${org.id}&tj=${param.tj}">  查看
+							<td> <a class="ext_btn" href="javascript:openPage('listUsers?orgId=${org.id }&divisionId=${org.divisionId }');">  查看
 							</a></td>
 							
 						</tr>

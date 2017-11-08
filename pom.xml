@@ -16,6 +16,7 @@
         <targetResourcesProject>${basedir}/src/main/resources</targetResourcesProject>
         <!--  编译jdk版本  -->
         <jdk.version>1.8</jdk.version>
+        
         <!-- spring版本号 -->
         <spring.version>4.1.2.RELEASE</spring.version>
         <!-- security版本号 -->
@@ -37,6 +38,8 @@
         <jedis.version>2.7.3</jedis.version>
         <flyway.version>4.0.1</flyway.version>
         <jjwt.version>0.6.0</jjwt.version>
+        <axis2.version>1.6.2</axis2.version>
+        <poi.version>3.9</poi.version>
     </properties>
     <dependencies>
         <dependency>
@@ -364,6 +367,57 @@
             <artifactId>persistence-api</artifactId>
             <version>${persistence.version}</version>
         </dependency>
+        
+        <!--axis2 begin-->
+<dependency> 
+    <groupId>org.apache.axis2</groupId>
+    <artifactId>axis2</artifactId>
+    <version>${axis2.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.axis2</groupId>
+    <artifactId>axis2-spring</artifactId>
+    <version>${axis2.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.axis2</groupId>
+    <artifactId>axis2-transport-http</artifactId>
+    <version>${axis2.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.axis2</groupId>
+    <artifactId>axis2-transport-local</artifactId>
+    <version>${axis2.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.axis2</groupId>
+    <artifactId>axis2-xmlbeans</artifactId>
+    <version>${axis2.version}</version>
+</dependency>
+<!--axis2 end-->
+
+<!-- poi start -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <!-- poi end -->
     </dependencies>
     <build>
         <finalName>sso-center</finalName>

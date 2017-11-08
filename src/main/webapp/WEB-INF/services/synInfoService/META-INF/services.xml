@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+
+<service name="synInfoService" targetNamespace="http://impl.service.app.com">  
+    <description>数据获取服务接口</description>
+    <!-- 
+     	在使用Java类生成WSDL文件时，WSDL文件中schema定义中的elementFormDefault默认是设置为qualified。
+     	如果qualified为true，则响应消息中的所有元素都是受限的。但是有些时候我们并不需要这种行为，
+     	我们希望把elementFormDefault设置为unqualified。
+     	这时我们只需要在services.xml文件中添加下述条目即可。
+     -->
+   <!--  <schema elementFormDefaultQualified="false"/> -->
+     
+    <!--  <excludeOperations>
+		<operation>hello</operation>
+	</excludeOperations> -->
+    <!-- 通过ServiceObjectSupplier参数指定SpringServletContextObjectSupplier类来获得Spring的ApplicationContext对象 -->
+    <parameter name="ServiceObjectSupplier">
+        org.apache.axis2.extensions.spring.receivers.SpringAppContextAwareObjectSupplier
+    </parameter>
+    <!-- 
+       SpringBeanName固定的不能改
+       helloWorld是spring中注册的实现类得id
+     -->
+    <parameter name="SpringBeanName">synInfoServiceImpl</parameter>
+    <!-- 
+    在这里最值得注意的是<messageReceivers>元素，该元素用于设置处理WebService方法的处理器。
+    例如，getGreeting方法有一个返回值，因此，需要使用可处理输入输出的RPCMessageReceiver类，
+    而update方法没有返回值，因此，需要使用只能处理输入的RPCInOnlyMessageReceiver类。
+     -->
+    <messageReceivers>
+        <messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out"
+            class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+        <messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-only"
+            class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver" />
+    </messageReceivers>
+</service>
+  

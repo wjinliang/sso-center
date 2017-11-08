@@ -24,4 +24,11 @@
     <result column="fax_no" property="faxNo" jdbcType="VARCHAR" />
     <result column="phone_no" property="phoneNo" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="selectMaxCode" resultType="String">
+  	select MAX(`CODE`) as maxcode FROM t_org where `CODE` LIKE CONCAT(#{divisionCode},'%')
+  </select>
+  <select id="selectMaxSeq" resultType="Long">
+  	select MAX(SEQ) as maxseq FROM t_org where `CODE` LIKE CONCAT(#{divisionCode},'%')
+  </select>
 </mapper>

@@ -11,8 +11,10 @@
     <http pattern="/error/**" security="none"/>
     <http pattern="/assets/**" security="none"/>
     <http pattern="/favicon.ico" security="none"/>
+    <http pattern="/axis2-web/css/**" security="none"/>
 
     <http use-expressions="true" entry-point-ref="osAuthenticationEntryPoint">
+	    <intercept-url pattern="/services/**" access="permitAll"/>
         <intercept-url pattern="/security/**" access="permitAll"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <!-- session管理-->

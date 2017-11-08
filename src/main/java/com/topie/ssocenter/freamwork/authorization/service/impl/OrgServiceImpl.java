@@ -1,7 +1,6 @@
 package com.topie.ssocenter.freamwork.authorization.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,12 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
-import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.topie.ssocenter.freamwork.authorization.dao.OrgMapper;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
+import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
@@ -29,6 +29,8 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 	private DivisionService divisionService;
 	@Autowired
 	private UserAccountService userService;
+	@Autowired
+	private OrgMapper orgMapper;
 
 	@Override
 	public PageInfo<Org> selectCurrentDivisionOrgPage(Integer pageNum, Integer pageSize,
@@ -53,14 +55,20 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 			c.andIn("divisionId", divisionIds);
 			
 		}else{//查询当前区划下的机构
-			if(org.getId()!=null){
-				c.andEqualTo("parentId", org.getId());
+			if(org.getParentId()!=null){//查看子机构   子区划下的机构
+				//c.andEqualTo("parentId", org.getId());
+				List<Division> list = this.divisionService.findByPid(org.getDivisionId());
+				List<String> ids = new ArrayList<String>();
+				for(Division d: list){
+					ids.add(d.getId());
+				}
+				c.andIn("divisionId",ids );
 			}else{
 				c.andEqualTo("divisionId", org.getDivisionId());
 			}
 		}
 		if(org.getSystemId()!=null){
-			c.andEqualTo("systeId", org.getSystemId());
+			c.andEqualTo("systemId", org.getSystemId());
 		}
 		ex.setOrderByClause("seq asc");
 		PageHelper.startPage(pageNum, pageSize);
@@ -97,6 +105,48 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 			p = this.divisionService.selectByKey(p).getParentId();
 		}
 		return list;
+	}
+	@Override
+	public String selectMaxCode(String divisionCode) {
+		String code = orgMapper.selectMaxCode(divisionCode);
+		return code;
+	}
+	@Override
+	public Long selectMaxSeq(String divisionCode) {
+		return orgMapper.selectMaxSeq(divisionCode);
+	}
+	@Override
+	public PageInfo<UserAccount> selectCurrentOrgUserPage(Integer pageNum,
+			Integer pageSize, Org org, UserAccount user) {
+		PageHelper.startPage(pageNum, pageSize);
+		Example ex = new Example(UserAccount.class);
+		Criteria ca = ex.createCriteria();
+		ca.andEqualTo("orgId", user.getOrgId());
+		if(user.getLoginname()!=null){
+			ca.andEqualTo("loginname", user.getLoginname());
+		}
+		if(user.getName()!=null){
+			ca.andEqualTo("name", user.getName());
+		}		
+		List<UserAccount> list = this.userService.selectByExample(ex);
+		return new PageInfo<UserAccount>(list);
+	}
+	@Override
+	public PageInfo<UserAccount> listMergeUsers(UserAccount user, Integer pageNum,
+			Integer pageSize) {
+		PageHelper.startPage(pageNum, pageSize);
+		Example example = new Example(UserAccount.class);
+		Criteria c = example.createCriteria();
+		c.andEqualTo("mergeUuid", user.getMergeUuid())
+			.andNotEqualTo("code", user.getCode());
+		if(user.getName()!=null){
+			c.andEqualTo("name", user.getName());
+		}
+		if(user.getLoginname()!=null){
+			c.andEqualTo("loginname", user.getLoginname());
+		}
+		List<UserAccount> list = this.userService.selectByExample(example);
+		return new PageInfo<UserAccount>(list);
 	}
 
 }

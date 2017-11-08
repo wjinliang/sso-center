@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
+import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
 public interface OrgService extends IService<Org>{
@@ -22,6 +23,37 @@ public interface OrgService extends IService<Org>{
 	 * @return
 	 */
 	PageInfo<Org> selectCurrentDivisionOrgPage(Integer thispage, Integer pagesize, Org org);
+	/**
+	 * 通过区划CODE 获取orgCODE
+	 * @param divisionCode  区划的前6位
+	 * @return
+	 */
+	String selectMaxCode(String divisionCode);
+	/**
+	 * 通过区划CODE 获取seq
+	 * @param divisionCode  区划的前6位
+	 * @return
+	 */
+	Long selectMaxSeq(String divisionCode);
+	/**
+	 * 获取当前区划 用户
+	 * @param thispage
+	 * @param pagesize
+	 * @param org   orgid  
+	 * @param user  userName
+	 * @return
+	 */
+	PageInfo<UserAccount> selectCurrentOrgUserPage(Integer thispage,
+			Integer pagesize, Org org, UserAccount user);
+	/**
+	 * 获取该用户关联的用户
+	 * @param user
+	 * @param thispage
+	 * @param pagesize
+	 * @return
+	 */
+	PageInfo<UserAccount> listMergeUsers(UserAccount user, Integer thispage,
+			Integer pagesize);
 	
 	
 
