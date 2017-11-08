@@ -230,6 +230,7 @@ public class OrgAndUserController {
 			@RequestParam(value = "tj", required = false) String name,
 			@RequestParam(value = "xt", required = false) String systemId,
 			@RequestParam(value = "userid", required = true) String userid) {
+		//TODO 用户关联列表
 			/*List<UserAccount> userList = this.orgAndUserService.listUsers(null,
 					systemId, name, thispage, pagesize);
 			List<Order> orders = new ArrayList<Order>();
@@ -247,6 +248,7 @@ public class OrgAndUserController {
 	public ModelAndView mergeUser(ModelAndView model,
 			@RequestParam(value = "userid", required = true) String userid,
 			@RequestParam(value = "userIds", required = true) String userIds) {
+		//TODO 用户关联
 			/*UserAccount currentUser = UserAccountUtil.getInstance()
 					.getCurrentUserAccount();
 			UserAccount user = this.commonDAO
@@ -277,6 +279,8 @@ public class OrgAndUserController {
 			HttpServletResponse response,
 			@RequestParam(value = "userid", required = false) String userid)
 			throws Exception {
+		
+		//TODO 用户关联删除
 		/*response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		try {
