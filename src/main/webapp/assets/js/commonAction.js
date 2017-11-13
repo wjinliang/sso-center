@@ -87,6 +87,50 @@
 			  return;
 			});
 	};
+	function deleteItemAction(url,isReload){
+		var ids = [];
+	    var checkboxs = this.$(".list_table").find("input[type='checkbox']:checked").each(
+	        function () {
+	            ids.push($(this).val());
+	        });
+	    if(ids.length<1){
+	    	layer.msg('请选择要删除的项', {icon: 1});
+	    	return;
+	    }
+		layer.confirm('确定删除吗？', {
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				$.ajax({
+					url:url,
+					data:"ids="+ids,
+					beforeSend:function(){
+					  layer.msg('请稍后', {icon: 1});
+					},
+					success:function(data){
+						if(data.code==200){
+							layer.msg('操作成功', {icon: 1});	
+							if(isReload||isReload===undefined){
+								window.location.reload();
+							}
+						}
+						else if(data.code==301){
+							window.location.href=root+data.data;
+						}
+						else{
+							layer.msg('删除失败', {icon: 1});
+							//window.location.reload();
+						}
+					},
+					error:function(){
+						layer.msg('操作失败', {icon: 1});
+						//window.location.reload();
+					}
+				});
+			}, function(){
+			  return;
+			});
+	};
+	
 	function confirmAction(url,isReload){
 		layer.confirm('确认操作吗？', {
 			  btn: ['确定','取消'] //按钮

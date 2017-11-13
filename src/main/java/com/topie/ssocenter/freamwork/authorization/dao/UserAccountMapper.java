@@ -16,4 +16,6 @@ public interface UserAccountMapper extends Mapper<UserAccount> {
     List<UserAccount> findUserList(UserAccount user);
 
     int findExistUser(UserAccount user);
+
+	String selectMaxUserLoginNameByOrgCode(String code);
 }

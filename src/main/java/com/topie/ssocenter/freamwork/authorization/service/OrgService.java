@@ -54,6 +54,12 @@ public interface OrgService extends IService<Org>{
 	 */
 	PageInfo<UserAccount> listMergeUsers(UserAccount user, Integer thispage,
 			Integer pagesize);
+	/**
+	 * 根据机构编码 获取下一个用户名编码
+	 * @param code
+	 * @return
+	 */
+	String selectNextUserLoginNameByOrgCode(String code);
 	
 	
 

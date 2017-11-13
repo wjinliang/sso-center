@@ -11,6 +11,7 @@ import tk.mybatis.mapper.entity.Example.Criteria;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.freamwork.authorization.dao.OrgMapper;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
@@ -42,13 +43,13 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
 			Org o = this.getMapper().selectByPrimaryKey(orgId);
 			if(o==null){//如果当前用户的机构不存在   返回空
-				return new PageInfo<Org>();
+				return ResponseUtil.emptyPage();
 			}
 			org.setDivisionId(o.getDivisionId());//设置
 		}
 		
 		if(org.getName()!=null){//要查询当前用户所能看到的所有机构匹配的
-			c.andLike("name", org.getName());
+			c.andLike("name", "%"+org.getName()+"%");
 			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
 			Org o = this.getMapper().selectByPrimaryKey(orgId);
 			List<String> divisionIds = getAllSonLevelDivisionId(o.getDivisionId());
@@ -58,6 +59,9 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 			if(org.getParentId()!=null){//查看子机构   子区划下的机构
 				//c.andEqualTo("parentId", org.getId());
 				List<Division> list = this.divisionService.findByPid(org.getDivisionId());
+				if(list.size()==0){
+					return ResponseUtil.emptyPage();
+				}
 				List<String> ids = new ArrayList<String>();
 				for(Division d: list){
 					ids.add(d.getId());
@@ -118,6 +122,10 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 	@Override
 	public PageInfo<UserAccount> selectCurrentOrgUserPage(Integer pageNum,
 			Integer pageSize, Org org, UserAccount user) {
+		if(user.getOrgId()==null){
+			
+			return ResponseUtil.emptyPage();
+		}
 		PageHelper.startPage(pageNum, pageSize);
 		Example ex = new Example(UserAccount.class);
 		Criteria ca = ex.createCriteria();
@@ -126,7 +134,7 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 			ca.andEqualTo("loginname", user.getLoginname());
 		}
 		if(user.getName()!=null){
-			ca.andEqualTo("name", user.getName());
+			ca.andLike("name", "%"+user.getName() +"%");
 		}		
 		List<UserAccount> list = this.userService.selectByExample(ex);
 		return new PageInfo<UserAccount>(list);
@@ -147,6 +155,15 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 		}
 		List<UserAccount> list = this.userService.selectByExample(example);
 		return new PageInfo<UserAccount>(list);
+	}
+	@Override
+	public String selectNextUserLoginNameByOrgCode(String code) {
+		String maxname = this.userService.selectMaxUserLoginNameByOrgCode(code);
+		if(maxname==null){
+			return code+"001";
+		}
+		maxname = String.valueOf((Long.valueOf(maxname)+1));
+		return maxname;
 	}
 
 }

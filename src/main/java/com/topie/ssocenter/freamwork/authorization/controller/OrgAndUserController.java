@@ -2,7 +2,6 @@ package com.topie.ssocenter.freamwork.authorization.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,22 +15,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.Criteria;
 
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.StringUtil;
+import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.common.utils.ExcelExportUtils;
+import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.common.utils.UUIDUtil;
-import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
+import com.topie.ssocenter.freamwork.authorization.exception.AuthBusinessException;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
@@ -39,6 +41,8 @@ import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.utils.R;
+import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
+import com.topie.ssocenter.freamwork.authorization.utils.SimpleCrypto;
 
 
 @Controller
@@ -82,6 +86,7 @@ public class OrgAndUserController {
 			@PathVariable String mode,
 			Org org) {
 			Division division = this.divisionService.selectByKey(org.getDivisionId());
+			model.addObject("mode", mode);
 			if(division==null){
 				model.addObject("msg", "请选择区划");
 				model.setViewName("error/500");
@@ -98,7 +103,7 @@ public class OrgAndUserController {
 			org.setSeq(seq);
 			org.setCode(getOrgCode(division));
 			model.addObject("org", org);
-			model.setViewName("/pages/admin/orgUser/form");
+			model.setViewName("/org/edit");
 			return model;
 	}
 
@@ -138,6 +143,10 @@ public class OrgAndUserController {
 			org.setId(System.currentTimeMillis());
 			//验证code
 			String code = org.getCode();
+			String name = SecurityUtils.getCurrentUserName();
+			String createTime = DmDateUtil.Current();
+			org.setCreateDate(createTime);
+			org.setCreateUser(name);
 			Example ex = new Example(Org.class);
 			ex.createCriteria().andEqualTo("code",code);
 			List<Org> list = this.orgService.selectByExample(ex);
@@ -146,7 +155,7 @@ public class OrgAndUserController {
 				org.setCode(getOrgCode(division));
 			}//验证code end
 			orgService.save(org);
-			
+			//TODO 同步新增 ？
 			model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId()
 					+"&id="+org.getId()+"&parentId="+org.getParentId());
 			return model;
@@ -158,8 +167,18 @@ public class OrgAndUserController {
 				+"&parentId="+org.getId());
 		return model;
 	}
-
-
+	@RequestMapping("/delete")
+	@ResponseBody
+	public Object deleteOrg(String ids){
+		if(StringUtils.isEmpty(ids)){
+			return ResponseUtil.error("请选择要删除的项");
+		}
+		String[] idArr = ids.split(",");
+		for(int i =0 ;i<idArr.length;i++){
+			this.orgService.delete(Long.valueOf(idArr[i]));
+		}
+		return ResponseUtil.success();
+	}
 	@RequestMapping({ "/listUsers" })
 	public ModelAndView listUsers(
 			ModelAndView model,
@@ -167,27 +186,103 @@ public class OrgAndUserController {
 			Org org,
 			@RequestParam(value = "thispage", required = false) Integer thispage,
 			@RequestParam(value = "pagesize", required = false) Integer pagesize) {
+		if (pagesize == null) {
+			pagesize = Integer.valueOf(10);
+		}
+		if (thispage == null) {
+			thispage = Integer.valueOf(0);
+		}
 		model.addObject(R.SEARCHMODEL,user);
-		model.addObject(R.SEARCHMODEL+"Org",org);
 		//获取当前用户的区划
-		setCurrentDivisionList(org,model);
+		org = setCurrentDivisionList(org,model);
+		model.addObject(R.SEARCHMODEL+"Org",org);
 		//获取当前机构用户列表
 		PageInfo<UserAccount> page = this.orgService.selectCurrentOrgUserPage(thispage,pagesize,org,user);
 		model.addObject(R.PAGE, page);
-		model.setViewName("/org/userList");
+		model.setViewName("/user/userList");
 		return model;
 	}
 
+	@RequestMapping({ "/user/{mode}" })
+	public ModelAndView listUsers(
+			ModelAndView model,
+			@PathVariable String mode,
+			UserAccount user,
+			Org org) {
+		model.addObject("mode",mode);
+		model.addObject("org",org);
+		model.addObject("isadmin",false);
+		String useraccountid = user.getCode();
+		Long orgid = user.getOrgId();
+		if (mode != null && !mode.equals("new")) {//编辑
+			if (useraccountid != null) {
+				user = userAccountService.selectByKey(useraccountid);
+				//TODO 判断是否为admin 
+			}
+		} else {//新增
+			if (orgid == null) {
+				throw new AuthBusinessException("请选择结构！");
+			}
+			org = this.orgService.selectByKey(orgid);
+			if (org == null) {
+				throw new AuthBusinessException("请选择结构！");
+			}
+			String code = org.getCode();
+			String loginName = this.orgService.selectNextUserLoginNameByOrgCode(code);
+			user.setLoginname(loginName);
+			user.setEnabled(true);
+		}
+//		UserAccount currentUserAccount = UserAccountUtil.getInstance()
+//				.getCurrentUserAccount();
+//		model.addObject("currentUser",currentUserAccount);
+		model.addObject("userAccount", user);
+		model.setViewName("/user/edit");
+		return model;
+	}
 	
-	private void setCurrentDivisionList(Org org, ModelAndView model) {
+	@RequestMapping("user/save")
+	public ModelAndView user_save(UserAccount user, ModelAndView model) throws Exception{
+		model.setViewName("listUsers?orgId="+user.getOrgId());
+		if(StringUtil.isNotEmpty(user.getCode())){//更新
+			this.userAccountService.updateNotNull(user);
+			
+			return model;
+		}
+		//新增
+		user.setCode(UUIDUtil.getUUID());
+		ShaPasswordEncoder sha = new ShaPasswordEncoder();
+		sha.setEncodeHashAsBase64(false);
+		String password = user.getPassword();
+		user.setPassword(sha.encodePassword(password, null));
+		String encryptPassword = SimpleCrypto.encrypt("zcpt@123456",
+				password);
+		user.setSynpassword(encryptPassword);
+		user.setLocked(false);
+		user.setAccountExpired(true);
+		user.setPasswordExpired(true);
+		user.setCreateDate(DmDateUtil.Current());
+		user.setCreateUser(SecurityUtils.getCurrentUserName());
+		
+		//TODO 设置角色
+		return model;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Org setCurrentDivisionList(Org org, ModelAndView model) {
 		//获取当前用户的区划
 		String divisionid = org.getDivisionId();
+		if(divisionid==null){
+			org = this.orgService.selectByKey(org.getId());
+			if(org!=null){
+				divisionid = org.getDivisionId();
+			}
+		}
 		List<Division> division = this.orgService.selectCurrentDivisionTree(divisionid);
 		List ml = new ArrayList();
-		String ids = "";
+		//String ids = "";
 		for (Division divi : division) {
 			Map m = new HashMap();
-			ids+=divi.getId()+",";
+			//ids+=divi.getId()+",";
 			m.put("id", divi.getId());
 			m.put("name", divi.getName());
 			m.put("pId",divi.getParentId()==null?"":divi.getParentId());
@@ -199,6 +294,7 @@ public class OrgAndUserController {
 		}
 		JSONArray arr = new JSONArray(ml);
 		model.addObject("divisionStr", arr.toJSONString());
+		return org;
 	}
 
 	@RequestMapping({ "/listMergeUsers" })
@@ -323,8 +419,6 @@ public class OrgAndUserController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		String whereSql = "";
-		Map argMap = new HashMap();
 		List<UserAccount> list = this.orgService.selectCurrentOrgUserPage(0, 1000, org, user).getList();
 		String[] fields = {"loginname","name","gender","mobile","bizPhoneNo","schoolAge","address","title","speciality","email","fano","userType","systemId"};
 		String[] names = {"登录名","姓名","性别"			,"手机","固话","学历","通讯地址",			"职称","专业","邮箱","传真","用户类型","系统标识"};

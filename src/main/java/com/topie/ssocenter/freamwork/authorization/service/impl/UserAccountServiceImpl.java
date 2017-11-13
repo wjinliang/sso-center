@@ -74,4 +74,9 @@ public class UserAccountServiceImpl extends BaseService<UserAccount>
     public int findExistUserAccount(UserAccount user) {
         return userMapper.findExistUser(user);
     }
+
+	@Override
+	public String selectMaxUserLoginNameByOrgCode(String code) {
+		return  userMapper.selectMaxUserLoginNameByOrgCode(code);
+	}
 }

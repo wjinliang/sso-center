@@ -28,4 +28,6 @@ public interface UserAccountService extends IService<UserAccount> {
     PageInfo<UserAccount> findUserAccountList(Integer pageNum, Integer pageSize, UserAccount user);
 
     int findExistUserAccount(UserAccount user);
+
+	String selectMaxUserLoginNameByOrgCode(String code);
 }

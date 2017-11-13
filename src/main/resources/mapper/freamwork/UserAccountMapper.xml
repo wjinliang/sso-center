@@ -114,4 +114,7 @@
             </if>
         </where>
     </select>
+    <select id="selectMaxUserLoginNameByOrgCode" resultType="String">
+    	select MAX(LOGINNAME) as maxLoginName FROM t_user_account t WHERE LOGINNAME LIKE CONCAT(#{code},'%')
+    </select>
 </mapper>

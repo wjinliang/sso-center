@@ -18,4 +18,20 @@ $.validator.setDefaults({
       form.submit();
     }
 });
+
+var detail = ${param.detail=="1"};
+$(function(){
+	if(detail){
+		$("table").find('input').each(function(){
+			if($(this).attr('name')!='button')
+				$(this).attr("disabled","true");
+		});
+		$("table").find('select').each(function(){
+			$(this).attr("disabled","true");
+		});
+		$("table").find('textarea').each(function(){
+			$(this).attr("disabled","true");
+		});
+	}
+});
 </script>

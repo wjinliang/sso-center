@@ -105,17 +105,17 @@
 .list_table{
 	width: 100%;
 	border-top: 1px solid #d3dbde;
-	border-right: 1px solid #d3dbde;
+/* 	border-right: 1px solid #d3dbde; */
 }
 .list_table th{
 height: 37px;
 background: url('../images/box_top.png') 0px 0px repeat-x;
 line-height: 37px;
-border-left: 1px solid #d3dbde;
+/* border-left: 1px solid #d3dbde; */
 }
 .list_table td{
 	border-bottom: 1px solid #d3dbde;
-    border-left: 1px solid #d3dbde;
+/*     border-left: 1px solid #d3dbde; */
     padding: 5px;
     text-align: center;
 }
@@ -205,9 +205,12 @@ background-color: #f5f5f5;
 /*form*/
 .textarea,.input-text{
 	border: 1px solid #bac7d2;
-	background: #f7fcfe;/* #f7fcfe #f3fafd*/
-	border-radius: 2px;
+	background: #f7fcfe;/* #f7fcfe #f3fafd*/ 
+/* 	border-radius: 2px; */
 	box-shadow: 2px 2px 2px #e7f1f7 inset;
+}
+.input-text:read-only{
+	color:#aaa
 }
 .input-text{height: 28px;}
 .textarea{width: 380px;height: 90px;}
@@ -218,7 +221,7 @@ padding:4px 3px;
 font-size:12px; 
 height:30px; 
 *margin:-1px; 
-border-radius: 2px;
+/* border-radius: 2px; */
 box-shadow: 2px 2px 2px  #e7f1f7 inset; 
 } 
 .select_border{ 
@@ -335,7 +338,7 @@ input.ext_btn,button.ext_btn{
 	font-size:1.2em;
 	line-height:normal;
 	padding:7px 18px;
-	border-radius:2px
+/* 	border-radius:2px */
 }
 input.ext_btn_big,button.ext_btn_big{
 	*padding:6px 18px 3px!important
@@ -379,6 +382,11 @@ input.ext_btn_big,button.ext_btn_big{
 }
 .ext_btn_error:active{
 	background-position:0 -441px
+}
+/* validate */
+.error{
+	border: 1px solid #900;
+	
 }
 
 .row {

@@ -21,7 +21,49 @@
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.SuperSlide.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/index.js"></script>
-    
+    <style type="text/css">
+	   
+	    #top_t {
+		    height: 36px;
+		}
+		.top{
+			height: 81px;
+		}
+		.side{
+			top:81px;
+		}
+		.main{
+			top:81px;
+		}
+		#side_here {
+		     height: 0px; 
+/* 		     background: #fff url(../images/here.gif) 0px 0px repeat-x;  */
+		}
+		#side_here_l {
+		    width: 0px;
+		    height: 0px;
+		    /* background: url(../images/side_top.gif) 0px 0px no-repeat; */
+		}
+		.menubtn{
+			position: fixed;
+		    left: 205px;
+/* 		    height: 32px; */
+/* 		    border: 1px solid #c3bdbd; */
+/* 		    line-height: 30px; */
+/* 		    top: 50%; */
+		    z-index:999;
+		}
+		.menubtn a{
+		    width: 30px;
+    		height: 30px;
+		    background: url(./assets/images/menu-toggler.png) 5px 7px no-repeat;
+		    background-color: #9a9292;
+		    display: inline-block;
+		}
+		 .menuHide{
+	    	left:0px;
+	    }
+    </style>
     <title>后台首页</title>
 </head>
 <body>
@@ -45,32 +87,20 @@
             </div>
         </div>
     </div>
-    <div id="side_here">
-        <div id="side_here_l" class="fl"></div>
-        <div id="here_area" class="fl">
-<input id="Button2" class="ext_btn" type="button" value="后退" onclick="document.getElementById('rightMain').contentWindow.history.back();" /> <input id="Button1" class="ext_btn" type="button" value="前进" onclick="document.getElementById('rightMain').contentWindow.history.forward();" /></div>
-    </div>
+    
 </div>
 <div class="side">
+    <div class="menubtn"><a href="javascript:menuHide();"></a></div>
     <div class="sideMenu" id="side-menu" style="margin:0 auto">
-        <!-- <h3 class="on">导航菜单</h3>
-        <ul>
-            <li><a href="http://baidu.com" target="rightMain">百度</a></li>
-            <li class="on"><a href="./main.html" target="rightMain">列表</a></li>
-        </ul>
-        <h3> 导航菜单</h3>
-        <ul>
-            <li>导航菜单</li>
-            <li>导航菜单</li>
-            <li>导航菜单</li>
-            <li>导航菜单</li>
-            <li>导航菜单</li>
-        </ul> -->
+        
     </div>
 </div>
 <div class="main">
-<iframe name="rightMain" id="rightMain" src="${mainPage }" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
+<iframe name="rightMain" id="rightMain" src="orgAndUser/listOrgs" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
 
+</div>
+<div class="menuShow">
+<a href="javascritp:menuHide()">&lt;&lt;</a>
 </div>
 <div class="bottom">
     <div id="bottom_bg">版权</div>
@@ -79,6 +109,12 @@
     <a href="javascript:;" class="per" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(1);"></a>
     <a href="javascript:;" class="next" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(2);"></a>
 </div>
-</body>
 
+</body>
+<script type="text/javascript">
+function menuHide(){
+	$(".main").toggleClass("menuHide");
+	$(".menubtn").toggleClass("menuHide");
+}
+</script>
 </html>

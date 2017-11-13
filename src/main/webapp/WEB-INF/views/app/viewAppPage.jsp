@@ -105,18 +105,25 @@
                     <textarea name="description" id="" cols="30" rows="10" class="textarea">${appInfo.description }</textarea>
                   </td>
                  </tr>
-                 
+                 <tr>
+                  <td class="td_right">状态：</td>
+                  <td class="">
+                  	<span>
+	                    <input type="radio" <c:if test="${appInfo.status=='1' }"> checked="checked"</c:if> name="status" value="1"> 可用
+	                    <input type="radio" <c:if test="${appInfo.status=='0' }"> checked="checked"</c:if> name="status" value="0"> 禁用
+                    </span>
+                  </td>
+                 </tr>
                 
                  <tr>
                    <td class="td_right">&nbsp;</td>
                    <td class="">
-                   <c:if test="${param.detail=='1' }">
-                   	<input type="button" name="button" onclick="javascript:window.location.href='../listApp'" class="btn btn82 btn_save2" value="返回"> 
-                   </c:if>
+                   
                    <c:if test="${!(param.detail=='1')}">
                      <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
                     <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
                    </c:if>
+                   <input type="button" name="button" onclick="javascript:window.location.href='../listApp'" class="btn btn82 btn_save2" value="返回"> 
                    </td>
                  </tr>
                </table>
@@ -131,20 +138,8 @@
 <%@include file="../include/formValidate.jsp"%>
 </body>
 <script type="text/javascript">
-	var detail = ${param.detail=="1"};
 	$(function(){
-		if(detail){
-			$("table").find('input').each(function(){
-				if($(this).attr('name')!='button')
-					$(this).attr("disabled","true");
-			});
-			$("table").find('select').each(function(){
-				$(this).attr("disabled","true");
-			});
-			$("table").find('textarea').each(function(){
-				$(this).attr("disabled","true");
-			});
-		}
+		
 		// 提交时验证表单
 		var validator = $("#form1").validate({
 			rules: {

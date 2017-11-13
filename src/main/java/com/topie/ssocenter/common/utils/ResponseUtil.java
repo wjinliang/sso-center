@@ -6,6 +6,9 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.validation.BindingResult;
 
+import com.github.pagehelper.PageInfo;
+import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -68,5 +71,13 @@ public class ResponseUtil {
             e.printStackTrace();
         }
     }
+
+	public static PageInfo emptyPage() {
+		PageInfo page = new PageInfo();
+		page.setIsFirstPage(true);
+		page.setIsLastPage(true);
+		page.setPageSize(10);
+		return page;
+	}
 
 }
