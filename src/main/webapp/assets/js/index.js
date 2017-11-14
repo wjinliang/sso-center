@@ -134,7 +134,10 @@ function scrollWW() {
         n = 1;
     }
 }
-
+function menuHide(){
+	$(".main").toggleClass("menuHide");
+	$(".menubtn").toggleClass("menuHide");
+}
 var n = 1;
 
 function menuScroll(num) {
