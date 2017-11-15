@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tk.mybatis.mapper.entity.Example;
+
 import com.topie.ssocenter.freamwork.authorization.dao.UserMenuMapper;
 import com.topie.ssocenter.freamwork.authorization.dao.UserRoleMapper;
 import com.topie.ssocenter.freamwork.authorization.model.UserMenu;
@@ -37,6 +39,54 @@ public class UserMenuServiceImpl extends BaseService<UserMenu> implements UserMe
 		roleMapper.deleteRoleMenu(null, menuId);
 		this.menuMapper.deleteByPrimaryKey(menuId);
 		
+	}
+
+	@Override
+	public void seqList(Long currentid, Long targetid, String moveType,
+			String moveMode) {
+		if(currentid==null || targetid==null) return ;
+		UserMenu t2 = this.getMapper().selectByPrimaryKey(currentid);//要移动的项
+		UserMenu t1 = this.getMapper().selectByPrimaryKey(targetid);//基准项
+		if(t1==null || t2==null) return ;
+		if(moveType.equals("inner")){//inner
+			t2.setPid(targetid);
+			this.getMapper().updateByPrimaryKeySelective(t2);
+			return;
+		}
+		if(moveMode.equals("same")){//同级内移动
+		}else{//垮父级移动
+			t2.setPid(t1.getPid());
+		}
+		if(moveType.equals("next")){//当前节点的后面
+			t2.setSeq(t1.getSeq()+1);
+		}else{//当前节点的前面
+			t2.setSeq(t1.getSeq());
+		}
+		
+		List<UserMenu> list = findByPid(t1.getPid());//order by seq asc
+		Long seq = t2.getSeq();
+		for(UserMenu t:list){
+			if(t.getId().equals(t2.getId())){//同级内移动才会出现   出现当前先不处理
+				continue;
+			}
+			if(t.getSeq()>seq){
+				break;
+			}
+			if(t.getSeq()==seq){
+				seq++;
+				t.setSeq(seq);
+				this.getMapper().updateByPrimaryKeySelective(t);
+			}
+		}
+		this.getMapper().updateByPrimaryKeySelective(t2);
+		
+	}
+
+	private List<UserMenu> findByPid(Long pid) {
+		Example ex = new Example(UserMenu.class);
+		ex.createCriteria().andEqualTo("pid", pid);
+		ex.setOrderByClause("seq asc");
+		return getMapper().selectByExample(ex);
 	}
 
 }

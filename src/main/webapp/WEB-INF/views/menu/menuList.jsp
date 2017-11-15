@@ -38,18 +38,15 @@
 					<div class="box_border">
 						<div class="box_top">
 							<b class="pl15">菜单树</b>
+							<span class="fr pr5">
+								<a class="ext_btn"
+											href="javascript:addTopMenu();">
+												添加顶级菜单 </a>
+							</span>
 						</div>
 						<div class="box_center">
 							<div class="ztree" id="menuTree" style="height: 500px;overflow-y: auto;"></div>
 						</div>
-						<div id="rMenu">
-			<ul class="dropdown-menu dropdown-context">
-				<li class="nav-header" id="m_add" onclick="addMenu();">增加子级菜单</li>
-				<li class="nav-header" id="m_addroot" onclick="addTopMenu();">增加顶级菜单</li>
-				<li class="nav-header" id="m_del" onclick="deleteMenu();">删除菜单</li>
-				<li class="nav-header" id="m_edit" onclick="editMenu();">编辑菜单</li>
-			</ul>
-			</div>
 					</div>
 				</div>
 			</div>
@@ -88,6 +85,10 @@
 				                  <textarea name="detail" id="" cols="30" rows="10" class="textarea"></textarea>
 				                  </td>
 				                </tr>
+				                <tr >
+				                  <td class="td_right">排序：</td><td><input type="text" name="seq" class="input-text lh30" size="40"></td>
+				                  </tr>
+				                <tr >
 				                 <tr>
 				                   <td class="td_right">&nbsp;</td>
 				                   <td class="">
@@ -129,18 +130,10 @@
 			      name:  {
 				        required: true,
 				        minlength: 2
-				      },
-			      code:{required:true,
-			    	  remote:{  
-		                url: "checkCode",  
-		                data: {  
-		                    'code': function () { return $("input[name='code']").val();},
-		                    'id':function(){return $("input[name='id']").val(); }
-		                }  
-		            }  },
-			},
-			messages:{code:{remote:"编码重复，请重新填写！"}}
-		});
+				      }
+			     
+			}
+		})
 	});
 	var zTree;
 	var rMenu;

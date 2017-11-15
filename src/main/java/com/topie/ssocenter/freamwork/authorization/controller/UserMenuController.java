@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import tk.mybatis.mapper.entity.Example;
 
 import com.alibaba.fastjson.JSONArray;
 import com.topie.ssocenter.common.utils.ResponseUtil;
@@ -35,12 +38,15 @@ public class UserMenuController {
     	public ModelAndView list(ModelAndView model, HttpServletRequest request) {
 			List ml = new ArrayList();
 			List<UserMenu> menuList = new ArrayList<UserMenu>();
-				menuList = this.menuService.selectAll();
-			for (UserMenu division : menuList) {
+			Example ex = new Example(UserMenu.class);
+			ex.setOrderByClause("seq asc");
+				menuList = this.menuService.selectByExample(ex);
+			for (UserMenu menu : menuList) {
 				Map m = new HashMap();
-				m.put("id", division.getId());
-				m.put("name", division.getName());
-				m.put("pId",division.getPid()==null?"":division.getPid());
+				m.put("id", menu.getId());
+				m.put("name", menu.getName());
+				m.put("seq", menu.getSeq());
+				m.put("pId",menu.getPid()==null?"":menu.getPid());
 				ml.add(m);
 			}
 			JSONArray arr = new JSONArray(ml);
@@ -79,4 +85,18 @@ public class UserMenuController {
         return ResponseUtil.success();
     }
 
+    @RequestMapping("/setseq")
+	@ResponseBody
+	public Object setseq(
+			HttpServletResponse response,
+			@RequestParam(value = "currentid", required = false) Long currentid,
+			@RequestParam(value = "targetid", required = false) Long targetid,
+			@RequestParam(value = "moveType", required = false) String moveType,
+			@RequestParam(value = "moveMode", required = false) String moveMode)
+			{
+		
+		this.menuService.seqList( currentid, targetid,  moveType, moveMode);
+		return ResponseUtil.success();
+			}
+			
 }

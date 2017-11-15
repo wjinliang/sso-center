@@ -15,4 +15,7 @@ public interface UserMenuService extends IService<UserMenu> {
 	List<UserMenu> findMenusByUserId(String id);
 
 	void deleteRecord(Long menuId);
+
+	void seqList(Long currentid, Long targetid, String moveType,
+			String moveMode);
 }

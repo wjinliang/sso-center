@@ -66,7 +66,7 @@
                  <td class="">
                   	<span>
 	                    <input type="radio" checked="checked" name="gender" value="男"> 男
-	                    <input type="radio" name="gender" <c:if test="${userAccount.gender='女'}"> checked="checked"</c:if>  value="女"> 女
+	                    <input type="radio" name="gender" <c:if test="${userAccount.gender=='女'}"> checked="checked"</c:if>  value="女"> 女
                     </span>
                   </td>
                  </tr>

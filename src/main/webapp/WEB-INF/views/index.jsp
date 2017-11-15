@@ -58,7 +58,7 @@
     </div>
 </div>
 <div class="main">
-<iframe name="rightMain" id="rightMain" src="orgAn3dUser/listOrgs" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
+<iframe name="rightMain" id="rightMain" src="orgAndUser/listOrgs" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
 
 </div>
 
