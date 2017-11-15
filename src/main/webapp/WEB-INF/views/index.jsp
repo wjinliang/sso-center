@@ -21,6 +21,7 @@
     <script type="text/javascript">var root = "<%=path%>";</script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.SuperSlide.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/index.js"></script>
 <!--[if lt IE 9]>
 <script src="<%=basePath%>/assets/js/IE9.js"></script>

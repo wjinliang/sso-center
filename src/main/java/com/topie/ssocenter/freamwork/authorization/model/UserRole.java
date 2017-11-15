@@ -23,6 +23,9 @@ public class UserRole {
 
     @Column(name = "SEQ")
     private Long seq;
+    
+    @Column(name = "level")
+    private Integer level;
 
     /**
      * @return CODE
@@ -107,6 +110,15 @@ public class UserRole {
     public void setSeq(Long seq) {
         this.seq = seq;
     }
+    
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
 
 	@Override
 	public String toString() {

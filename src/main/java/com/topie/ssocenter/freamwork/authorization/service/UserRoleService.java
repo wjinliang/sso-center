@@ -12,17 +12,17 @@ import com.topie.ssocenter.freamwork.database.baseservice.IService;
  */
 public interface UserRoleService extends IService<UserRole> {
 
-    int insertUserRole(UserRole role);
-
-    int updateUserRole(UserRole role);
-
-    UserRole findUserRoleById(String id);
-
-    int deleteUserRole(String id);
-
     int insertUserRoleFunction(String roleId, Long functionId);
 
     List<Map> findUserRoleMatchUpFunctions();
 
 	PageInfo<UserRole> findUserRoleList(int pageNum, int pageSize, UserRole role);
+
+	String selectRoleMenusTreeStr(String roleCode);
+
+	void save(UserRole role, String menuids);
+
+	void updateNotNull(UserRole role, String menuids);
+
+	void deleteRole(String roleId);
 }

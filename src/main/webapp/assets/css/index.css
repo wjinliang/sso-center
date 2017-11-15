@@ -37,10 +37,7 @@
 		    background-color: #9a9292;
 		    display: inline-block;
 		}
-		 .menuHide{
-	    	left:0px;
-	    	*left:0px;
-	    }
+		
 	    .menubtn{
 			position: fixed;
 		    left: 205px;
@@ -58,5 +55,9 @@ html { *padding:81px 0 25px 0;}
 .main { *height:100%; *margin-left:206px;}
 .bottom { *height:25px;}
 .top, .side, .main, .bottom {*position:relative; *top:0; *right:0; *bottom:0; *left:0;}
-	
+
+ .menuHide{
+	    	left:0px;
+	    	*left:0px;
+	    }	
 		

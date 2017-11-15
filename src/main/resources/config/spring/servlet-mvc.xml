@@ -88,4 +88,5 @@
 	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
 	<!-- 自定义标签结束 -->
 	<bean id="appUtil" class="com.topie.ssocenter.common.utils.AppUtil" />
+	
 </beans>

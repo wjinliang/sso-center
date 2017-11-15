@@ -10,12 +10,18 @@
     <result column="enabled" property="enabled" jdbcType="BIT" />
     <result column="HOMEPAGE" property="homepage" jdbcType="VARCHAR" />
     <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
     <result column="SEQ" property="seq" jdbcType="BIGINT" />
   </resultMap>
   
-    <insert id="insertRoleMenu">
-        insert into t_user_role_menu (ROLE_CODE,MENU_CODE) values(#{roleId,jdbcType=VARCHAR},#{menuId,jdbcType=BIGINT});
-    </insert>
+    <select id="selectMenuIdsByRoleID" resultType="Long">
+    	SELECT 
+    	t.id FROM t_user_menu t 
+    	LEFT JOIN t_role_menu m 
+    	ON t.id = m.MENU_CODE 
+    	WHERE m.ROLE_CODE=#{code} 
+    	ORDER BY t.SEQ,t.id asc
+    </select>
     <select id="findRoleMatchUpMenus" resultType="java.util.Map">
         select
         f.MENUURL as function,r.CODE as role
@@ -26,4 +32,27 @@
         on f.id=rf.MENU_CODE
         order by f.SEQ
     </select>
+    
+<!--     中间表--> 
+    <insert id="insertRoleMenu">
+        insert into t_role_menu (ROLE_CODE,MENU_CODE) values(#{roleId,jdbcType=VARCHAR},#{menuId,jdbcType=BIGINT});
+    </insert>
+    <select id="selectRoleMenuRecord" resultType="java.util.Map">
+    	SELECT * FROM t_role_menu 
+    	WHERE ROLE_CODE=#{roleId} 
+    	AND MENU_CODE=#{menuId}
+    </select>
+    <delete id="deleteRoleMenu">
+    	DELETE FROM t_role_menu 
+    	WHERE 1=1
+    	<if test="roleId == null and menuId == null">
+    		and 1=2
+    	</if>
+    	<if test="roleId != null">
+    		AND ROLE_CODE=#{roleId} 
+    	</if>
+    	<if test=" menuId != null">
+    		AND MENU_CODE=#{menuId}
+    	</if>
+    </delete>
 </mapper>

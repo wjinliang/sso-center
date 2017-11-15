@@ -1,4 +1,4 @@
-package com.topie.ssocenter.freamwork.authorization.service;
+package com.topie.ssocenter.freamwork.authorization.services;
 
 public interface SynInfoService {
 	public abstract String hello(String username);

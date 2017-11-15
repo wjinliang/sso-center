@@ -138,6 +138,11 @@ function menuHide(){
 	$(".main").toggleClass("menuHide");
 	$(".menubtn").toggleClass("menuHide");
 }
+function menuHide(){
+	$(".main").toggleClass("menuHide");
+	$(".menubtn").toggleClass("menuHide");
+}
+
 var n = 1;
 
 function menuScroll(num) {
@@ -161,4 +166,7 @@ function menuScroll(num) {
             n = n - 1;
         }
     }
+}
+function alertSucc(msg){
+	layer.msg(msg, {icon: 1,offset: 'rb'});
 }

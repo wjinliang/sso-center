@@ -1,11 +1,9 @@
-package com.topie.ssocenter.freamwork.authorization.service.impl;
+package com.topie.ssocenter.freamwork.authorization.services.impl;
 
-import org.springframework.stereotype.Service;
+import com.topie.ssocenter.freamwork.authorization.services.SynInfoService;
 
-import com.topie.ssocenter.freamwork.authorization.service.SynInfoService;
 
-@Service("synInfoServiceImpl")
-public class SynInfoServiceImp implements SynInfoService{
+public class SynInfoServiceImpl implements SynInfoService{
 
 	@Override
 	public String hello(String username) {

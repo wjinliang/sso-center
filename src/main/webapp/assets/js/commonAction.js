@@ -22,13 +22,10 @@
 	      }
 	    }
 	    else if($oinput.attr("type")=="radio"){
-	      $oinput.each(function(){
-	        var radioObj = $("[name="+name+"]");
-	        for(var i=0;i<radioObj.length;i++){
-	          if(radioObj[i].value == ival){
-	            radioObj[i].click();
+	      $oinput.each(function(i,that){
+	          if($(that).val() == ""+ival){
+	        	  $(that).click();
 	          }
-	        }
 	      });
 	    }
 	    else if($oinput.attr("type")=="textarea"){
@@ -65,7 +62,7 @@
 					},
 					success:function(data){
 						if(data.code==200){
-							layer.msg('操作成功', {icon: 1});	
+							showSuccess('操作成功');	
 							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
@@ -108,7 +105,7 @@
 					},
 					success:function(data){
 						if(data.code==200){
-							layer.msg('操作成功', {icon: 1});	
+							showSuccess('操作成功');	
 							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
@@ -142,7 +139,7 @@
 					},
 					success:function(data){
 						if(data.code==200){
-							layer.msg('操作成功', {icon: 1});	
+							showSuccess('操作成功');	
 							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
@@ -174,7 +171,7 @@
 			},
 			success:function(data){
 				if(data.code==200){
-					layer.msg('操作成功', {icon: 1});
+					showSuccess('操作成功');
 					if(isReload||isReload===undefined){
 						window.location.reload();
 					}}
@@ -193,13 +190,19 @@
 		});
 		
 	};
+function showSuccess(msg){
+	parent.alertSucc(msg);
+}
+function alertSucc(msg){
+	layer.msg(msg, {icon: 1});
+}
 function getAction(url,success){
 		
 		$.ajax({
 			url:url,
-			type:'post',
+			type:'get',
 			beforeSend:function(){
-			  layer.msg('请稍后', {icon: 1});
+			  //layer.msg('请稍后', {icon: 1});
 			},
 			success:function(data){
 				if(data.code==200){
