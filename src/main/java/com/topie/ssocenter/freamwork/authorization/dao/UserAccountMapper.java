@@ -18,4 +18,6 @@ public interface UserAccountMapper extends Mapper<UserAccount> {
     int findExistUser(UserAccount user);
 
 	String selectMaxUserLoginNameByOrgCode(String code);
+	
+	long selectSynCount(String appId);
 }

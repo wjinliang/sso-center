@@ -117,4 +117,7 @@
     <select id="selectMaxUserLoginNameByOrgCode" resultType="String">
     	select MAX(LOGINNAME) as maxLoginName FROM t_user_account t WHERE LOGINNAME LIKE CONCAT(#{code},'%')
     </select>
+    <select id="selectSynCount" resultType="long">
+    	select count(id) from syn_user where app_id=#{appId}
+    </select>
 </mapper>

@@ -31,4 +31,7 @@
   <select id="selectMaxSeq" resultType="Long">
   	select MAX(SEQ) as maxseq FROM t_org where `CODE` LIKE CONCAT(#{divisionCode},'%')
   </select>
+  <select id="selectSynCount" resultType="long">
+  	select count(id) from syn_org where app_id=#{appId}
+  </select>
 </mapper>
