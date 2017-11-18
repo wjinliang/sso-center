@@ -54,7 +54,7 @@ public class TjfxServiceImpl implements TjfxService {
 	public List<Map> getUserCountForDivision(ApplicationInfo app) {
 		String type=" count(t.`NAME`) ";
 		String isDelete="0";
-		String systemId=app.getAppName()==null?"动物标识及动物产品追溯系统":app.getAppName();
+		String systemId=app.getAppName()==null?"test":app.getAppName();
 		return this.tjfxMapper.selectBase(type,isDelete,systemId);
 	}
 
@@ -62,7 +62,7 @@ public class TjfxServiceImpl implements TjfxService {
 	public List<Map> getUserLonginCountForDivision(ApplicationInfo app) {
 		String type=" sum(t.`LOGINCOUNT`) ";
 		String isDelete="0";
-		String systemId=app.getAppName()==null?"动物标识及动物产品追溯系统":app.getAppName();
+		String systemId=app.getAppName()==null?"test":app.getAppName();
 		return this.tjfxMapper.selectBase(type,isDelete,systemId);
 	}
 
@@ -70,7 +70,7 @@ public class TjfxServiceImpl implements TjfxService {
 	public List<Map> getUserDelCountForDivision(ApplicationInfo app) {
 		String type=" count(t.`NAME`) ";
 		String isDelete="1";
-		String systemId=app.getAppName()==null?"动物标识及动物产品追溯系统":app.getAppName();
+		String systemId=app.getAppName()==null?"test":app.getAppName();
 		return this.tjfxMapper.selectBase(type,isDelete,systemId);
 	}
 

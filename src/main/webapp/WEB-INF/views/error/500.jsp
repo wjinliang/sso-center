@@ -65,12 +65,12 @@ h2{color:#0188DE; font-size:16px; padding:10px 0px 40px 0px;}
 
 
 <div id="page" style="border-style:dashed;border-color:#e4e4e4;line-height:30px;">
-	<c:if test="msg!=null">
+	<c:if test="${msg!=null}">
 		<h1>请求错误</h1>
 		<h2>Sorry, the site now can not be accessed. </h2>
-		<font color="#666666">你请求访问的页面，服务器处理是出现未知错误！</font><br /><br />
+		<font color="#666666">${msg}</font><br /><br />
 	</c:if>
-	<c:if test="msg==null">
+	<c:if test="${msg==null}">
 		<h1>抱歉，服务器内部错误~</h1>
 		<h2>Sorry, the site now can not be accessed. </h2>
 		<font color="#666666">你请求访问的页面，服务器处理是出现未知错误！</font><br /><br />

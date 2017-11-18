@@ -9,7 +9,7 @@ import com.topie.ssocenter.freamwork.database.baseservice.IService;
 public interface ApplicationInfoService extends IService<ApplicationInfo> {
 
 	PageInfo<ApplicationInfo> findApplicationInfoList(int pageNum,
-			int pageSize, ApplicationInfo role);
+			int pageSize, ApplicationInfo app);
 
 	PageInfo<ApplicationInfo> selectCurrentUserSynApps();
 

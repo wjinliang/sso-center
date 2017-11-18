@@ -38,9 +38,19 @@ var xAxisData=[],shengData=[],shiData=[],xianData=[],xiangData=[],cunData=[];
 							<input type="hidden" id="pageNum" name="thispage" value="">
 							<tr>
 								<td>系统名称</td>
-								<td><input type="text" name="appName" value="${searchModel.appName }" class="input-text lh25"
-									size="20"></td>
-								
+								<td>
+									<span class="fl">
+										<div class="select_border">
+											<div class="select_containers ">
+												<select name="appName" class="select">
+													<c:forEach items="${appPage.list}" var="app" varStatus="status">
+														<option <c:if test="${app.appName eq searchModel.appName}">selected</c:if> value="${app.appName }">${app.appName }</option>						
+													</c:forEach>
+												</select>
+											</div>
+										</div>
+									</span>
+								</td>
 								<td><input type="submit" class="btn btn82 btn_search"
 				value="查询"><td>
 							</tr>
@@ -49,9 +59,9 @@ var xAxisData=[],shengData=[],shiData=[],xianData=[],xiangData=[],cunData=[];
 					</form>
 				</div>
 				<div id="button" class="mt10">
-	       		<input type="button" name="button" class="btn btn82 btn_export" value="导出">
-				<input type="button" onclick="" name="button" class="btn btn82 btn_count"
-					value="统计图">
+	       		<input type="button" name="button" onclick="javascript:download();" class="btn btn82 btn_export" value="导出">
+				<input type="button" onclick="javascript:toggleCharts(this);" name="button" class="btn btn82 btn_count"
+					value="数据表">
 		<!-- <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
 			 <input type="button" name="button" class="btn btn82 btn_del" value="删除"> 
@@ -62,7 +72,10 @@ var xAxisData=[],shengData=[],shiData=[],xianData=[],xiangData=[],cunData=[];
 		</div>
 			</div>
 		</div>
-		<div id="charts" style="height:600px;"></div>
+		 <iframe id="ifile" class="dn"></iframe>
+		<div id="chartsPanel" class="">
+			<div id="charts" style="height:600px;"></div>
+		</div>
 		<div id="table" class="mt10">
 			<div class="box span10 oh">
 				<table width="100%" border="0" cellpadding="0" cellspacing="0"
@@ -102,11 +115,11 @@ var xAxisData=[],shengData=[],shiData=[],xianData=[],xiangData=[],cunData=[];
 									</tr>
 									<script >
 										xAxisData.push("${app.divisionName}");
-										shengData.push(${app.shengcount});
-										shiData.push(${app.shicount});
-										xianData.push(${app.xiancount});
-										xiangData.push(${app.xiangcount});
-										cunData.push(${app.cuncount});
+										shengData.push("${app.shengcount}");
+										shiData.push("${app.shicount}");
+										xianData.push("${app.xiancount}");
+										xiangData.push("${app.xiangcount}");
+										cunData.push("${app.cuncount}");
 									</script>
 									<c:if test="${status.last=='true'}">
 									<tr style="background-color: #ccc;">
@@ -133,9 +146,25 @@ var xAxisData=[],shengData=[],shiData=[],xianData=[],xiangData=[],cunData=[];
 
 $(function(){
         // 绘制图表。
-        echarts.init(document.getElementById('charts')).setOption(option);
+       echartsInstance = echarts.init(document.getElementById('charts')).setOption(option);
 	
 });
+ function toggleCharts(that){
+	 var t = $(that);
+	 if(t.val()=="数据表"){
+		 t.val("统计图");
+	 }else{
+		 t.val("数据表");
+	 }
+	$("#chartsPanel").toggle("dn");
+}
+ function download()
+ {
+	 var data = $("#serchForm").serialize();
+    //下载文件的地址
+    var url="download?type=1&"+data;
+    document.getElementById("ifile").src=url;
+ }
  var option = {
 		    tooltip : {
 		        trigger: 'axis',
@@ -163,26 +192,40 @@ $(function(){
 		        type: 'category',
 		        data: xAxisData,//['广东省','广西壮族自治区','青海省','河北省','河南省','浙江省','四川省','辽宁省','福建省','云南省','江西省','吉林省','新疆维吾尔自治区','湖北省','黑龙江省','海南省','山东省','甘肃省','湖南省','重庆市','新疆生产建设兵团','台湾省','陕西省','西藏自治区','江苏省','山西省','内蒙古自治区','上海市','安徽省','北京市','天津市','贵州省','宁夏回族自治区','宁夏农垦','广东农垦','黑龙江省农垦总局']
 		    },
+		    toolbox: {
+		    	 
+                show: true, //是否显示工具栏
+ 
+                feature: {
+                    saveAsImage: true, //是否保存图片
+ 
+                    mark: true,
+ 
+                    restore: true //复原
+ 
+ 
+                }
+		    },
 		    dataZoom: [
 		            {
 		                show: true,
 		                start: 0,
 		                end: 100
 		            },
-		            {
+		            /* {
 		                type: 'inside',
 		                start: 94,
 		                end: 100
-		            },
-		            {
-		                show: true,
-		                yAxisIndex: 0,
-		                filterMode: 'empty',
-		                width: 30,
-		                height: '80%',
-		                showDataShadow: false,
-		                left: '93%'
-		            }
+		            }, */
+// 		            {
+// 		                show: true,
+// 		                yAxisIndex: 0,
+// 		                filterMode: 'empty',
+// 		                width: 30,
+// 		                height: '80%',
+// 		                showDataShadow: false,
+// 		                left: '93%'
+// 		            }
 		        ],
 		    series: [
 		        {

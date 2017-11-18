@@ -2,7 +2,6 @@ package com.topie.ssocenter.freamwork.authorization.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,6 @@ import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.dao.UserAccountMapper;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
-import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseService;
 
 /**
@@ -24,32 +22,8 @@ public class UserAccountServiceImpl extends BaseService<UserAccount>
     UserAccountMapper userMapper;
 
     @Override
-    public int insertUserAccount(UserAccount user) {
-        user.setPassword(SecurityUtils.encodeString(user.getPassword()));
-        return getMapper().insert(user);
-    }
-
-    @Override
-    public int updateUserAccount(UserAccount user) {
-        if (StringUtils.isNotEmpty(user.getPassword())) {
-            user.setPassword(SecurityUtils.encodeString(user.getPassword()));
-        }
-        return getMapper().updateByPrimaryKey(user);
-    }
-
-    @Override
-    public UserAccount findUserAccountById(String id) {
-        return getMapper().selectByPrimaryKey(id);
-    }
-
-    @Override
     public UserAccount findUserAccountByLoginName(String loginName) {
         return userMapper.findUserByLoginName(loginName);
-    }
-
-    @Override
-    public int deleteUserAccount(String id) {
-        return getMapper().deleteByPrimaryKey(id);
     }
 
     @Override

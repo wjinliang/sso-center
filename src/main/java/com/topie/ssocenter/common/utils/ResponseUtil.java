@@ -1,17 +1,18 @@
 package com.topie.ssocenter.common.utils;
 
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.validation.BindingResult;
 
 import com.github.pagehelper.PageInfo;
-import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/6 说明：
@@ -77,6 +78,16 @@ public class ResponseUtil {
 		page.setIsFirstPage(true);
 		page.setIsLastPage(true);
 		page.setPageSize(10);
+		return page;
+	}
+
+	public static PageInfo listToPage(List<Map<String, String>> list) {
+		PageInfo page = new PageInfo();
+		page.setIsFirstPage(true);
+		page.setIsLastPage(true);
+		page.setPageSize(10);
+		page.setList(list);
+		page.setTotal(list.size());
 		return page;
 	}
 
