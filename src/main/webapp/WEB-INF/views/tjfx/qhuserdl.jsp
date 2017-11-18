@@ -173,13 +173,16 @@ $(function(){
 		        }
 		    },
 		    title: {
-		        text: '全国各地登录次数统计',
+		        text: '${searchModel.appName}-全国各地各个区划下用户删除数量统计',
 		        subtext: ''
 		    },
 		    legend: {
-		        data: ['省级', '市级','区县级','乡镇级','村级']
+		        data: ['省级', '市级','区县级','乡镇级','村级'],
+		       // x:"right",
+		        padding:35
 		    },
 		    grid: {
+		    	top:'15%',
 		        left: '3%',
 		        right: '4%',
 		        bottom: '3%',

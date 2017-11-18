@@ -15,7 +15,7 @@
 	<function>
 		<description>根据用户id获取最后登录时间</description>
 		<name>gLL</name>
-		<function-class>com.topie.ssocenter.freamwork.authorization.tld.user_tld</function-class>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
 		<function-signature>String getLastLoginTime(java.lang.String)
 		</function-signature>
 		<example>${d:gLL(userId)}</example>
