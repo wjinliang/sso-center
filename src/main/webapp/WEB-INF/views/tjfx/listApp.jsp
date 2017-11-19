@@ -24,22 +24,22 @@
 </head>
 <body>
 	<div class="container">
-		<div id="search_bar" class="mt10">
+		<!-- <div id="search_bar" class="mt10">
 			<div class="box">
 				<div id="button" class="mt10">
        		<input type="button" name="button" class="btn btn82 btn_export" value="导出">
 			<input type="button" onclick="" name="button" class="btn btn82 btn_add"
 				value="统计图">
-		<!-- <input type="button" name="button"
+		<input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
 			 <input type="button" name="button" class="btn btn82 btn_del" value="删除"> 
        <input type="button" name="button" class="btn btn82 btn_config" value="配置"> 
        <input type="button" name="button" class="btn btn82 btn_checked" value="全选"> 
        <input type="button" name="button" class="btn btn82 btn_nochecked" value="取消"> 
-       <input type="button" name="button" class="btn btn82 btn_recycle" value="回收站"> -->
+       <input type="button" name="button" class="btn btn82 btn_recycle" value="回收站">
 		</div>
 			</div>
-		</div>
+		</div> -->
 		<div id="table" class="mt10">
 			<div class="box span10 oh">
 				<table width="100%" border="0" cellpadding="0" cellspacing="0"

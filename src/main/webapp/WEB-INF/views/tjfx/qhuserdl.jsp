@@ -173,7 +173,7 @@ $(function(){
 		        }
 		    },
 		    title: {
-		        text: '${searchModel.appName}-全国各地各个区划下用户删除数量统计',
+		        text: '${searchModel.appName}-全国各地用户删除数量统计',
 		        subtext: ''
 		    },
 		    legend: {
