@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
@@ -33,6 +37,13 @@ public class SecurityUtils {
         if (principal instanceof OrangeSideSecurityUser)
             return (OrangeSideSecurityUser) principal;
         return null;
+    }
+    
+    public static String getCurrentIP() {
+    	 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+         WebAuthenticationDetails wauth = (WebAuthenticationDetails) auth.getDetails();
+         String ip = wauth.getRemoteAddress();
+         return ip;
     }
 
     public static String encodeString(String character) {
@@ -95,4 +106,24 @@ public class SecurityUtils {
 		}
 	}
     
+    public static String getIpAddress(HttpServletRequest request) { 
+        String ip = request.getHeader("x-forwarded-for"); 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+          ip = request.getHeader("Proxy-Client-IP"); 
+        } 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+          ip = request.getHeader("WL-Proxy-Client-IP"); 
+        } 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+          ip = request.getHeader("HTTP_CLIENT_IP"); 
+        } 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+          ip = request.getHeader("HTTP_X_FORWARDED_FOR"); 
+        } 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+          ip = request.getRemoteAddr(); 
+        } 
+        return ip; 
+      } 
+
 }

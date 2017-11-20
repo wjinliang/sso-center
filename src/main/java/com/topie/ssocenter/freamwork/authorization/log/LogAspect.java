@@ -2,11 +2,16 @@ package com.topie.ssocenter.freamwork.authorization.log;
 
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.freamwork.authorization.model.Log;
@@ -14,8 +19,10 @@ import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUs
 import com.topie.ssocenter.freamwork.authorization.service.LogService;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 
-@Aspect  
+@Component
+@Aspect 
 public class LogAspect {  
+	Logger logger = Logger.getLogger(LogAspect.class);
       
     @Autowired  
     private LogService logService;//日志记录Service  
@@ -23,20 +30,27 @@ public class LogAspect {
     /** 
      * 添加业务逻辑方法切入点 
      */  
-    @Pointcut("execution(* com.xxx.service.*.insert*(..))")  
+    @Pointcut("(execution(* com.**.service.*.insert*(..))||"
+    		+ "execution(* com.**.service.*.save*(..)))&&"
+    		+ "(!execution(* com.**.service.LogService*.save*(..)))")  
     public void insertServiceCall() { }  
       
     /** 
      * 修改业务逻辑方法切入点 
      */  
-    @Pointcut("execution(* com.xxx.service.*.update*(..))")  
+    @Pointcut("(execution(* com.**.service.*.update*(..)))||"
+    		+ "(!execution(* com.**.service.LogService*.update*(..)))")  
     public void updateServiceCall() { }  
       
     /** 
      * 删除影片业务逻辑方法切入点 
      */  
-    @Pointcut("execution(* com.xxx.service.FilmService.deleteFilm(..))")  
-    public void deleteFilmCall() { }  
+//    @Pointcut("execution(* com.xxx.service.FilmService.deleteFilm(..))")  
+//    public void deleteFilmCall() { }  
+    
+    @Pointcut("execution(* com.**.controller.*.*(..))")
+	public void allCall() {
+	}
       
     /** 
      * 管理员添加操作日志(后置通知) 
@@ -64,7 +78,7 @@ public class LogAspect {
     }  
       
     
-     private void insertLog(String title,String content,String ip) {
+     private void insertLog(String title,String content,String nll) {
     	 Log log = new Log();  
     	 //获取登录管理员 
     	 OrangeSideSecurityUser user = SecurityUtils.getCurrentSecurityUser(); 
@@ -73,6 +87,7 @@ public class LogAspect {
          log.setContent(content);//操作内容  
          log.setTitle(title);//操作  
          log.setType(LogService.CAOZUO);
+         String ip = SecurityUtils.getCurrentIP();
          log.setIp(ip);
          logService.save(log);//添加日志  
 		
@@ -102,6 +117,32 @@ public class LogAspect {
         insertLog("修改",opContent,"");
     }  
       
+    
+    @AfterThrowing(value = "allCall()", throwing = "e")
+	public void afterThrowing(JoinPoint joinPoint, RuntimeException e) {
+    	  //获取方法名  
+        String methodName = joinPoint.getSignature().getName();  
+          
+        //获取操作内容  
+        String opContent =methodName+"[throw 产生异常的方法名称]：  " + e.getMessage() + ">>>>>>>" + e.getCause();
+        //创建日志对象  
+        insertLog("异常",opContent,"");
+	}
+
+	@Around(value = "allCall()")
+	public Object aroundCall(ProceedingJoinPoint pjp) throws Throwable {
+		Object result = null;
+		long procTime = System.currentTimeMillis();
+		try {
+			result = pjp.proceed();
+			procTime = System.currentTimeMillis() - procTime;
+			logger.info(pjp.getTarget().getClass().getName() + "."
+					+ pjp.getSignature().getName() + "耗时：" + procTime + "ms");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
     /** 
      * 管理员删除影片操作(环绕通知)，使用环绕通知的目的是 
      * 在影片被删除前可以先查询出影片信息用于日志记录 

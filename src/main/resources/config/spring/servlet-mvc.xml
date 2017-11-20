@@ -39,6 +39,8 @@
 	</mvc:annotation-driven>
 	<context:component-scan
 		base-package="com.topie.ssocenter.freamwork.*.handler,com.topie.ssocenter.freamwork.**.controller" />
+	<!-- 开启AOP自动代理 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<!-- 静态资源(js/image)的访问 -->
 	<mvc:resources location="/favicon.ico" mapping="/favicon.ico" />
 	<mvc:resources location="/assets/" mapping="/assets/**" />
