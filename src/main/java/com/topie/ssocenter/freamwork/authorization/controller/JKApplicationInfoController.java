@@ -165,7 +165,7 @@ public class JKApplicationInfoController {
 				JKApplicationInfo applicationInfo = this.appService.selectByKey(appId);
 				String appPath = applicationInfo.getAppPath();
 				String ip = getAppIp(appPath);
-				System.out.println("应用IP为："+ip);
+				//System.out.println("应用IP为："+ip);
 				Process process = null; // 声明处理类对象
 				String line = null; // 返回行信息
 				InputStream is = null; // 输入流
@@ -187,17 +187,16 @@ public class JKApplicationInfoController {
 					if(i>=4){
 						break;
 					}
-					System.out.println(i);
 				}
 				is.close();
 				isr.close();
 				br.close();
 				if (res) {
 					//System.out.println("ping 通  ...");
-					return ResponseUtil.success("ping 通...");
+					return ResponseUtil.success("ping 通   ==>"+line);
 				} else {
 					//System.out.println("ping 不通...");
-					return ResponseUtil.error("ping 不通...");
+					return ResponseUtil.error("ping 不通  ==>"+line);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -211,5 +210,6 @@ public class JKApplicationInfoController {
 			String ip = urlsz[0];
 			return ip;
 		}
+		
 	
 }

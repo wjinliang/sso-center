@@ -51,7 +51,7 @@
 
     <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="XMLMAPPER" />
 
-    <table tableName="jk_applicationinfo" domainObjectName="JKApplicationInfo">
+    <table tableName="t_log" domainObjectName="Log">
       <!-- <generatedKey column="id" sqlStatement="Mysql" identity="true"/> -->
     </table>
   </context>
