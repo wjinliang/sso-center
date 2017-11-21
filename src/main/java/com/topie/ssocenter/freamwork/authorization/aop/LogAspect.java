@@ -35,7 +35,7 @@ public class LogAspect {
     /** 
      * 修改业务逻辑方法切入点 
      */  
-    @Pointcut("execution(* com.topie.ssocenter.freamwork.authorization.service..*.*(..))")
+    @Pointcut("execution(* com.topie.ssocenter.freamwork.authorization.service.impl.*.update*(..))")
     public void updateServiceCall() { }  
       
     /** 

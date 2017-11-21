@@ -39,8 +39,21 @@
 								<td>内容</td>
 								<td><input type="text" name="appName" value="${searchModel.content }" class="input-text lh25"
 									size="20"></td>
+								<td>操作用户</td>
+								<td><input type="text" name="user" value="${searchModel.user }" class="input-text lh25"
+									size="20"></td>
 								<td>类型</td>
-								<td></td>
+								<td><span class="fl">
+										<div class="select_border">
+											<div class="select_containers ">
+												<select name="type" class="select">
+													<option value="">请选择</option>
+													<option <c:if test="${'1' eq searchModel.type}">selected</c:if> value="1">操作</option>
+													<option <c:if test="${'0' eq searchModel.type}">selected</c:if> value="0">登录</option>
+												</select>
+											</div>
+										</div>
+								</span></td>
 								<td><input type="button" onclick="nextPage('0')" class="btn btn82 btn_search"
 				value="查询"><td>
 							</tr>
@@ -62,6 +75,7 @@
 						<th>标题</th>
 						<th>内容</th>
 						<th>日志类型</th>
+						<th>操作用户</th>
 						<th>时间</th>
 						<th>操作</th>
 					</tr>
@@ -75,6 +89,7 @@
 							<td>${log.title}</td>
 							<td>${log.content}</td>
 							<td>${log.type=='0'?'登录':'操作'}</td>
+							<td>${log.user}</td>
 							<td>${log.date}</td>
 							<td><a class="ext_btn ext_btn_error" href="javascript:deleteAction('./delete?id=${log.id}')">删除
 							</a> 

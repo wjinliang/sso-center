@@ -33,6 +33,9 @@ public class LogServiceImpl extends BaseServiceImpl<Log,Long> implements LogServ
 		if(!StringUtils.isEmpty(log.getContent())){
 			c.andLike("content", "%"+log.getContent()+"%");
 		}
+		if(!StringUtils.isEmpty(log.getUser())){
+			c.andLike("user", "%"+log.getUser()+"%");
+		}
 		if(!StringUtils.isEmpty(log.getType())){
 			c.andEqualTo("type",log.getType());
 		}
