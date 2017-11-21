@@ -1,6 +1,8 @@
 package com.topie.ssocenter.freamwork.authorization.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table(name = "t_log")
 public class Log {
@@ -122,4 +124,12 @@ public class Log {
     public void setContent(String content) {
         this.content = content;
     }
+
+	@Override
+	public String toString() {
+		return "Log [id=" + id + ", date=" + date + ", ip=" + ip + ", title="
+				+ title + ", type=" + type + ", user=" + user + ", content="
+				+ content + "]";
+	}
+    
 }

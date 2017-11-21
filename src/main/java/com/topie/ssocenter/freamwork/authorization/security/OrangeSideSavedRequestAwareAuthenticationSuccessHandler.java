@@ -17,9 +17,14 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
 
+import com.topie.ssocenter.common.utils.AppUtil;
+import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.common.utils.RequestUtil;
 import com.topie.ssocenter.common.utils.ResponseUtil;
+import com.topie.ssocenter.freamwork.authorization.model.Log;
+import com.topie.ssocenter.freamwork.authorization.service.LogService;
 import com.topie.ssocenter.freamwork.authorization.service.SecurityService;
+import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/8 说明：
@@ -86,10 +91,32 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
         } else {
             username = authentication.getPrincipal().toString();
         }
+        String ip =  RequestUtil.getIpAddress(request);
         logger.info("登录系统成功;日志类型:{};用户:{};登录IP:{};", LOGIN, username,
-                RequestUtil.getIpAddress(request));
+              ip );
+        String content = username+"[ip:"+ip+"]登录成功";
+        insertLog("登录系统成功",content,"");
     }
 
+
+    private void insertLog(String title,String content,String nll) {
+   	 Log log = new Log();  
+   	 //获取登录管理员 
+   	 OrangeSideSecurityUser user = SecurityUtils.getCurrentSecurityUser(); 
+   	 if(user==null){
+   		 return;
+   	 }
+        log.setUser(user.getUsername()+"["+user.getId()+"]");//设置管理员id  
+        log.setDate(DmDateUtil.Current());//操作时间  
+        log.setContent(content);//操作内容  
+        log.setTitle(title);//操作  
+        log.setType("0");
+        String ip = SecurityUtils.getCurrentIP();
+        log.setIp(ip);
+        LogService logService = (LogService) AppUtil.getBean("logServiceImpl");
+        logService.save(log);//添加日志  
+		
+	}
     private void decideRedirect(HttpServletRequest request, HttpServletResponse response,
                                 String targetUrl) throws IOException {
         try {

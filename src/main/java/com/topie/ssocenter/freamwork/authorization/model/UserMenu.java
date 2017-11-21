@@ -1,6 +1,8 @@
 package com.topie.ssocenter.freamwork.authorization.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table(name = "t_user_menu")
 public class UserMenu {
@@ -190,4 +192,14 @@ public class UserMenu {
     public void setIscommon(String iscommon) {
         this.iscommon = iscommon;
     }
+
+	@Override
+	public String toString() {
+		return "UserMenu [id=" + id + ", checked=" + checked + ", detail="
+				+ detail + ", icon=" + icon + ", isshow=" + isshow + ", name="
+				+ name + ", open=" + open + ", seq=" + seq + ", menuurl="
+				+ menuurl + ", pid=" + pid + ", iscommon=" + iscommon + "]";
+	}
+    
+    
 }

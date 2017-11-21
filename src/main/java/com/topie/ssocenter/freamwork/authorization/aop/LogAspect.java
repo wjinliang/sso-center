@@ -1,6 +1,4 @@
-package com.topie.ssocenter.freamwork.authorization.log;
-
-import java.lang.reflect.Method;
+package com.topie.ssocenter.freamwork.authorization.aop;
 
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
@@ -30,25 +28,23 @@ public class LogAspect {
     /** 
      * 添加业务逻辑方法切入点 
      */  
-    @Pointcut("(execution(* com.**.service.*.insert*(..))||"
-    		+ "execution(* com.**.service.*.save*(..)))&&"
-    		+ "(!execution(* com.**.service.LogService*.save*(..)))")  
+    @Pointcut("execution(* com.topie.ssocenter.freamwork.authorization.service.impl.*.insert*(..))||"
+    		+ "execution(* com.topie.ssocenter.freamwork.authorization.service.impl.*.save*(..))")
     public void insertServiceCall() { }  
       
     /** 
      * 修改业务逻辑方法切入点 
      */  
-    @Pointcut("(execution(* com.**.service.*.update*(..)))||"
-    		+ "(!execution(* com.**.service.LogService*.update*(..)))")  
+    @Pointcut("execution(* com.topie.ssocenter.freamwork.authorization.service..*.*(..))")
     public void updateServiceCall() { }  
       
     /** 
-     * 删除影片业务逻辑方法切入点 
+     * 
      */  
 //    @Pointcut("execution(* com.xxx.service.FilmService.deleteFilm(..))")  
 //    public void deleteFilmCall() { }  
     
-    @Pointcut("execution(* com.**.controller.*.*(..))")
+    @Pointcut("execution(* com.topie..*.controller.*.*(..))")
 	public void allCall() {
 	}
       
@@ -66,10 +62,9 @@ public class LogAspect {
         if(joinPoint.getArgs() == null){//没有参数  
             return;  
         }  
-         
         //获取方法名  
-        String methodName = joinPoint.getSignature().getName();  
-          
+        String methodName = joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName();
+        
         //获取操作内容  
         String opContent = adminOptionContent(joinPoint.getArgs(), methodName);  
           
@@ -82,6 +77,9 @@ public class LogAspect {
     	 Log log = new Log();  
     	 //获取登录管理员 
     	 OrangeSideSecurityUser user = SecurityUtils.getCurrentSecurityUser(); 
+    	 if(user==null){
+    		 return;
+    	 }
          log.setUser(user.getUsername()+"["+user.getId()+"]");//设置管理员id  
          log.setDate(DmDateUtil.Current());//操作时间  
          log.setContent(content);//操作内容  
@@ -106,9 +104,8 @@ public class LogAspect {
         if(joinPoint.getArgs() == null){//没有参数  
             return;  
         }  
-          
         //获取方法名  
-        String methodName = joinPoint.getSignature().getName();  
+        String methodName = joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName();
           
         //获取操作内容  
         String opContent = adminOptionContent(joinPoint.getArgs(), methodName);  
@@ -120,9 +117,9 @@ public class LogAspect {
     
     @AfterThrowing(value = "allCall()", throwing = "e")
 	public void afterThrowing(JoinPoint joinPoint, RuntimeException e) {
-    	  //获取方法名  
-        String methodName = joinPoint.getSignature().getName();  
-          
+    	 //获取方法名  
+        String methodName = joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName();
+         
         //获取操作内容  
         String opContent =methodName+"[throw 产生异常的方法名称]：  " + e.getMessage() + ">>>>>>>" + e.getCause();
         //创建日志对象  
@@ -208,13 +205,16 @@ public class LogAspect {
         int index = 1;  
         // 遍历参数对象  
         for (Object info : args) {  
-              
+              if(info==null){
+            	  rs.append("[参数" + index + "，值：NULL"); 
+            	  continue;
+              }
             //获取对象类型  
             className = info.getClass().getName();  
             className = className.substring(className.lastIndexOf(".") + 1);  
             rs.append("[参数" + index + "，类型：" + className + "，值：");  
               
-            // 获取对象的所有方法  
+            /*// 获取对象的所有方法  
             Method[] methods = info.getClass().getDeclaredMethods();  
               
             // 遍历方法，判断get方法  
@@ -244,7 +244,8 @@ public class LogAspect {
                 rs.append("(" + methodName + " : " + rsValue + ")");  
             }  
               
-            rs.append("]");  
+            rs.append("]");  */
+            rs.append(info.toString());
               
             index++;  
         }  

@@ -123,4 +123,14 @@ public class JKApplicationInfo {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	@Override
+	public String toString() {
+		return "JKApplicationInfo [id=" + id + ", appName=" + appName
+				+ ", appCode=" + appCode + ", appPath=" + appPath
+				+ ", appUsername=" + appUsername + ", appPassword="
+				+ appPassword + ", description=" + description + "]";
+	}
+    
+    
 }

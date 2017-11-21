@@ -75,7 +75,7 @@ public class UserRoleController {
         if (SecurityUtils.getCurrentSecurityUser().getId().equals( roleId)) {
             throw new AuthBusinessException(AuBzConstant.CANNOT_DEL_CURRENT_USER);
         }
-        roleService.deleteRole(roleId);
+        roleService.delete(roleId);
         return ResponseUtil.success();
     }
     @RequestMapping("/stoprole")

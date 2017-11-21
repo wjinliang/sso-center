@@ -81,7 +81,7 @@ public class UserMenuController {
         if (SecurityUtils.getCurrentSecurityUser().getId().equals( menuId)) {
             throw new AuthBusinessException(AuBzConstant.CANNOT_DEL_CURRENT_USER);
         }
-        menuService.deleteRecord(menuId);
+        menuService.delete(menuId);
         return ResponseUtil.success();
     }
 

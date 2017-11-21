@@ -24,16 +24,19 @@
 
 package com.topie.ssocenter.freamwork.database.baseservice.impl;
 
-import com.topie.ssocenter.freamwork.database.baseservice.IService;
-import org.springframework.beans.factory.annotation.Autowired;
-import tk.mybatis.mapper.common.Mapper;
-
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.entity.Example;
+
+import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
 /**
  * Created by liuzh on 2014/12/11.
  */
-public abstract class BaseService<T> implements IService<T> {
+public abstract class BaseServiceImpl<T,K> implements IService<T,K> {
 
     @Autowired
     protected Mapper<T> mapper;
@@ -43,7 +46,7 @@ public abstract class BaseService<T> implements IService<T> {
     }
 
     @Override
-    public T selectByKey(Object key) {
+    public T selectByKey(K key) {
         return mapper.selectByPrimaryKey(key);
     }
 
@@ -51,7 +54,7 @@ public abstract class BaseService<T> implements IService<T> {
         return mapper.insert(entity);
     }
 
-    public int delete(Object key) {
+    public int delete(K key) {
         return mapper.deleteByPrimaryKey(key);
     }
 
@@ -63,7 +66,7 @@ public abstract class BaseService<T> implements IService<T> {
         return mapper.updateByPrimaryKeySelective(entity);
     }
 
-    public List<T> selectByExample(Object example) {
+    public List<T> selectByExample(Example example) {
         return mapper.selectByExample(example);
     }
 

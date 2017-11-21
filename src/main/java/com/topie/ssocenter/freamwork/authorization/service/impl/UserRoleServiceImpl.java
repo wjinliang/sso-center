@@ -21,13 +21,13 @@ import com.topie.ssocenter.freamwork.authorization.dao.UserRoleMapper;
 import com.topie.ssocenter.freamwork.authorization.model.UserMenu;
 import com.topie.ssocenter.freamwork.authorization.model.UserRole;
 import com.topie.ssocenter.freamwork.authorization.service.UserRoleService;
-import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseService;
+import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/3 说明：
  */
 @Service("roleService")
-public class UserRoleServiceImpl extends BaseService<UserRole> implements
+public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implements
 		UserRoleService {
 
 	@Autowired
@@ -121,9 +121,58 @@ public class UserRoleServiceImpl extends BaseService<UserRole> implements
 	}
 
 	@Override
-	public void deleteRole(String roleId) {
+	public int delete(String roleId) {
 		this.roleMapper.deleteRoleMenu(roleId, null);
-		this.getMapper().deleteByPrimaryKey(roleId);
+		return this.getMapper().deleteByPrimaryKey(roleId);
 		
 	}
+
+	@Override
+	public UserRole selectByKey(String key) {
+		
+		return super.selectByKey(key);
+	}
+
+	@Override
+	/**
+	 * 不可用  没有实现 只新增基本属性 没有关联表
+	 */
+	@Deprecated
+	public int save(UserRole entity) {
+		
+		return super.save(entity);
+	}
+
+	@Override
+	/**
+	 * 不可用  没有实现 只更新基本属性 没有关联表
+	 */
+	@Deprecated
+	public int updateAll(UserRole entity) {
+		
+		return super.updateAll(entity);
+	}
+
+	@Override
+	/**
+	 * 不可用  没有实现 只更新基本属性 没有关联表
+	 */
+	@Deprecated
+	public int updateNotNull(UserRole entity) {
+		
+		return super.updateNotNull(entity);
+	}
+
+	@Override
+	public List<UserRole> selectByExample(Example example) {
+		
+		return super.selectByExample(example);
+	}
+
+	@Override
+	public List<UserRole> selectAll() {
+		
+		return super.selectAll();
+	}
+	
 }

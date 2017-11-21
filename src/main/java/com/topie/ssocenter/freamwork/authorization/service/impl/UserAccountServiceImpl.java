@@ -5,18 +5,21 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.entity.Example;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.dao.UserAccountMapper;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
-import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseService;
+import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/2 说明：
  */
 @Service("userService")
-public class UserAccountServiceImpl extends BaseService<UserAccount>
+public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
         implements UserAccountService {
     @Autowired
     UserAccountMapper userMapper;
@@ -53,4 +56,55 @@ public class UserAccountServiceImpl extends BaseService<UserAccount>
 	public String selectMaxUserLoginNameByOrgCode(String code) {
 		return  userMapper.selectMaxUserLoginNameByOrgCode(code);
 	}
+
+	@Override
+	public Mapper<UserAccount> getMapper() {
+		
+		return super.getMapper();
+	}
+
+	@Override
+	public UserAccount selectByKey(String key) {
+		
+		return super.selectByKey(key);
+	}
+
+	@Override
+	public int save(UserAccount entity) {
+		
+		return super.save(entity);
+	}
+
+	@Override
+	public int delete(String key) {
+		
+		return super.delete(key);
+	}
+
+	@Override
+	public int updateAll(UserAccount entity) {
+		
+		return super.updateAll(entity);
+	}
+
+	@Override
+	public int updateNotNull(UserAccount entity) {
+		
+		return super.updateNotNull(entity);
+	}
+
+	@Override
+	public List<UserAccount> selectByExample(Example example) {
+		
+		return super.selectByExample(example);
+	}
+
+	@Override
+	public List<UserAccount> selectAll() {
+		
+		return super.selectAll();
+	}
+
+	
+	
 }

@@ -8,7 +8,7 @@ import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
 /**
  */
-public interface UserAccountService extends IService<UserAccount> {
+public interface UserAccountService extends IService<UserAccount,String> {
 
 
     UserAccount findUserAccountByLoginName(String loginName);

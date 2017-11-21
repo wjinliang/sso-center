@@ -8,7 +8,7 @@ import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
-public interface OrgService extends IService<Org>{
+public interface OrgService extends IService<Org,Long>{
 	/**
 	 * 获取当前用户的区划树，
 	 * @param divisionid   当前所在的节点 可以为null

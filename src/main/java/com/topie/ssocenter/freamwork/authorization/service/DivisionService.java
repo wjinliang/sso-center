@@ -6,7 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
-public interface DivisionService extends IService<Division>{
+public interface DivisionService extends IService<Division,String>{
 
 	List<Division> findSheng();
 

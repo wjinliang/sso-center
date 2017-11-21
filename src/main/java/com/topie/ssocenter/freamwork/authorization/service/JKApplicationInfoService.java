@@ -6,7 +6,7 @@ import com.topie.ssocenter.freamwork.database.baseservice.IService;
 
 /**
  */
-public interface JKApplicationInfoService extends IService<JKApplicationInfo> {
+public interface JKApplicationInfoService extends IService<JKApplicationInfo,String> {
 
 	PageInfo<JKApplicationInfo> findApplicationInfoList(int pageNum,
 			int pageSize, JKApplicationInfo jkapp);

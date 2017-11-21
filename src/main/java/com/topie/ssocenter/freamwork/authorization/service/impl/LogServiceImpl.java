@@ -14,12 +14,12 @@ import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.dao.LogMapper;
 import com.topie.ssocenter.freamwork.authorization.model.Log;
 import com.topie.ssocenter.freamwork.authorization.service.LogService;
-import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseService;
+import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 
 /**
  */
 @Service
-public class LogServiceImpl extends BaseService<Log> implements LogService {
+public class LogServiceImpl extends BaseServiceImpl<Log,Long> implements LogService {
 	
 	@Autowired
 	private LogMapper logService;

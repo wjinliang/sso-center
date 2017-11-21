@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
@@ -20,12 +21,12 @@ import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
-import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseService;
+import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 
 /**
  */
 @Service
-public class OrgServiceImpl extends BaseService<Org> implements OrgService {
+public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgService {
 	@Autowired
 	private DivisionService divisionService;
 	@Autowired
@@ -164,6 +165,46 @@ public class OrgServiceImpl extends BaseService<Org> implements OrgService {
 		}
 		maxname = String.valueOf((Long.valueOf(maxname)+1));
 		return maxname;
+	}
+	@Override
+	public Mapper<Org> getMapper() {
+		
+		return super.getMapper();
+	}
+	@Override
+	public Org selectByKey(Long key) {
+		
+		return super.selectByKey(key);
+	}
+	@Override
+	public int save(Org entity) {
+		
+		return super.save(entity);
+	}
+	@Override
+	public int delete(Long key) {
+		
+		return super.delete(key);
+	}
+	@Override
+	public int updateAll(Org entity) {
+		
+		return super.updateAll(entity);
+	}
+	@Override
+	public int updateNotNull(Org entity) {
+		
+		return super.updateNotNull(entity);
+	}
+	@Override
+	public List<Org> selectByExample(Example example) {
+		
+		return super.selectByExample(example);
+	}
+	@Override
+	public List<Org> selectAll() {
+		
+		return super.selectAll();
 	}
 
 }

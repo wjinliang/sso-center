@@ -14,9 +14,9 @@ import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.topie.ssocenter.common.utils.DmDateUtil;
+import com.topie.ssocenter.freamwork.authorization.security.OrangeSideCaptchaAuthenticationDetails;
 import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
 
 /**
@@ -32,17 +32,21 @@ public class SecurityUtils {
     }
 
     public static OrangeSideSecurityUser getCurrentSecurityUser() {
+    	try{
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = null;
         if (principal instanceof OrangeSideSecurityUser)
             return (OrangeSideSecurityUser) principal;
+    	}catch(Exception ex){
+    		//ex.printStackTrace();
+    	}
         return null;
     }
     
     public static String getCurrentIP() {
     	 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-         WebAuthenticationDetails wauth = (WebAuthenticationDetails) auth.getDetails();
-         String ip = wauth.getRemoteAddress();
+    	 OrangeSideCaptchaAuthenticationDetails wauth = (OrangeSideCaptchaAuthenticationDetails) auth.getDetails();
+         String ip = wauth.getIp();
          return ip;
     }
 

@@ -10,7 +10,7 @@ import com.topie.ssocenter.freamwork.database.baseservice.IService;
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/3 说明：
  */
-public interface UserRoleService extends IService<UserRole> {
+public interface UserRoleService extends IService<UserRole,String> {
 
     int insertUserRoleFunction(String roleId, Long functionId);
 
@@ -23,6 +23,4 @@ public interface UserRoleService extends IService<UserRole> {
 	void save(UserRole role, String menuids);
 
 	void updateNotNull(UserRole role, String menuids);
-
-	void deleteRole(String roleId);
 }
