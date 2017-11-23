@@ -10,10 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.freamwork.authorization.exception.AuBzConstant;
 import com.topie.ssocenter.freamwork.authorization.exception.AuthBusinessException;
+import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.model.UserMenu;
 import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
@@ -43,6 +45,14 @@ public class IndexController {
         String userId = SecurityUtils.getCurrentSecurityUser().getId();
         //List<String> roleIds = userService.findUserAccountRoleByUserAccountId(userId);
         return "index";
+    }
+    @RequestMapping("/infoCenter")
+    public ModelAndView infoCenter(ModelAndView model){
+    	String userId = SecurityUtils.getCurrentSecurityUser().getId();
+    	UserAccount userAccount = userService.selectByKey(userId);
+    	model.addObject("userAccount", userAccount);
+    	model.setViewName("user/info");
+    	return model;
     }
     
     @RequestMapping("/menu")

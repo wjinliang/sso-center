@@ -39,7 +39,7 @@ public class SynLogServiceImpl extends BaseServiceImpl<SynLog,String> implements
 		if(!StringUtils.isEmpty(log.getSynResult())){
 			c.andEqualTo("synResult",log.getSynResult());
 		}
-		ex.setOrderByClause("synTime desc");
+		ex.setOrderByClause("syn_time desc");
 		List<SynLog> list = getMapper().selectByExample(ex);
 		return new PageInfo(list);
 	}

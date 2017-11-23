@@ -48,9 +48,9 @@ public class SynLogController {
 
 
 
-		@RequestMapping({ "/delete" })
+		@RequestMapping({ "/deleteLog" })
 		@ResponseBody
-		public Object delete(
+		public Object deleteLog(
 				@RequestParam(value = "id", required = false) String id)
 				{
 				if (id != null) {

@@ -80,7 +80,7 @@
 							<td>${log.synUsername}</td>
 							<td>${log.synTime}</td>
 							<c:if test="${isTopLevel }">
-								<td><a class="ext_btn ext_btn_error" href="javascript:deleteAction('./delete?id=${log.id}')">删除
+								<td><a class="ext_btn ext_btn_error" href="javascript:deleteAction('./deleteLog?id=${log.id}')">删除
 								</a> 
 								</td>
 							</c:if>
