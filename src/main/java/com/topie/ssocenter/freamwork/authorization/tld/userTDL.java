@@ -1,8 +1,11 @@
 package com.topie.ssocenter.freamwork.authorization.tld;
 
 import com.topie.ssocenter.common.utils.AppUtil;
+import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
+import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 
 public class userTDL {
 	
@@ -24,6 +27,18 @@ public class userTDL {
 		} else {
 			return "-";
 		}
+	}
+	
+	public static String getCurretUserDivisionId() {
+		try{
+			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
+			OrgService orgService = (OrgService)AppUtil.getBean("orgServiceImpl");
+			Org o = orgService.selectByKey(orgId);
+			return o.getDivisionId();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "-";
 	}
 
 	private static UserAccount getUser(String userId) {

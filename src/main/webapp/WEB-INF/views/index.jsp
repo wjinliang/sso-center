@@ -63,7 +63,7 @@
 </div>
 
 <div class="bottom">
-    <div id="bottom_bg">版权</div>
+    <div id="bottom_bg">版权&copy;-中国动物疫病预防控制中心</div>
 </div>
 <div class="scroll">
     <a href="javascript:;" class="per" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(1);"></a>

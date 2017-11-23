@@ -20,4 +20,12 @@
 		</function-signature>
 		<example>${d:gLL(userId)}</example>
 	</function>
+	<function>
+		<description>获取当前用户得区划ID</description>
+		<name>gDID</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurretUserDivisionId()
+		</function-signature>
+		<example>${d:gDID()}</example>
+	</function>
 </taglib>

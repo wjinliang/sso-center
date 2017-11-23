@@ -1,6 +1,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c"%>
+<%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -79,7 +80,7 @@
 									</div>
 								</form>
 							</div>
-
+						<c:if test="${d:gDID()=='1'}">
 							<div id="button" class="mt10">
 								<input type="button"
 									onclick="javascript:openPage('./form/new?divisionId=${searchModel.divisionId}&parentId=${searchModel.parentId}');"
@@ -95,6 +96,7 @@
        <input type="button" name="button" class="btn btn82 btn_export" value="导出">
        <input type="button" name="button" class="btn btn82 btn_recycle" value="回收站"> -->
 							</div>
+							</c:if>
 						</div>
 					</div>
 					<div id="table" class="mt10">
