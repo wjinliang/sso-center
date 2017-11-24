@@ -22,4 +22,6 @@ public interface UserAccountService extends IService<UserAccount,String> {
     int findExistUserAccount(UserAccount user);
 
 	String selectMaxUserLoginNameByOrgCode(String code);
+
+	void updatePassword(String userId,String oldPassword, String newPassword);
 }

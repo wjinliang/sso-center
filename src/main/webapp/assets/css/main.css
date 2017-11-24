@@ -101,6 +101,13 @@
 	background:   url('../images/btn_res_hover.png') 0px 0px no-repeat;
 	color: #fff;
 }
+.btn_back{
+	background:   url('../images/btn_back.jpg') 0px -1px no-repeat;
+}
+.btn_back:hover{
+	background:   url('../images/btn_back_hover.jpg') 0px 0px no-repeat;
+	color: #fff;
+}
 /*table*/
 .list_table{
 	width: 100%;

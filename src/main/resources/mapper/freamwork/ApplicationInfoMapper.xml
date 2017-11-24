@@ -29,7 +29,7 @@
 	and a.status = '1' order by seq asc
   </select>
   <select id="selectSynAppsByMergeUuid" resultMap="BaseResultMap">
-  	SELECT t1.* FROM (	
+  	SELECT DISTINCT(t1.id) distid,t1.* FROM (	
 		SELECT * FROM 	app_applicationinfo app LEFT JOIN (
 			SELECT syn.app_id FROM ( 
 				SELECT u. CODE  

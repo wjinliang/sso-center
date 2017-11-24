@@ -74,7 +74,7 @@ var xAxisData=[],shengData=[],shiData=[],xianData=[],xiangData=[],cunData=[];
 		</div>
 		 <iframe id="ifile" class="dn"></iframe>
 		<div id="chartsPanel" class="">
-			<div id="charts" style="height:600px;"></div>
+			<div id="charts" style="height:510px;"></div>
 		</div>
 		<div id="table" class="mt10">
 			<div class="box span10 oh">

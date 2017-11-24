@@ -3,6 +3,7 @@ package com.topie.ssocenter.freamwork.authorization.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.common.Mapper;
@@ -11,8 +12,10 @@ import tk.mybatis.mapper.entity.Example;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.dao.UserAccountMapper;
+import com.topie.ssocenter.freamwork.authorization.exception.RuntimeBusinessException;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
+import com.topie.ssocenter.freamwork.authorization.utils.SimpleCrypto;
 import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 
 /**
@@ -103,6 +106,29 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 	public List<UserAccount> selectAll() {
 		
 		return super.selectAll();
+	}
+
+	@Override
+	public void updatePassword(String userId, String oldPassword,
+			String enPassword) {
+		String dePassword ="";
+		try {
+			dePassword = SimpleCrypto.decrypt("zcpt@123456",
+					enPassword);
+		} catch (Exception e) {
+			throw new RuntimeBusinessException("修改密码时解码错误");
+		}
+		UserAccount record = getMapper().selectByPrimaryKey(userId);
+		if(!record.getPassword().equals(oldPassword)){
+			throw new RuntimeBusinessException("原密码输入错误");
+		}
+		UserAccount user = new UserAccount();
+		user.setCode(userId);
+		user.setSynpassword(enPassword);
+		ShaPasswordEncoder sha = new ShaPasswordEncoder();
+		sha.setEncodeHashAsBase64(false);
+		user.setPassword(sha.encodePassword(dePassword, null));
+		getMapper().updateByPrimaryKeySelective(user);
 	}
 
 	

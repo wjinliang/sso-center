@@ -127,7 +127,6 @@ public class TjController {
 		response.setHeader("content-disposition", "attachment;filename="+new String(fileName.getBytes(), "iso-8859-1")+".xls");  
 			fOut = response.getOutputStream();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//List<UserAccount> list = this.userAccountService.listUserAccount(orgId, orgId, 0, 1000);
@@ -138,13 +137,10 @@ public class TjController {
 			workbook = ExcelExportUtils.getInstance().inExcel(list, fields, names);
 			workbook.write(fOut);  
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally
@@ -152,7 +148,6 @@ public class TjController {
 			try {
 				fOut.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -40,6 +40,20 @@ public class userTDL {
 		}
 		return "-";
 	}
+	public static String getCurretUserName() {
+		return SecurityUtils.getCurrentUserName();
+	}
+	public static String getCurrentUserOrgName() {
+		try{
+			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
+			OrgService orgService = (OrgService)AppUtil.getBean("orgServiceImpl");
+			Org o = orgService.selectByKey(orgId);
+			return o.getName();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "-";
+	}
 
 	private static UserAccount getUser(String userId) {
 		UserAccountService userService = (UserAccountService)AppUtil.getBean("userService");

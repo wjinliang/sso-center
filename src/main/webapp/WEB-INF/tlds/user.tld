@@ -28,4 +28,20 @@
 		</function-signature>
 		<example>${d:gDID()}</example>
 	</function>
+	<function>
+		<description>获取当前用户名</description>
+		<name>gN</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurretUserName()
+		</function-signature>
+		<example>${d:gN()}</example>
+	</function>
+	<function>
+		<description>获取当前用户机构名</description>
+		<name>gO</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurrentUserOrgName()
+		</function-signature>
+		<example>${d:gO()}</example>
+	</function>
 </taglib>

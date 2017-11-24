@@ -211,13 +211,11 @@ public class OrgAndUserController {
 			Org org) {
 		model.addObject("mode",mode);
 		model.addObject("org",org);
-		model.addObject("isadmin",false);
 		String useraccountid = user.getCode();
 		Long orgid = user.getOrgId();
 		if (mode != null && !mode.equals("new")) {//编辑
 			if (useraccountid != null) {
 				user = userAccountService.selectByKey(useraccountid);
-				//TODO 判断是否为admin 
 			}
 		} else {//新增
 			if (orgid == null) {

@@ -43,10 +43,11 @@
         if (subMenus.length > 0) {
             ele += "<ul>";
             $.each(subMenus, function (i, m) {
-                ele += ('<li >'
-                + '<a href="' +root+ m.url
+            	var on = m.name=="/infoCenter"?"on":"";
+                ele += ('<li class="'+on+'">'
+                + '<a href="javascript:void();" data-url="' +root+ m.url
                 + '" data-title="' + m.name
-                + '" target="rightMain"><i class="' + (m.icon == null ? "" : m.icon) + '"></i> '
+                + '"><i class="' + (m.icon == null ? "" : m.icon) + '"></i> '
                 + m.name
                 + '</a>');
                 var sMenus = getSubMenu(menus, m.id);
@@ -83,6 +84,16 @@
                             var h3 = $(ele);
                             
                             $(div).append(h3);
+                        });
+                        var lis = $(div).find("li");
+                        lis.on("mousedown",function(e){
+                        	 e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+                        	 $(div).find("li.on").removeClass("on");
+                        	var li = $(this);
+                        	li.addClass("on");
+                        	var url = li.find("a").data("url");
+                        	$("#rightMain").attr("src",url);
+                        	
                         });
                         
                             $(".sideMenu").slide({

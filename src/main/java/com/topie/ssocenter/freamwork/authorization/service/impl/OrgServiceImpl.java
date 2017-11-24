@@ -48,7 +48,24 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 			}
 			org.setDivisionId(o.getDivisionId());//设置
 		}
-		
+		if(org.getName()!=null){//要查询当前用户所能看到的所有机构匹配的
+			c.andLike("name", "%"+org.getName()+"%");
+		}
+		if(org.getParentId()!=null){//查看子机构   子区划下的机构
+			//c.andEqualTo("parentId", org.getId());
+			List<Division> list = this.divisionService.findByPid(org.getDivisionId());
+			if(list.size()==0){
+				return ResponseUtil.emptyPage();
+			}
+			List<String> ids = new ArrayList<String>();
+			for(Division d: list){
+				ids.add(d.getId());
+			}
+			c.andIn("divisionId",ids );
+		}else{
+			c.andEqualTo("divisionId", org.getDivisionId());
+		}
+		/*//
 		if(org.getName()!=null){//要查询当前用户所能看到的所有机构匹配的
 			c.andLike("name", "%"+org.getName()+"%");
 			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
@@ -71,7 +88,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 			}else{
 				c.andEqualTo("divisionId", org.getDivisionId());
 			}
-		}
+		}*/
 		if(org.getSystemId()!=null){
 			c.andEqualTo("systemId", org.getSystemId());
 		}

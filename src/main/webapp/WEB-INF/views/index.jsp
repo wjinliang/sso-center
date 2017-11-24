@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
@@ -38,13 +39,12 @@
             </div>
             <div id="base_info" class="fr">
                 <div class="help_info">
-                    <a href="1" id="hp">&nbsp;</a>
-                    <a href="2" id="gy">&nbsp;</a>
-                    <a href="<%=basePath%>/security/logout" id="out">&nbsp;</a>
+                    <a href="javascript:void();" id="hp" style="color:#fff">${d:gN() }</a>
+                    <a href="<%=basePath%>/security/logout" id="out" style="color:#fff">退出</a>
                 </div>
                 <div class="info_center">
-                    admin
-                    <span id="nt">通知</span><span><a href="#" id="notice">3</a></span>
+                    ${d:gO() }
+<!--                     <span id="nt">通知</span><span><a href="#" id="notice">3</a></span> -->
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
     </div>
 </div>
 <div class="main">
-<iframe name="rightMain" id="rightMain" src="orgAndUser/listOrgs" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
+<iframe name="rightMain" id="rightMain" src="infoCenter" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
 
 </div>
 
