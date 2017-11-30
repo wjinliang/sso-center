@@ -5,19 +5,22 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.common.utils.AppUtil;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
+import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
+import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 
 public class userTDL {
-	
-  public static String getRemoteIpAddr(String userId) {
+
+	public static String getRemoteIpAddr(String userId) {
 		if (userId != null && !userId.equals("")) {
 			UserAccount u = getUser(userId);
-			if(u==null) return "-";
+			if (u == null)
+				return "-";
 			return u.getRemoteipaddr();
 		} else {
 			return "-";
@@ -27,47 +30,84 @@ public class userTDL {
 	public static String getLastLoginTime(String userId) {
 		if (userId != null && !userId.equals("")) {
 			UserAccount u = getUser(userId);
-			if(u==null) return "-";
+			if (u == null)
+				return "-";
 			return u.getLastlogintime();
 		} else {
 			return "-";
 		}
 	}
-	
+
 	public static String getCurretUserDivisionId() {
-		try{
-			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
-			OrgService orgService = (OrgService)AppUtil.getBean("orgServiceImpl");
-			Org o = orgService.selectByKey(orgId);
+		try {
+			Org o = getCurrentUserOrg();
 			return o.getDivisionId();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "-";
 	}
+
+	private static Org getCurrentUserOrg() {
+		Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
+		OrgService orgService = (OrgService) AppUtil
+				.getBean("orgServiceImpl");
+		Org o = orgService.selectByKey(orgId);
+		return o;
+	}
+
 	public static String getCurretUserName() {
 		return SecurityUtils.getCurrentUserName();
 	}
+
 	public static String getCurrentUserOrgName() {
-		try{
-			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
-			OrgService orgService = (OrgService)AppUtil.getBean("orgServiceImpl");
-			Org o = orgService.selectByKey(orgId);
+		try {
+			Org o = getCurrentUserOrg();
 			return o.getName();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "-";
 	}
-	
-	public static List<ApplicationInfo> getCurrentUserApps() {
-		ApplicationInfoService appService = (ApplicationInfoService)AppUtil.getBean("applicationInfoServiceImpl");
-		PageInfo<ApplicationInfo> list = appService.selectCurrentUserSynApps();
-		return list.getList();
+
+	public static List<ApplicationInfo> getCurrentUserApps(String divisionId) {
+		ApplicationInfoService appService = (ApplicationInfoService) AppUtil
+				.getBean("applicationInfoServiceImpl");
+		PageInfo<ApplicationInfo> page = appService.selectCurrentUserSynApps();
+		List<ApplicationInfo> list = page.getList();
+/*		Division userDivision = getCurrentUserDivision();
+		int currentUserLevel = userDivision.getLevel();
+		int userLevel = getDivision(divisionId).getLevel();
+		for (ApplicationInfo a : list) {
+			boolean hidden = false;
+			int op = Integer.valueOf(a.getOpLevel());
+			int user = Integer.parseInt(a.getUserLevel());
+			if (userLevel > user) {
+				hidden = true;
+			}
+			if (currentUserLevel > op) {
+				hidden = true;
+			}
+		}
+*/		return list;
+	}
+
+	private static Division getCurrentUserDivision() {
+		Org o = getCurrentUserOrg();
+		String divisionId = o.getDivisionId();
+		DivisionService ds =  (DivisionService) AppUtil
+				.getBean("divisionServiceImpl");
+		return ds.selectByKey(divisionId);
+	}
+	private static Division getDivision(String divisionId) {
+		DivisionService ds =  (DivisionService) AppUtil
+				.getBean("divisionServiceImpl");
+		return ds.selectByKey(divisionId);
 	}
 
 	private static UserAccount getUser(String userId) {
-		UserAccountService userService = (UserAccountService)AppUtil.getBean("userService");
+		UserAccountService userService = (UserAccountService) AppUtil
+				.getBean("userService");
 		UserAccount user = userService.selectByKey(userId);
 		return user;
 	}
