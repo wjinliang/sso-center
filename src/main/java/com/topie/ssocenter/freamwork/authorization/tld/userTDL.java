@@ -1,8 +1,13 @@
 package com.topie.ssocenter.freamwork.authorization.tld;
 
+import java.util.List;
+
+import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.common.utils.AppUtil;
+import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
@@ -53,6 +58,12 @@ public class userTDL {
 			e.printStackTrace();
 		}
 		return "-";
+	}
+	
+	public static List<ApplicationInfo> getCurrentUserApps() {
+		ApplicationInfoService appService = (ApplicationInfoService)AppUtil.getBean("applicationInfoServiceImpl");
+		PageInfo<ApplicationInfo> list = appService.selectCurrentUserSynApps();
+		return list.getList();
 	}
 
 	private static UserAccount getUser(String userId) {

@@ -1,6 +1,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c"%>
+<%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d"%>
+<%@ taglib uri="/WEB-INF/tlds/fn.tld" prefix="fn"%>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
@@ -81,6 +83,18 @@
                 <tr>
                   <td class="td_right">传真：</td><td><input type="text" name="faxNo" value="${org.faxNo}" class="input-text lh30" size="40"></td>
                   <td class="td_right">电话：</td><td><input type="text" name="phoneNo" value="${org.phoneNo}" class="input-text lh30" size="40"></td>
+                </tr>
+                <tr>
+                  <td class="td_right">同步到系统：</td>
+                  <td colspan="3">
+                  <c:if test="${ fn:length(d:gAS()) == 0}">
+                  	您没有同步到其他系统得权限！
+                  </c:if>
+                  <c:forEach var="app" items="${d:gAS() }">
+                    <input type="checkbox" name="synApps" value="${app.id }">${app.appName } 
+                  </c:forEach>
+                  </td>
+                  
                 </tr>
                 
                  <tr>

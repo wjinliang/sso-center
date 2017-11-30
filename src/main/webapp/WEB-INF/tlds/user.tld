@@ -30,18 +30,26 @@
 	</function>
 	<function>
 		<description>获取当前用户名</description>
-		<name>gN</name>
+		<name>gUN</name>
 		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
 		<function-signature>String getCurretUserName()
 		</function-signature>
-		<example>${d:gN()}</example>
+		<example>${d:gUN()}</example>
 	</function>
 	<function>
 		<description>获取当前用户机构名</description>
-		<name>gO</name>
+		<name>gON</name>
 		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
 		<function-signature>String getCurrentUserOrgName()
 		</function-signature>
-		<example>${d:gO()}</example>
+		<example>${d:gON()}</example>
+	</function>
+	<function>
+		<description>获取当前用户可以同步得权限Apps</description>
+		<name>gAS</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurrentUserApps()
+		</function-signature>
+		<example>${d:gAS()}</example>
 	</function>
 </taglib>

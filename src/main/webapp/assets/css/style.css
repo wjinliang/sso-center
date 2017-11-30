@@ -79,18 +79,19 @@ html { *padding:125px 0 25px 0;}
 	 height: 19px;
 }
 #base_info .help_info #hp{
-	margin-left: 40px;
+/* 	margin-left: 40px; */
 }
 #base_info .help_info #gy{
-	margin-left: 5px;
+	margin-left: 10px;
 }
 #base_info .help_info #out{
+	margin-left: 30px;
 }
 #base_info .info_center{
-	width: 151px;
+	width: 200px;
 	height: 25px;
  	padding-top:10px; 
- 	padding-left: 34px;
+/*  	padding-left: 34px; */
  	color:#fff;
 }
 #base_info .info_center #nt{

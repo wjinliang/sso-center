@@ -39,11 +39,11 @@
             </div>
             <div id="base_info" class="fr">
                 <div class="help_info">
-                    <a href="javascript:void();" id="hp" style="color:#fff">${d:gN() }</a>
+                    <a href="javascript:void();" id="hp" style="color:#fff">${d:gUN() }</a>
                     <a href="<%=basePath%>/security/logout" id="out" style="color:#fff">退出</a>
                 </div>
                 <div class="info_center">
-                    ${d:gO() }
+                    ${d:gON() }
 <!--                     <span id="nt">通知</span><span><a href="#" id="notice">3</a></span> -->
                 </div>
             </div>

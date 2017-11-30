@@ -43,7 +43,7 @@
         if (subMenus.length > 0) {
             ele += "<ul>";
             $.each(subMenus, function (i, m) {
-            	var on = m.name=="/infoCenter"?"on":"";
+            	var on = m.url=="/infoCenter"?"on":"";
                 ele += ('<li class="'+on+'">'
                 + '<a href="javascript:void();" data-url="' +root+ m.url
                 + '" data-title="' + m.name

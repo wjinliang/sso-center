@@ -147,6 +147,18 @@
 						value="${userAccount.address}" class="input-text lh30" size="40"></td>
 				</tr>
 				<tr>
+                  <td class="td_right">同步到系统：</td>
+                  <td colspan="3">
+                  <c:if test="${ fn:length(d:gAS()) == 0}">
+                  	您没有同步到其他系统得权限！
+                  </c:if>
+                  <c:forEach var="app" items="${d:gAS() }">
+                    <input type="checkbox" name="synApps" value="${app.id }">${app.appName } 
+                  </c:forEach>
+                  </td>
+                  
+                </tr>
+				<tr> 
                    <td class="td_right">&nbsp;</td>
                    <td class="">
                    	

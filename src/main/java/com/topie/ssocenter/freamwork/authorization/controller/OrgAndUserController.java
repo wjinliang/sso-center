@@ -137,7 +137,7 @@ public class OrgAndUserController {
 	@RequestMapping("/save")
 	public ModelAndView save(
 			ModelAndView model,
-			Org org) {
+			Org org,@RequestParam(value="synApps",required=false) String synAppIds) {
 		Long orgId = org.getId();
 		if(orgId==null){//新增
 			org.setId(System.currentTimeMillis());
@@ -175,7 +175,11 @@ public class OrgAndUserController {
 		}
 		String[] idArr = ids.split(",");
 		for(int i =0 ;i<idArr.length;i++){
-			this.orgService.delete(Long.valueOf(idArr[i]));
+			int count = this.orgService.delete(Long.valueOf(idArr[i]));
+			if(count>0){
+				//TODO 删除操作
+			}
+			
 		}
 		return ResponseUtil.success();
 	}
@@ -229,6 +233,8 @@ public class OrgAndUserController {
 			String loginName = this.orgService.selectNextUserLoginNameByOrgCode(code);
 			user.setLoginname(loginName);
 			user.setEnabled(true);
+			//TODO 获取用户的权限 是否为管理员
+			
 		}
 //		UserAccount currentUserAccount = UserAccountUtil.getInstance()
 //				.getCurrentUserAccount();
