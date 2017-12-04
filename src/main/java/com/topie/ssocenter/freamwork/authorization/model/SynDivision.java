@@ -1,9 +1,11 @@
 package com.topie.ssocenter.freamwork.authorization.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table(name = "syn_division")
-public class synDivision {
+public class SynDivision {
     @Id
     private String id;
 

@@ -70,7 +70,7 @@ public class userTDL {
 		return "-";
 	}
 
-	public static List<ApplicationInfo> getCurrentUserApps(String divisionId) {
+	public static List<ApplicationInfo> getCurrentUserApps() {
 		ApplicationInfoService appService = (ApplicationInfoService) AppUtil
 				.getBean("applicationInfoServiceImpl");
 		PageInfo<ApplicationInfo> page = appService.selectCurrentUserSynApps();

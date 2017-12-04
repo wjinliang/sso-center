@@ -55,4 +55,27 @@
     		AND MENU_CODE=#{menuId}
     	</if>
     </delete>
+    <!-- 中间表 -->
+    <select id="selectRolesByUserId" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        select
+        ROLE_CODE
+        from t_user_account_role
+        where USER_CODE = #{userId,jdbcType=VARCHAR}
+    </select>
+    <insert id="insertUserAccountRole" >
+    	INSERT INTO `t_user_account_role` (`USER_CODE`, `ROLE_CODE`) VALUES (#{userId}, #{roleId});
+    </insert>
+    <delete id="deleteUserAccountRole">
+    	DELETE FROM `t_user_account_role` WHERE 1=1
+    	<if test="userId!='' and userId!=null">
+	    	AND USER_CODE = #{userId}
+    	</if>
+    	<if test="roleId!='' and roleId!=null">
+	    	AND ROLE_CODE = #{roleId}
+    	</if>
+    	<if test="userId==null and roleId==null">
+	    	AND 1=2
+    	</if>
+    </delete>
 </mapper>

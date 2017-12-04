@@ -12,6 +12,7 @@ import tk.mybatis.mapper.entity.Example;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.dao.UserAccountMapper;
+import com.topie.ssocenter.freamwork.authorization.dao.UserRoleMapper;
 import com.topie.ssocenter.freamwork.authorization.exception.RuntimeBusinessException;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
@@ -26,6 +27,8 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
         implements UserAccountService {
     @Autowired
     UserAccountMapper userMapper;
+    @Autowired
+    UserRoleMapper userRoleMapper;
 
     @Override
     public UserAccount findUserAccountByLoginName(String loginName) {
@@ -34,12 +37,12 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 
     @Override
     public int insertUserAccountRole(String userId, String roleId) {
-        return userMapper.insertUserRole(userId, roleId);
+        return userRoleMapper.insertUserAccountRole(userId, roleId);
     }
 
     @Override
     public List<String> findUserAccountRoleByUserAccountId(String userId) {
-        return userMapper.findUserRoleByUserId(userId);
+        return userRoleMapper.selectRolesByUserId(userId);
     }
 
     @Override

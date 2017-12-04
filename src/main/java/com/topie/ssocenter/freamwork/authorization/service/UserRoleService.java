@@ -23,4 +23,10 @@ public interface UserRoleService extends IService<UserRole,String> {
 	void save(UserRole role, String menuids);
 
 	void updateNotNull(UserRole role, String menuids);
+
+	List<String> selectRolesByUserId(String useraccountid);
+
+	int insertUserAccountRole(String code, String adminId);
+
+	int deleteUserAccountRole(String code, String adminId);
 }

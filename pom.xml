@@ -232,7 +232,7 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.8.2</version>
+            <version>1.8.7</version>
         </dependency>
 
         <dependency>
@@ -395,7 +395,35 @@
     <version>${axis2.version}</version>
 </dependency>
 <!--axis2 end-->
-
+<!-- axis1 start-->
+<!-- https://mvnrepository.com/artifact/org.apache.axis/axis -->
+	<dependency>  
+		<groupId>org.springframework</groupId>  
+        <artifactId>spring-remoting</artifactId>  
+        <version>2.0.8</version>  
+    </dependency>  
+	<dependency>
+	    <groupId>org.apache.axis</groupId>
+	    <artifactId>axis</artifactId>
+	    <version>1.4</version>
+	</dependency>
+       <dependency>  
+           <groupId>axis</groupId>  
+           <artifactId>axis-jaxrpc</artifactId>  
+           <version>1.4</version>  
+       </dependency>  
+       <dependency>  
+           <groupId>wsdl4j</groupId>  
+           <artifactId>wsdl4j</artifactId>  
+           <version>1.6.3</version>  
+       </dependency>
+       <!-- https://mvnrepository.com/artifact/commons-discovery/commons-discovery -->
+		<dependency>
+		    <groupId>commons-discovery</groupId>
+		    <artifactId>commons-discovery</artifactId>
+		    <version>0.2</version>
+		</dependency>
+ <!-- axis1 end -->     
 <!-- poi start -->
         <dependency>
             <groupId>org.apache.poi</groupId>

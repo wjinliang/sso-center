@@ -79,16 +79,6 @@
         from t_user_account
         where LOGINNAME = #{loginName,jdbcType=VARCHAR}
     </select>
-    <insert id="insertUserRole" parameterType="java.lang.Integer">
-        insert into t_user_account_role (USER_CODE,ROLE_CODE) values(#{userId,jdbcType=VARCHAR},#{roleId,jdbcType=VARCHAR});
-    </insert>
-    <select id="findUserRoleByUserId" parameterType="java.lang.String"
-            resultType="java.lang.String">
-        select
-        ROLE_CODE
-        from t_user_account_role
-        where USER_CODE = #{userId,jdbcType=VARCHAR}
-    </select>
     <select id="findUserList" parameterType="com.topie.ssocenter.freamwork.authorization.model.UserAccount"
             resultMap="BaseResultMap">
         select

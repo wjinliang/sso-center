@@ -195,8 +195,8 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 	}
 	@Override
 	public int save(Org entity) {
-		
-		return super.save(entity);
+		int i = super.save(entity);
+		return i;
 	}
 	@Override
 	public int delete(Long key) {

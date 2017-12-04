@@ -56,6 +56,10 @@ public class ResponseUtil {
         return new Result(code, msg);
     }
 
+	public static <T> Result error(T data) {
+		 return new Result(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, data);
+	}
+
     public static Result error(BindingResult result) {
         String msg = "";
         if (result.hasFieldErrors()) {
@@ -90,5 +94,6 @@ public class ResponseUtil {
 		page.setTotal(list.size());
 		return page;
 	}
+
 
 }

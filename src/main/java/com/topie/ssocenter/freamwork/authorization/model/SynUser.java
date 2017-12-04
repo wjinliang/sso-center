@@ -3,7 +3,7 @@ package com.topie.ssocenter.freamwork.authorization.model;
 import javax.persistence.*;
 
 @Table(name = "syn_user")
-public class synUser {
+public class SynUser {
     private String id;
 
     @Column(name = "app_id")

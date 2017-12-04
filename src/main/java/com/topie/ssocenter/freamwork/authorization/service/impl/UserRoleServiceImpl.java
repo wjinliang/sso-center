@@ -27,8 +27,8 @@ import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/3 说明：
  */
 @Service("roleService")
-public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implements
-		UserRoleService {
+public class UserRoleServiceImpl extends BaseServiceImpl<UserRole, String>
+		implements UserRoleService {
 
 	@Autowired
 	UserRoleMapper roleMapper;
@@ -94,7 +94,8 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implem
 	@Override
 	public void save(UserRole role, String menuids) {
 		this.getMapper().insert(role);
-		if(StringUtil.isEmpty(menuids)) return;
+		if (StringUtil.isEmpty(menuids))
+			return;
 		String[] arr = menuids.split(",");
 		for (String id : arr) {
 			Long mid = Long.valueOf(id);
@@ -106,15 +107,16 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implem
 	@Override
 	public void updateNotNull(UserRole role, String menuids) {
 		this.getMapper().updateByPrimaryKeySelective(role);
-		if(StringUtil.isEmpty(menuids)) return;
+		if (StringUtil.isEmpty(menuids))
+			return;
 		String[] arr = menuids.split(",");
-		String roleId  = role.getCode();
+		String roleId = role.getCode();
 		for (String id : arr) {
 			Long menuId = Long.valueOf(id);
-			Map record = this.roleMapper.selectRoleMenuRecord(roleId,menuId);
-			if(record==null){
+			Map record = this.roleMapper.selectRoleMenuRecord(roleId, menuId);
+			if (record == null) {
 				this.roleMapper.insertRoleMenu(roleId, menuId);
-			}else{
+			} else {
 				this.roleMapper.deleteRoleMenu(roleId, menuId);
 			}
 		}
@@ -124,12 +126,12 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implem
 	public int delete(String roleId) {
 		this.roleMapper.deleteRoleMenu(roleId, null);
 		return this.getMapper().deleteByPrimaryKey(roleId);
-		
+
 	}
 
 	@Override
 	public UserRole selectByKey(String key) {
-		
+
 		return super.selectByKey(key);
 	}
 
@@ -139,7 +141,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implem
 	 */
 	@Deprecated
 	public int save(UserRole entity) {
-		
+
 		return super.save(entity);
 	}
 
@@ -149,7 +151,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implem
 	 */
 	@Deprecated
 	public int updateAll(UserRole entity) {
-		
+
 		return super.updateAll(entity);
 	}
 
@@ -159,20 +161,35 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole,String> implem
 	 */
 	@Deprecated
 	public int updateNotNull(UserRole entity) {
-		
+
 		return super.updateNotNull(entity);
 	}
 
 	@Override
 	public List<UserRole> selectByExample(Example example) {
-		
+
 		return super.selectByExample(example);
 	}
 
 	@Override
 	public List<UserRole> selectAll() {
-		
+
 		return super.selectAll();
 	}
-	
+
+	@Override
+	public List<String> selectRolesByUserId(String userId) {
+		return roleMapper.selectRolesByUserId(userId);
+	}
+
+	@Override
+	public int insertUserAccountRole(String code, String roleId) {
+		return this.roleMapper.insertUserAccountRole(code,roleId);
+	}
+
+	@Override
+	public int deleteUserAccountRole(String code, String roleId) {
+		return this.roleMapper.deleteUserAccountRole(code,roleId);
+	}
+
 }
