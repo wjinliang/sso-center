@@ -21,4 +21,6 @@ public interface SynService {
 
 	public abstract List<SynOrg> selectOrgSynInfo(Long id);
 
+	public abstract List<SynUser> selectUserSynInfo(String code);
+
 }

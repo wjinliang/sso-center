@@ -439,4 +439,11 @@ public class SynServiceImpl implements SynService {
 		example.createCriteria().andEqualTo("orgId", id);
 		return this.synOrgMapper.selectByExample(example);
 	}
+
+	@Override
+	public List<SynUser> selectUserSynInfo(String code) {
+		Example example = new Example(SynUser.class);
+		example.createCriteria().andEqualTo("userId",code);
+		return this.synUserMapper.selectByExample(example);
+	}
 }

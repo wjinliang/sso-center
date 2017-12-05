@@ -32,7 +32,8 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 
     @Override
     public UserAccount findUserAccountByLoginName(String loginName) {
-        return userMapper.findUserByLoginName(loginName);
+        
+    	return userMapper.findUserByLoginName(loginName);
     }
 
     @Override

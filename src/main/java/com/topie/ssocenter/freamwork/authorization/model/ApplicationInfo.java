@@ -44,6 +44,18 @@ public class ApplicationInfo {
 
     @Column(name = "param_name")
     private String paramName;
+    
+    @Column(name = "is_org_syn")
+    private Boolean isOrgSyn;
+
+    @Column(name = "is_org_authorize")
+    private Boolean isOrgAuthorize;
+
+    @Column(name = "is_user_syn")
+    private Boolean isUserSyn;
+
+    @Column(name = "is_user_authorize")
+    private Boolean isUserAuthorize;
 
     private Integer seq;
 
@@ -259,16 +271,50 @@ public class ApplicationInfo {
         this.seq = seq;
     }
 
+	public Boolean getIsOrgSyn() {
+		return isOrgSyn;
+	}
+
+	public void setIsOrgSyn(Boolean isOrgSyn) {
+		this.isOrgSyn = isOrgSyn;
+	}
+
+	public Boolean getIsOrgAuthorize() {
+		return isOrgAuthorize;
+	}
+
+	public void setIsOrgAuthorize(Boolean isOrgAuthorize) {
+		this.isOrgAuthorize = isOrgAuthorize;
+	}
+
+	public Boolean getIsUserSyn() {
+		return isUserSyn;
+	}
+
+	public void setIsUserSyn(Boolean isUserSyn) {
+		this.isUserSyn = isUserSyn;
+	}
+
+	public Boolean getIsUserAuthorize() {
+		return isUserAuthorize;
+	}
+
+	public void setIsUserAuthorize(Boolean isUserAuthorize) {
+		this.isUserAuthorize = isUserAuthorize;
+	}
+
 	@Override
 	public String toString() {
 		return "ApplicationInfo [id=" + id + ", appName=" + appName
 				+ ", appCode=" + appCode + ", appPath=" + appPath
 				+ ", appPath1=" + appPath1 + ", synType=" + synType
-				+ ", synPath=" + synPath + ", description=" + description
-				+ ", packagename=" + packagename + ", status=" + status
-				+ ", opLevel=" + opLevel + ", userLevel=" + userLevel
-				+ ", paramName=" + paramName + ", seq=" + seq + "]";
+				+ ", synPath=" + synPath + ", synPath1=" + synPath1
+				+ ", description=" + description + ", packagename="
+				+ packagename + ", status=" + status + ", opLevel=" + opLevel
+				+ ", userLevel=" + userLevel + ", paramName=" + paramName
+				+ ", isOrgSyn=" + isOrgSyn + ", isOrgAuthorize="
+				+ isOrgAuthorize + ", isUserSyn=" + isUserSyn
+				+ ", isUserAuthorize=" + isUserAuthorize + ", seq=" + seq + "]";
 	}
-    
     
 }

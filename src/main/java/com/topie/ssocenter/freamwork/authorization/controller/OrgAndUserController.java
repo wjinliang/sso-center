@@ -40,6 +40,7 @@ import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.SynLog;
 import com.topie.ssocenter.freamwork.authorization.model.SynOrg;
+import com.topie.ssocenter.freamwork.authorization.model.SynUser;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
@@ -174,9 +175,8 @@ public class OrgAndUserController {
 				org.setCode(getOrgCode(division));
 			}//验证code end
 			orgService.save(org);
-			doTongBu("41",org,synAppIds,model);
-//			model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId()
-//					+"&id="+org.getId()+"&parentId="+org.getParentId());
+			List<Map> resultList = doTongBu("41",org,synAppIds,model);
+			
 			return model;
 		}
 		//更新
@@ -189,7 +189,7 @@ public class OrgAndUserController {
 	private List<Map> doTongBu(String optype, Org org, String synAppIds,
 			ModelAndView model) {
 		List<Map> list = new ArrayList<Map>();
-		if(synAppIds!=null&& !synAppIds.equals("")){
+		if(synAppIds==null ||synAppIds.equals("")){
 			return list;
 		}
 		if(optype=="41"){//新增
@@ -245,6 +245,31 @@ public class OrgAndUserController {
 				list.add(u);
 			}
 		}
+		model.addObject("resultList", list);//同步结果
+		int redirect=0;
+		String appCode="";
+		for(Map map:list){
+			if("42".equals(map.get("opType").toString())){//如果新增  则设置权限
+				if(map.get("isAuthorize")!=null && (Boolean)map.get("isAuthorize")){//如果要授权
+					redirect++;
+					appCode = map.get("appCode").toString();
+				};
+			}
+		}
+		if(redirect==0){//返回到列表页面
+			model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId()
+					+"&id="+org.getId()+"&parentId="+org.getParentId());
+		}
+		if(redirect==1){//TODO 一个app需要授权  直接打开授权页面
+			model.setViewName("redirect:"
+					+ "../synuseraccount/ssoServiceBySession?xtbs="+appCode
+					+"&TYPE="+
+					R.ORG_AUTHORIZE+"&ID="+org.getId());
+		}
+		if(redirect > 1){//TODO 多个app 需要授权   手动选择授权
+			model.setViewName("redirect:form/authorize?divisionId="+org.getDivisionId()
+					+"&id="+org.getId()+"&parentId="+org.getParentId());
+		}
 		return list;
 	}
 
@@ -261,11 +286,14 @@ public class OrgAndUserController {
 	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 	private Map synOneOrg(Org org, String appId,String type,String typeName) {
 		ApplicationInfo app = appService.selectByKey(appId);
+		
 		Map u = new HashMap();
 		u.put("opType", typeName);
 		u.put("appName", app.getAppName());
 		u.put("appId", app.getId());
+		u.put("appCode", app.getAppCode());
 		u.put("status", true);
+//		u.put(, );
 		if(app==null){
 			String s = "同步"+typeName+"Org时 {appId="+appId+"}未找到对应的应用";
 			logger.info(s);
@@ -273,22 +301,27 @@ public class OrgAndUserController {
 			u.put("status", false);
 			return u;
 		}
-		String result = this.synService.synStart(appId, org.getId()
-				.toString(), type);
+		String result = "000";
 		String today = DmDateUtil.Current();
-		if (result != null && result.equals("000")) {
-			result = "同步成功";
-			SynOrg synOrg = new SynOrg();
-			String uuid = UUIDUtil.getUUID();
-			synOrg.setAppId(appId);
-			synOrg.setId(uuid);
-			synOrg.setOrgId(org.getId().toString());
-			synOrg.setSynTime(today);
-			this.synService.save(synOrg);
-			
-		
-		}else{
-			u.put("status", false);
+		if(app.getIsOrgSyn()){//如果该系统要同步机构
+			logger.info("开始同步Org："+app.getAppName()+"-"+org.getName());
+			result = this.synService.synStart(appId, org.getId()
+					.toString(), type);
+			if (result != null && result.equals("000")) {
+				result = "同步成功";
+				SynOrg synOrg = new SynOrg();
+				String uuid = UUIDUtil.getUUID();
+				synOrg.setAppId(appId);
+				synOrg.setId(uuid);
+				synOrg.setOrgId(org.getId().toString());
+				synOrg.setSynTime(today);
+				this.synService.save(synOrg);
+				u.put("isAuthorize",app.getIsOrgAuthorize());
+			}else{
+				u.put("status", false);
+			}
+		}else{//不同不到该系统
+			result = "该系统设置为不同步机构";
 		}
 		/*
 		 * 添加记录日志的操作
@@ -304,6 +337,7 @@ public class OrgAndUserController {
 		synLog.setSynUserid(currentUser.getId());
 		synLog.setSynUsername(currentUser.getDisplayName());
 		this.synService.save(synLog);
+		u.put("result", result);
 		return u;
 		
 	}
@@ -414,14 +448,16 @@ public class OrgAndUserController {
 	}
 	
 	@RequestMapping("user/save")
-	public ModelAndView user_save(UserAccount user, ModelAndView model,String isAdmin) throws Exception{
+	public ModelAndView user_save(UserAccount user,
+			@RequestParam(value="synApps",required=false) String synAppIds,
+			ModelAndView model,String isAdmin) throws Exception{
 		model.setViewName("listUsers?orgId="+user.getOrgId());
 		if(StringUtil.isNotEmpty(user.getCode())){//更新
 			this.userAccountService.updateNotNull(user);
 			if(isAdmin.equals("true")){
 				try{
 				this.userRoleService.insertUserAccountRole(user.getCode(),this.adminId);
-				}catch(Exception e){
+				}catch(Exception e){//之前已存在  报主键重复错误
 					
 				}
 			}
@@ -449,8 +485,125 @@ public class OrgAndUserController {
 		if(isAdmin.equals("true")){
 			this.userRoleService.insertUserAccountRole(user.getCode(),this.adminId);
 		}
-		
+		List<Map> list = doTongBu("11", user, synAppIds, model);
 		return model;
+	}
+	
+	private List<Map> doTongBu(String optype, UserAccount user, String synAppIds,
+			ModelAndView model) {
+		List<Map> list = new ArrayList<Map>();
+		if(synAppIds!=null&& !synAppIds.equals("")){
+			return list;
+		}
+		if(optype=="11"){//新增
+			for(String appId:synAppIds.split(",")){
+				Map u = synOneUser(user,appId,"11","新增");
+				list.add(u);
+			}
+		}
+		if(optype=="12"){//更新
+			List<SynUser> listInfo = synService.selectUserSynInfo(user.getCode());//已经同步过的APP
+			for(String appId:synAppIds.split(",")){
+				if(!getIsOpen(appId)){//没有同步权限
+					continue;
+				}
+				boolean isSyn = false;//是否已经同步过了
+				for(SynUser synUser:listInfo){
+					if(synUser.getAppId().equals(appId)){
+						isSyn = true;
+						break;
+					}
+				}
+				if(isSyn){//如果同步过-》更新
+					Map u = synOneUser(user,appId,"12","更新");
+					list.add(u);
+				}else{//如果没有通不过-》新增
+					Map u = synOneUser(user,appId,"11","新增");
+					list.add(u);
+				}
+			}
+			
+			for(SynUser synUser:listInfo){
+				if(!getIsOpen(synUser.getAppId())){//没有同步权限
+					continue;
+				}
+				boolean isSyn = true;//是否已经同步过了
+				String app="";
+				for(String appId:synAppIds.split(",")){
+					app = appId;
+					if(synUser.getAppId().equals(appId)){
+						isSyn = false;
+						break;
+					}
+				}
+				if(isSyn){//以前同步过现在去掉同步 -》删除
+					Map u = synOneUser(user,app,"13","删除");
+					list.add(u);
+				}
+			}
+		}
+		if(optype=="13"){//删除
+			for(String appId:synAppIds.split(",")){
+				Map u = synOneUser(user,appId,"13","删除");
+				list.add(u);
+			}
+		}
+		return list;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	private Map synOneUser(UserAccount user, String appId,String type,String typeName) {
+		ApplicationInfo app = appService.selectByKey(appId);
+		Map u = new HashMap();
+		u.put("opType", typeName);
+		u.put("appName", app.getAppName());
+		u.put("appId", app.getId());
+		u.put("status", true);
+		if(app==null){
+			String s = "同步"+typeName+"User时 {appId="+appId+"}未找到对应的应用";
+			logger.info(s);
+			u.put("result", s);
+			u.put("status", false);
+			return u;
+		}
+		String today = DmDateUtil.Current();
+		String result="000";
+		if(app.getIsUserSyn()){
+			result = this.synService.synStart(appId, user.getCode()
+					, type);
+			if (result != null && result.equals("000")) {
+				result = "同步成功";
+				SynUser synUser = new SynUser();
+				String uuid = UUIDUtil.getUUID();
+				synUser.setAppId(appId);
+				synUser.setId(uuid);
+				synUser.setUserId(user.getCode());
+				synUser.setSynTime(today);
+				this.synService.save(synUser);
+				u.put("isAuthorize",app.getIsUserAuthorize());
+			}else{
+				u.put("status", false);
+			}
+		}else{//不同不到该系统
+			result = "该系统设置为不同步用户";
+		}
+		u.put("result", result);
+		/*
+		 * 添加记录日志的操作
+		 */
+		SynLog synLog = new SynLog();
+		synLog.setId(UUIDUtil.getUUID());
+		synLog.setAppId(appId);
+		synLog.setAppName(app.getAppName());
+		synLog.setSynTime(today);
+		synLog.setSynResult("用户(" + user.getName()+"["+user.getLoginname()+"]" + ")"+typeName+"操作："
+				+ result);
+		OrangeSideSecurityUser currentUser = SecurityUtils.getCurrentSecurityUser();
+		synLog.setSynUserid(currentUser.getId());
+		synLog.setSynUsername(currentUser.getDisplayName());
+		this.synService.save(synLog);
+		return u;
+		
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
