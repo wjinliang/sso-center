@@ -110,4 +110,31 @@
     <select id="selectSynCount" resultType="long">
     	select count(id) from syn_user where app_id=#{appId}
     </select>
+    <select id="selectSynUserByAppId" resultMap="BaseResultMap">
+    	SELECT t.* 
+    	FROM t_user_account t 
+    	LEFT JOIN syn_user st 
+    	ON t.`CODE`=st.user_id 
+    	WHERE st.app_id=#{appId}
+    	<if test="user.loginname!=null and user.loginname!=''">
+	    	AND t.LOGINNAME=#{user.loginname}
+    	</if>
+    	<if test="user.name!=null and user.name!=''">
+			AND t.`NAME` LIKE CONCAT('%',#{user.name},'%')
+    	</if>
+    </select>
+    
+     <select id="selectToSynUserByAppId" resultMap="BaseResultMap">
+    	SELECT t.* 
+    	FROM t_user_account t 
+    	LEFT JOIN syn_user st 
+    	ON t.`CODE`=st.user_id 
+    	WHERE st.app_id &lt;&gt; #{appId}
+    	<if test="user.loginname!=null and user.loginname!=''">
+	    	AND t.LOGINNAME=#{user.loginname}
+    	</if>
+    	<if test="user.name!=null and user.name!=''">
+			AND t.`NAME` LIKE CONCAT('%',#{user.name},'%')
+    	</if>
+    </select>
 </mapper>

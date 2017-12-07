@@ -38,11 +38,9 @@ import com.topie.ssocenter.freamwork.authorization.exception.AuthBusinessExcepti
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
-import com.topie.ssocenter.freamwork.authorization.model.SynLog;
 import com.topie.ssocenter.freamwork.authorization.model.SynOrg;
 import com.topie.ssocenter.freamwork.authorization.model.SynUser;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
-import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
@@ -186,6 +184,18 @@ public class OrgAndUserController {
 				+"&parentId="+org.getId());
 		return model;
 	}
+
+	private boolean getIsOpen(String appId) {
+		List<ApplicationInfo> list = appService.selectCurrentUserSynApps().getList();//当前admin 可以同步的APP
+		for(ApplicationInfo app:list){
+			if(app.getId().equals(appId)){//当前用户有操作权限
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("rawtypes")
 	private List<Map> doTongBu(String optype, Org org, String synAppIds,
 			ModelAndView model) {
 		List<Map> list = new ArrayList<Map>();
@@ -194,7 +204,7 @@ public class OrgAndUserController {
 		}
 		if(optype=="41"){//新增
 			for(String appId:synAppIds.split(",")){
-				Map u = synOneOrg(org,appId,"41","新增");
+				Map u = orgService.synOneOrg(org,appId,"41","新增");
 				list.add(u);
 			}
 		}
@@ -212,10 +222,10 @@ public class OrgAndUserController {
 					}
 				}
 				if(isSyn){//如果同步过-》更新
-					Map u = synOneOrg(org,appId,"42","更新");
+					Map u = orgService.synOneOrg(org,appId,"42","更新");
 					list.add(u);
 				}else{//如果没有通不过-》新增
-					Map u = synOneOrg(org,appId,"41","新增");
+					Map u = orgService.synOneOrg(org,appId,"41","新增");
 					list.add(u);
 				}
 			}
@@ -234,14 +244,14 @@ public class OrgAndUserController {
 					}
 				}
 				if(isSyn){//以前同步过现在去掉同步 -》删除
-					Map u = synOneOrg(org,app,"43","删除");
+					Map u = orgService.synOneOrg(org,app,"43","删除");
 					list.add(u);
 				}
 			}
 		}
 		if(optype=="43"){//删除
 			for(String appId:synAppIds.split(",")){
-				Map u = synOneOrg(org,appId,"43","删除");
+				Map u = orgService.synOneOrg(org,appId,"43","删除");
 				list.add(u);
 			}
 		}
@@ -273,75 +283,7 @@ public class OrgAndUserController {
 		return list;
 	}
 
-	private boolean getIsOpen(String appId) {
-		List<ApplicationInfo> list = appService.selectCurrentUserSynApps().getList();//当前admin 可以同步的APP
-		for(ApplicationInfo app:list){
-			if(app.getId().equals(appId)){//当前用户有操作权限
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
-	private Map synOneOrg(Org org, String appId,String type,String typeName) {
-		ApplicationInfo app = appService.selectByKey(appId);
-		
-		Map u = new HashMap();
-		u.put("opType", typeName);
-		u.put("appName", app.getAppName());
-		u.put("appId", app.getId());
-		u.put("appCode", app.getAppCode());
-		u.put("status", true);
-//		u.put(, );
-		if(app==null){
-			String s = "同步"+typeName+"Org时 {appId="+appId+"}未找到对应的应用";
-			logger.info(s);
-			u.put("result", s);
-			u.put("status", false);
-			return u;
-		}
-		String result = "000";
-		String today = DmDateUtil.Current();
-		if(app.getIsOrgSyn()){//如果该系统要同步机构
-			logger.info("开始同步Org："+app.getAppName()+"-"+org.getName());
-			result = this.synService.synStart(appId, org.getId()
-					.toString(), type);
-			if (result != null && result.equals("000")) {
-				result = "同步成功";
-				SynOrg synOrg = new SynOrg();
-				String uuid = UUIDUtil.getUUID();
-				synOrg.setAppId(appId);
-				synOrg.setId(uuid);
-				synOrg.setOrgId(org.getId().toString());
-				synOrg.setSynTime(today);
-				this.synService.save(synOrg);
-				u.put("isAuthorize",app.getIsOrgAuthorize());
-			}else{
-				u.put("status", false);
-			}
-		}else{//不同不到该系统
-			result = "该系统设置为不同步机构";
-		}
-		/*
-		 * 添加记录日志的操作
-		 */
-		SynLog synLog = new SynLog();
-		synLog.setId(UUIDUtil.getUUID());
-		synLog.setAppId(appId);
-		synLog.setAppName(app.getAppName());
-		synLog.setSynTime(today);
-		synLog.setSynResult("组织(" + org.getName() + ")"+typeName+"操作："
-				+ result);
-		OrangeSideSecurityUser currentUser = SecurityUtils.getCurrentSecurityUser();
-		synLog.setSynUserid(currentUser.getId());
-		synLog.setSynUsername(currentUser.getDisplayName());
-		this.synService.save(synLog);
-		u.put("result", result);
-		return u;
-		
-	}
-
+	@SuppressWarnings({ "unused", "rawtypes" })
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Object deleteOrg(String ids){
@@ -497,7 +439,7 @@ public class OrgAndUserController {
 		}
 		if(optype=="11"){//新增
 			for(String appId:synAppIds.split(",")){
-				Map u = synOneUser(user,appId,"11","新增");
+				Map u = userAccountService.synOneUser(user,appId,"11","新增");
 				list.add(u);
 			}
 		}
@@ -515,10 +457,10 @@ public class OrgAndUserController {
 					}
 				}
 				if(isSyn){//如果同步过-》更新
-					Map u = synOneUser(user,appId,"12","更新");
+					Map u = userAccountService.synOneUser(user,appId,"12","更新");
 					list.add(u);
 				}else{//如果没有通不过-》新增
-					Map u = synOneUser(user,appId,"11","新增");
+					Map u = userAccountService.synOneUser(user,appId,"11","新增");
 					list.add(u);
 				}
 			}
@@ -537,74 +479,21 @@ public class OrgAndUserController {
 					}
 				}
 				if(isSyn){//以前同步过现在去掉同步 -》删除
-					Map u = synOneUser(user,app,"13","删除");
+					Map u = userAccountService.synOneUser(user,app,"13","删除");
 					list.add(u);
 				}
 			}
 		}
 		if(optype=="13"){//删除
 			for(String appId:synAppIds.split(",")){
-				Map u = synOneUser(user,appId,"13","删除");
+				Map u = userAccountService.synOneUser(user,appId,"13","删除");
 				list.add(u);
 			}
 		}
 		return list;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
-	private Map synOneUser(UserAccount user, String appId,String type,String typeName) {
-		ApplicationInfo app = appService.selectByKey(appId);
-		Map u = new HashMap();
-		u.put("opType", typeName);
-		u.put("appName", app.getAppName());
-		u.put("appId", app.getId());
-		u.put("status", true);
-		if(app==null){
-			String s = "同步"+typeName+"User时 {appId="+appId+"}未找到对应的应用";
-			logger.info(s);
-			u.put("result", s);
-			u.put("status", false);
-			return u;
-		}
-		String today = DmDateUtil.Current();
-		String result="000";
-		if(app.getIsUserSyn()){
-			result = this.synService.synStart(appId, user.getCode()
-					, type);
-			if (result != null && result.equals("000")) {
-				result = "同步成功";
-				SynUser synUser = new SynUser();
-				String uuid = UUIDUtil.getUUID();
-				synUser.setAppId(appId);
-				synUser.setId(uuid);
-				synUser.setUserId(user.getCode());
-				synUser.setSynTime(today);
-				this.synService.save(synUser);
-				u.put("isAuthorize",app.getIsUserAuthorize());
-			}else{
-				u.put("status", false);
-			}
-		}else{//不同不到该系统
-			result = "该系统设置为不同步用户";
-		}
-		u.put("result", result);
-		/*
-		 * 添加记录日志的操作
-		 */
-		SynLog synLog = new SynLog();
-		synLog.setId(UUIDUtil.getUUID());
-		synLog.setAppId(appId);
-		synLog.setAppName(app.getAppName());
-		synLog.setSynTime(today);
-		synLog.setSynResult("用户(" + user.getName()+"["+user.getLoginname()+"]" + ")"+typeName+"操作："
-				+ result);
-		OrangeSideSecurityUser currentUser = SecurityUtils.getCurrentSecurityUser();
-		synLog.setSynUserid(currentUser.getId());
-		synLog.setSynUsername(currentUser.getDisplayName());
-		this.synService.save(synLog);
-		return u;
-		
-	}
+	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Org setCurrentDivisionList(Org org, ModelAndView model) {
@@ -641,6 +530,7 @@ public class OrgAndUserController {
 			ModelAndView model,
 			@RequestParam(value = "thispage", required = false) Integer thispage,
 			UserAccount user,
+			Org org,
 			@RequestParam(value = "pagesize", required = false) Integer pagesize) {
 			if (pagesize == null) {
 				pagesize = Integer.valueOf(10);
@@ -648,95 +538,69 @@ public class OrgAndUserController {
 			if (thispage == null) {
 				thispage = Integer.valueOf(0);
 			}
-			PageInfo<UserAccount> userList = this.orgService.listMergeUsers(
+			PageInfo<UserAccount> userList = this.userAccountService.listMergeUsers(
 					user, thispage, pagesize);
 			model.addObject(R.SEARCHMODEL, user);
+			model.addObject(R.SEARCHMODEL+"_org",org);
 			model.addObject(R.PAGE, userList);
-			model.setViewName("/org/listMergeUsers");
+			model.setViewName("/user/listMergeUsers");
 			return model;
 	}
 
-	
 	@RequestMapping({ "/gotoMergeUser" })
 	public ModelAndView gotoMergeUser(
 			ModelAndView model,
 			@RequestParam(value = "thispage", required = false, defaultValue = "0") Integer thispage,
-			@RequestParam(value = "pagesize", required = false, defaultValue = "6") Integer pagesize,
-			@RequestParam(value = "tj", required = false) String name,
-			@RequestParam(value = "xt", required = false) String systemId,
-			@RequestParam(value = "userid", required = true) String userid) {
-		//TODO 用户关联列表
-			/*List<UserAccount> userList = this.orgAndUserService.listUsers(null,
-					systemId, name, thispage, pagesize);
-			List<Order> orders = new ArrayList<Order>();
-			orders.add(new Order(Direction.ASC, "seq"));
-			List<ApplicationInfo> appList = this.commonDAO
-					.findAll(ApplicationInfo.class,orders);
-			model.addObject("appList", appList);
-			model.addObject("userList", userList);
-			model.addObject("userid", userid);
-			model.setViewName("/pages/admin/useraccount/user");*/
+			UserAccount user,
+			@RequestParam(value = "pagesize", required = false, defaultValue = "6") Integer pagesize){	
+			PageInfo<UserAccount> page = userAccountService.listNotMergeUsers(thispage, pagesize, user);
+			model.addObject(R.SEARCHMODEL, user);
+			model.addObject(R.PAGE, page);
+			model.setViewName("/user/listNotMergeUsers");
 			return model;
 	}
 
 	@RequestMapping({ "/mergeUser" })
-	public ModelAndView mergeUser(ModelAndView model,
-			@RequestParam(value = "userid", required = true) String userid,
+	@ResponseBody
+	public Object mergeUser(ModelAndView model,
+			@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "userIds", required = true) String userIds) {
-		//TODO 用户关联
-			/*UserAccount currentUser = UserAccountUtil.getInstance()
-					.getCurrentUserAccount();
-			UserAccount user = this.commonDAO
-					.findOne(UserAccount.class, userid);
+			UserAccount user = this.userAccountService.selectByKey(userId);
 			String[] userIdArray = userIds.trim().split(",");
 			String uuid = null;
-			if (user.getMergeUuid() != null && !user.getMergeUuid().equals("")) {
-				uuid = user.getMergeUuid();
-			} else {
+			if (user.getMergeUuid() == null || user.getMergeUuid().equals("")) {
 				uuid = UUIDUtil.getUUID();
 				user.setMergeUuid(uuid);
+			} else {
+				uuid = user.getMergeUuid();
 			}
 			for (int i = 0; i < userIdArray.length; i++) {
 				String infoCode = userIdArray[i];
-				UserAccount mergeUser = this.commonDAO.findOne(
-						UserAccount.class, infoCode);
+				UserAccount mergeUser =  this.userAccountService.selectByKey(infoCode);
 				mergeUser.setMergeUuid(uuid);
-				this.userAccountService.updateUser(mergeUser);
+				this.userAccountService.updateAll(mergeUser);
 			}
-			this.userAccountService.updateUser(user);
-			model.addObject("userid", userid);
-			return NewRedirect(model, "/orgAndUser/listMergeUsers");*/
-		return model;
+			this.userAccountService.updateAll(user);
+			return ResponseUtil.success(); 
 	}
 
 	@RequestMapping({ "/deleteMerge" })
-	public void deleteMerge(HttpServletRequest request,
+	@ResponseBody
+	public Object deleteMerge(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "userid", required = false) String userid)
-			throws Exception {
+			{
 		
-		//TODO 用户关联删除
-		/*response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		try {
 			if (userid != null) {
 				String[] rid = userid.split(",");
 				for (String str : rid) {
-					UserAccount findOne = this.commonDAO.findOne(
-							UserAccount.class, str);
+					UserAccount findOne = this.userAccountService.selectByKey(str);
 					findOne.setMergeUuid(null);
-					this.userAccountService.updateUser(findOne);
+					this.userAccountService.updateAll(findOne);
 				}
 			}
-			out.write("ok");
-			out.flush();
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			out.write("error");
-			out.flush();
-			out.close();
-		}*/
+			return ResponseUtil.success();
+			
 	}
 
 	@RequestMapping("/excelExport")

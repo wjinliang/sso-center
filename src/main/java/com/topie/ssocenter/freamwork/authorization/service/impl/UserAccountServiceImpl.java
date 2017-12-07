@@ -1,21 +1,37 @@
 package com.topie.ssocenter.freamwork.authorization.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.topie.ssocenter.common.utils.DmDateUtil;
+import com.topie.ssocenter.common.utils.ResponseUtil;
+import com.topie.ssocenter.common.utils.UUIDUtil;
 import com.topie.ssocenter.freamwork.authorization.dao.UserAccountMapper;
 import com.topie.ssocenter.freamwork.authorization.dao.UserRoleMapper;
 import com.topie.ssocenter.freamwork.authorization.exception.RuntimeBusinessException;
+import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
+import com.topie.ssocenter.freamwork.authorization.model.SynLog;
+import com.topie.ssocenter.freamwork.authorization.model.SynUser;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
+import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
+import com.topie.ssocenter.freamwork.authorization.service.SynService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
+import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 import com.topie.ssocenter.freamwork.authorization.utils.SimpleCrypto;
 import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 
@@ -25,10 +41,15 @@ import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 @Service("userService")
 public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
         implements UserAccountService {
+	public static final Logger logger = LoggerFactory.getLogger(UserAccountServiceImpl.class);
     @Autowired
     UserAccountMapper userMapper;
     @Autowired
     UserRoleMapper userRoleMapper;
+    @Autowired
+    SynService synService;
+    @Autowired
+    ApplicationInfoService appService;
 
     @Override
     public UserAccount findUserAccountByLoginName(String loginName) {
@@ -135,6 +156,118 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		getMapper().updateByPrimaryKeySelective(user);
 	}
 
+	@Override
+	public PageInfo<UserAccount> listNotMergeUsers(Integer pageNum,
+			Integer pageSize, UserAccount user) {
+		PageHelper.startPage(pageNum, pageSize);
+		Example example = new Example(UserAccount.class);
+		Criteria c = example.createCriteria();
+		c.andNotEqualTo("code", user.getCode());
+		c.andIsNull("mergeUuid");
+		if(!StringUtils.isEmpty(user.getName())){
+			c.andEqualTo("name", user.getName());
+		}
+		if(!StringUtils.isEmpty(user.getLoginname())){
+			c.andEqualTo("loginname", user.getLoginname());
+		}
+		List<UserAccount> list = this.selectByExample(example);
+		return new PageInfo<UserAccount>(list);
+	}
+
+	@Override
+	public PageInfo<UserAccount> listMergeUsers(UserAccount user, Integer pageNum,
+			Integer pageSize) {
+		UserAccount u = this.userMapper.selectByPrimaryKey(user.getCode());
+		PageHelper.startPage(pageNum, pageSize);
+		Example example = new Example(UserAccount.class);
+		Criteria c = example.createCriteria();
+		c.andNotEqualTo("code", user.getCode());
+		if(!StringUtils.isEmpty(u.getMergeUuid())){
+			c.andEqualTo("mergeUuid", u.getMergeUuid());
+		}else{//如果当前用户没有mergeId
+			return ResponseUtil.emptyPage();
+		}
+		if(!StringUtils.isEmpty(user.getName())){
+			c.andEqualTo("name", user.getName());
+		}
+		if(!StringUtils.isEmpty(user.getLoginname())){
+			c.andEqualTo("loginname", user.getLoginname());
+		}
+		List<UserAccount> list = this.selectByExample(example);
+		return new PageInfo<UserAccount>(list);
+	}
+
+	@Override
+	public PageInfo<UserAccount> findSynUserByAppId(Integer thispage,
+			Integer pagesize, UserAccount user, String appId) {
+		PageHelper.startPage(thispage, pagesize);
+		List<UserAccount> list = userMapper.selectSynUserByAppId(user,appId);
+		return new PageInfo<UserAccount>(list);
+	}
+
+	@Override
+	public PageInfo<UserAccount> findToSynUserByAppId(Integer thispage,
+			Integer pagesize, UserAccount user, String appId) {
+		PageHelper.startPage(thispage, pagesize);
+		List<UserAccount> list = userMapper.selectToSynUserByAppId(user,appId);
+		return new PageInfo<UserAccount>(list);
+	}
+
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	public Map synOneUser(UserAccount user, String appId,String type,String typeName) {
+		ApplicationInfo app = appService.selectByKey(appId);
+		Map u = new HashMap();
+		u.put("opType", typeName);
+		u.put("appName", app.getAppName());
+		u.put("appId", app.getId());
+		u.put("status", true);
+		if(app==null){
+			String s = "同步"+typeName+"User时 {appId="+appId+"}未找到对应的应用";
+			logger.info(s);
+			u.put("result", s);
+			u.put("status", false);
+			return u;
+		}
+		String today = DmDateUtil.Current();
+		String result="000";
+		if(app.getIsUserSyn()){
+			result = this.synService.synStart(appId, user.getCode()
+					, type);
+			if (result != null && result.equals("000")) {
+				result = "同步成功";
+				SynUser synUser = new SynUser();
+				String uuid = UUIDUtil.getUUID();
+				synUser.setAppId(appId);
+				synUser.setId(uuid);
+				synUser.setUserId(user.getCode());
+				synUser.setSynTime(today);
+				this.synService.save(synUser);
+				u.put("isAuthorize",app.getIsUserAuthorize());
+			}else{
+				u.put("status", false);
+			}
+		}else{//不同不到该系统
+			result = "该系统设置为不同步用户";
+		}
+		u.put("result", result);
+		/*
+		 * 添加记录日志的操作
+		 */
+		SynLog synLog = new SynLog();
+		synLog.setId(UUIDUtil.getUUID());
+		synLog.setAppId(appId);
+		synLog.setAppName(app.getAppName());
+		synLog.setSynTime(today);
+		synLog.setSynResult("用户(" + user.getName()+"["+user.getLoginname()+"]" + ")"+typeName+"操作："
+				+ result);
+		OrangeSideSecurityUser currentUser = SecurityUtils.getCurrentSecurityUser();
+		synLog.setSynUserid(currentUser.getId());
+		synLog.setSynUsername(currentUser.getDisplayName());
+		this.synService.save(synLog);
+		return u;
+		
+	}
 	
 	
 }

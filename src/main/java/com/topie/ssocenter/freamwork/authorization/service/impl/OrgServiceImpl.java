@@ -1,8 +1,12 @@
 package com.topie.ssocenter.freamwork.authorization.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +16,21 @@ import tk.mybatis.mapper.entity.Example.Criteria;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.common.utils.ResponseUtil;
+import com.topie.ssocenter.common.utils.UUIDUtil;
 import com.topie.ssocenter.freamwork.authorization.dao.OrgMapper;
+import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
+import com.topie.ssocenter.freamwork.authorization.model.SynLog;
+import com.topie.ssocenter.freamwork.authorization.model.SynOrg;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
+import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
+import com.topie.ssocenter.freamwork.authorization.service.SynService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
@@ -27,12 +39,17 @@ import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
  */
 @Service
 public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgService {
+	Logger logger = LoggerFactory.getLogger(OrgServiceImpl.class);
 	@Autowired
 	private DivisionService divisionService;
 	@Autowired
 	private UserAccountService userService;
 	@Autowired
 	private OrgMapper orgMapper;
+	@Autowired
+	private SynService synService;
+	@Autowired
+	private ApplicationInfoService appService;
 
 	@Override
 	public PageInfo<Org> selectCurrentDivisionOrgPage(Integer pageNum, Integer pageSize,
@@ -157,23 +174,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		List<UserAccount> list = this.userService.selectByExample(ex);
 		return new PageInfo<UserAccount>(list);
 	}
-	@Override
-	public PageInfo<UserAccount> listMergeUsers(UserAccount user, Integer pageNum,
-			Integer pageSize) {
-		PageHelper.startPage(pageNum, pageSize);
-		Example example = new Example(UserAccount.class);
-		Criteria c = example.createCriteria();
-		c.andEqualTo("mergeUuid", user.getMergeUuid())
-			.andNotEqualTo("code", user.getCode());
-		if(user.getName()!=null){
-			c.andEqualTo("name", user.getName());
-		}
-		if(user.getLoginname()!=null){
-			c.andEqualTo("loginname", user.getLoginname());
-		}
-		List<UserAccount> list = this.userService.selectByExample(example);
-		return new PageInfo<UserAccount>(list);
-	}
+	
 	@Override
 	public String selectNextUserLoginNameByOrgCode(String code) {
 		String maxname = this.userService.selectMaxUserLoginNameByOrgCode(code);
@@ -222,6 +223,81 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 	public List<Org> selectAll() {
 		
 		return super.selectAll();
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	public Map synOneOrg(Org org, String appId,String type,String typeName) {
+		ApplicationInfo app = appService.selectByKey(appId);
+		
+		Map u = new HashMap();
+		u.put("opType", typeName);
+		u.put("appName", app.getAppName());
+		u.put("appId", app.getId());
+		u.put("appCode", app.getAppCode());
+		u.put("status", true);
+//		u.put(, );
+		if(app==null){
+			String s = "同步"+typeName+"Org时 {appId="+appId+"}未找到对应的应用";
+			logger.info(s);
+			u.put("result", s);
+			u.put("status", false);
+			return u;
+		}
+		String result = "000";
+		String today = DmDateUtil.Current();
+		if(app.getIsOrgSyn()){//如果该系统要同步机构
+			logger.info("["+today+"]开始同步Org："+app.getAppName()+"-"+org.getName());
+			result = this.synService.synStart(appId, org.getId()
+					.toString(), type);
+			if (result != null && result.equals("000")) {
+				result = "同步成功";
+				SynOrg synOrg = new SynOrg();
+				String uuid = UUIDUtil.getUUID();
+				synOrg.setAppId(appId);
+				synOrg.setId(uuid);
+				synOrg.setOrgId(org.getId().toString());
+				synOrg.setSynTime(today);
+				this.synService.save(synOrg);
+				u.put("isAuthorize",app.getIsOrgAuthorize());
+			}else{
+				u.put("status", false);
+			}
+		}else{//不同不到该系统
+			result = "该系统设置为不同步机构";
+		}
+		/*
+		 * 添加记录日志的操作
+		 */
+		SynLog synLog = new SynLog();
+		synLog.setId(UUIDUtil.getUUID());
+		synLog.setAppId(appId);
+		synLog.setAppName(app.getAppName());
+		synLog.setSynTime(today);
+		synLog.setSynResult("组织(" + org.getName() + ")"+typeName+"操作："
+				+ result);
+		OrangeSideSecurityUser currentUser = SecurityUtils.getCurrentSecurityUser();
+		synLog.setSynUserid(currentUser.getId());
+		synLog.setSynUsername(currentUser.getDisplayName());
+		this.synService.save(synLog);
+		u.put("result", result);
+		return u;
+		
+	}
+	@Override
+	public PageInfo<Org> findSynOrgByAppId(Integer pageNum, Integer pageSize,
+			Org org, String appId) {
+		PageHelper.startPage(pageNum, pageSize);
+		List<Org> orgList = this.orgMapper.selectSynOrgByAppId(appId,org);
+		PageInfo<Org> page = new PageInfo<Org>(orgList);
+		return page;
+	}
+	@Override
+	public PageInfo<Org> findToSynOrgByAppId(Integer pageNum,
+			Integer pageSize, Org org, String appId) {
+		PageHelper.startPage(pageNum, pageSize);
+		List<Org> orgList = this.orgMapper.selectToSynOrgByAppId(appId,org);
+		PageInfo<Org> page = new PageInfo<Org>(orgList);
+		return page;
 	}
 
 }

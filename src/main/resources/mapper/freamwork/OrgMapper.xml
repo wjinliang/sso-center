@@ -34,4 +34,25 @@
   <select id="selectSynCount" resultType="long">
   	select count(id) from syn_org where app_id=#{appId}
   </select>
+  
+  <select id="selectSynOrgByAppId" resultMap="BaseResultMap">
+  	SELECT t.* FROM t_org t LEFT JOIN syn_org st ON t.id=st.org_id 
+  	WHERE st.app_id=#{appId} 
+  	<if test="org.code!=null and org.code!=''">
+	  	AND t.`CODE`=#{org.code}
+  	</if>
+  	<if test="org.name!=null and org.name!=''">
+		AND t.`NAME` LIKE CONCAT('%',#{org.name},'%')
+  	</if>
+  </select>
+  <select id="selectToSynOrgByAppId" resultMap="BaseResultMap">
+  	SELECT t.* FROM t_org t LEFT JOIN syn_org st ON t.id=st.org_id 
+  	WHERE st.app_id &lt;&gt; #{appId} 
+  	<if test="org.code!=null and org.code!=''">
+	  	AND t.`CODE`=#{org.code}
+  	</if>
+  	<if test="org.name!=null and org.name!=''">
+		AND t.`NAME` LIKE CONCAT('%',#{org.name},'%')
+  	</if>
+  </select>
 </mapper>

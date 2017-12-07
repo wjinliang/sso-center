@@ -233,6 +233,20 @@
 		});
 		
 	};
+	function dialogPage(title,url,endCall){
+		 layer.open({
+		      type: 2,
+		      title: title,
+		      shadeClose: true,
+		      shade: [0.1,'#fff'],
+		      maxmin: true, //开启最大化最小化按钮
+		      area: ['700px', '480px'],
+		      content: url,
+		      end:function(){
+		    	  endCall();
+		    	}
+		    });
+	}
 function showSuccess(msg){
 	parent.alertSucc(msg);
 }

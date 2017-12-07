@@ -14,6 +14,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="<%=basePath%>/assets/css/common.css">
 <link rel="stylesheet" href="<%=basePath%>/assets/css/main.css">
+<link rel="stylesheet" href="<%=basePath%>/assets/plugin/jquery.sweetDropdown/min/jquery.sweet-dropdown.min.css">
 <link rel="stylesheet"
 	href="<%=basePath%>/assets/plugin/zTree/css/zTreeStyle/zTreeStyle.css"
 	type="text/css">
@@ -30,6 +31,8 @@
 	src="<%=basePath%>/assets/js/commonAction.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>/assets/plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>/assets/plugin/jquery.sweetDropdown/min/jquery.sweet-dropdown.min.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -123,7 +126,18 @@
 											href="javascript:viewPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
 												查看 </a> <a class="ext_btn"
 											href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
-												编辑 </a></td>
+												编辑 </a>
+												<a class="ext_btn" data-dropdown="#dropdown-standard${user.code }">操作</a>
+												<div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="dropdown-standard${user.code }">
+												<ul>
+													<li><a href="javascript:openPage('./listMergeUsers?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+													关联用户</a></li>
+													<li><a href="#">Item 2</a></li>
+													<li class="divider"></li>
+													<li><a href="#">Item 3</a></li>
+												</ul>
+												</div>
+												</td>
 
 									</tr>
 								</c:forEach>

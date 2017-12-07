@@ -21,7 +21,7 @@ import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoServic
 import com.topie.ssocenter.freamwork.authorization.utils.R;
 
 @Controller
-@RequestMapping({ "/syn" })
+@RequestMapping({ "/app" })
 public class ApplicationInfoController {
 
 	 @Autowired
