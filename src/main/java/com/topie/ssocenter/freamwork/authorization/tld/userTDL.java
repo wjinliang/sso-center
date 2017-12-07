@@ -1,5 +1,6 @@
 package com.topie.ssocenter.freamwork.authorization.tld;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
@@ -70,11 +71,29 @@ public class userTDL {
 		return "-";
 	}
 
-	public static List<ApplicationInfo> getCurrentUserApps() {
+	public static List<ApplicationInfo> getCurrentUserApps(String type) {
 		ApplicationInfoService appService = (ApplicationInfoService) AppUtil
 				.getBean("applicationInfoServiceImpl");
 		PageInfo<ApplicationInfo> page = appService.selectCurrentUserSynApps();
 		List<ApplicationInfo> list = page.getList();
+		List<ApplicationInfo> result = new ArrayList<ApplicationInfo>();
+		if(type!=null && type.equals("org")){
+			for(ApplicationInfo a:list){
+				if(a.getIsOrgSyn()){
+					result.add(a);
+				}
+			}
+		}else
+		if(type!=null && type.equals("user")){
+			for(ApplicationInfo a:list){
+				if(a.getIsUserSyn()){
+					result.add(a);
+				}
+			}
+		}
+		else{
+				result = list;
+			}
 /*		Division userDivision = getCurrentUserDivision();
 		int currentUserLevel = userDivision.getLevel();
 		int userLevel = getDivision(divisionId).getLevel();
@@ -89,7 +108,7 @@ public class userTDL {
 				hidden = true;
 			}
 		}
-*/		return list;
+*/		return result;
 	}
 
 	private static Division getCurrentUserDivision() {

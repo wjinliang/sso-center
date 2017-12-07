@@ -27,7 +27,7 @@ public class ApplicationInfoServiceImpl extends
 		ApplicationInfoService {
 
 	@Autowired
-	private ApplicationInfoMapper appService;
+	private ApplicationInfoMapper appMapper;
 
 	@Override
 	public PageInfo<ApplicationInfo> findApplicationInfoList(int pageNum,
@@ -54,9 +54,9 @@ public class ApplicationInfoServiceImpl extends
 		PageHelper.startPage(1, 100);
 		List<ApplicationInfo> list;
 		if (StringUtils.isEmpty(mergeUuid)) {
-			list = appService.selectSynAppsByUserId(currentUserAccount.getId());
+			list = appMapper.selectSynAppsByUserId(currentUserAccount.getId());
 		} else {
-			list = appService.selectSynAppsByMergeUuid(mergeUuid);
+			list = appMapper.selectSynAppsByMergeUuid(mergeUuid);
 		}
 		return new PageInfo<ApplicationInfo>(list);
 	}
