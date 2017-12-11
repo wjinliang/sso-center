@@ -673,8 +673,45 @@ public class OrgAndUserController {
 	}
 	@RequestMapping("/resetPass")
 	@ResponseBody
-	public Object resetPass(String id,String newp){
+	public Object resetPass(String userId,String newp){
+		ShaPasswordEncoder sha = new ShaPasswordEncoder();
+		UserAccount user = this.userAccountService.selectByKey(userId);
+		sha.setEncodeHashAsBase64(false);
+		String password = newp;
+		user.setPassword(sha.encodePassword(password, null));
+		String encryptPassword="";
+		try {
+			encryptPassword = SimpleCrypto.encrypt("zcpt@123456",
+					password);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		user.setSynpassword(encryptPassword);
+		this.userAccountService.updateAll(user);
+		return ResponseUtil.success();
+	}
+	
+	@RequestMapping("/user/rolePage")
+	public ModelAndView rolePage(ModelAndView model,String userId){
+		//获取用户的权限
+		List<String> list = userRoleService.selectRolesByUserId(userId);
+		model.addObject("roles", list);
+		model.setViewName("/user/rolePage");
+		return model;
+	}
+	@RequestMapping("/user/setRole")
+	@ResponseBody
+	public Object setRole(String userId,String isAdmin){
 		
+		// 设置角色
+		if(isAdmin.equals("true")){
+			try{
+			this.userRoleService.insertUserAccountRole(userId,this.adminId);
+			}catch(Exception e){}
+		}else{
+			this.userRoleService.deleteUserAccountRole(userId,this.adminId);
+		}
 		return ResponseUtil.success();
 	}
 	

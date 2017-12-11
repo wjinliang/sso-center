@@ -170,20 +170,19 @@
 		</div>
 	</div>
 	</div>
+	<div id="resetp" style="display:none;">
+		<input name="userId" style="display:none;">
+		<input name="newp" >
+		<input type="buttom" class="btn" onclick="commitRep();" value="确认">
+	</div>
+	<div id="setRole" style="display:none;">
+		<input name="userId" style="display:none;">
+		<input type="checkbox" name="roles" value="1"> 普通登录用户
+		<input type="checkbox" name="roles" value="2"> 机构管理员
+		<input type="buttom" class="btn" onclick="commitRoles();" value="确认">
+	</div>
 	<script type="text/javascript">
 		jQuery(document).ready(function() {
-			/*jQuery('#useraccount_table .group-checkable').change(function() {
-				var set = jQuery(this).attr("data-set");
-				var checked = jQuery(this).is(":checked");
-				jQuery(set).each(function() {
-					if (checked) {
-						$(this).attr("checked", true);
-					} else {
-						$(this).attr("checked", false);
-					}
-				});
-				jQuery.uniform.update(set);
-			});*/
 			$.fn.zTree.init($("#divisionTree"), settingMenu, zNodesMenu);
 			zTree = $.fn.zTree.getZTreeObj("divisionTree");
 			selectNodes();
@@ -217,9 +216,23 @@
 			zTree.expandNode(node, true, false);//指定选中ID节点展开  
 		}
 		function repassword(userId){
-			prompt('请输入新密码',function(text){
-				alert(text+""+userId);
-			var x=false;
+			
+			  layer.open({
+			    type: 1
+			    ,title: '重置密码'
+			    ,moveType: 1
+			    ,id: 'Lay_layer_resetp'
+			    ,content: $('#resetp')
+			    ,shade: false
+			    ,resize: false
+			    ,fixed: false
+			    ,maxWidth: '100%'
+			    ,success: function(layero, index){
+			      $(layero).find('input[name="userId"]').val(userId);
+			    }
+			  });
+		}
+		function commitRep(){
 			$.ajax({
 				url:"resetPass",
 				type:'post',
@@ -244,8 +257,49 @@
 					//window.location.reload();
 				}
 			});
-			return x;
-		})
+		}
+		function setR(userId){
+			
+			  layer.open({
+			    type: 1
+			    ,title: '设置角色'
+			    ,moveType: 1
+			    ,id: 'Lay_layer_setRole'
+			    ,content: $('#setRole')
+			    ,shade: false
+			    ,resize: false
+			    ,fixed: false
+			    ,maxWidth: '100%'
+			    ,success: function(layero, index){
+			      $(layero).find('input[name="userId"]').val(userId);
+			    }
+			  });
+		}
+		function commitRoles(){
+			$.ajax({
+				url:"resetPass",
+				type:'post',
+				async: false,
+				data:{newp:text,userId:userid},
+				beforeSend:function(){
+				  layer.msg('请稍后', {icon: 1});
+				},
+				success:function(data){
+					if(data.code==200){
+						showSuccess('操作成功');
+					}else if(data.code==301){
+						window.location.href=root+data.data;
+					}
+					else{
+						layer.msg('操作失败', {icon: 1});
+						
+					}
+				},
+				error:function(){
+					layer.msg('操作失败', {icon: 1});
+					//window.location.reload();
+				}
+			});
 		}
 	</script>
 </body>
