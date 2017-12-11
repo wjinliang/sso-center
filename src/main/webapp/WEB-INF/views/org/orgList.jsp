@@ -80,7 +80,8 @@
 									</div>
 								</form>
 							</div>
-						<c:if test="${d:gDID()=='1'}">
+							<c:set var="isAdm" value="${d:gDID()=='1'}"></c:set>
+						<c:if test="${isAdm}">
 							<div id="button" class="mt10">
 								<input type="button"
 									onclick="javascript:openPage('./form/new?divisionId=${searchModel.divisionId}&parentId=${searchModel.parentId}');"
@@ -118,8 +119,16 @@
 											value='${org.id }'></td>
 										<td class="td_center">
 											${(page.pageNum-1)*page.pageSize+status.count}</td>
-										<td><a
-											href="javascript:openPage('./form/edit?divisionId=${org.divisionId}&id=${org.id }');">${org.name}</a></td>
+										<td>
+										<c:if test="${isAdm}">
+										<a
+											href="javascript:openPage('./form/edit?divisionId=${org.divisionId}&id=${org.id }');">
+										</c:if>
+											${org.name}
+										<c:if test="${isAdm}">	
+											</a>
+										</c:if>	
+											</td>
 										<td>${org.code}</td>
 										<td><a class="ext_btn"
 											href="javascript:openPage('listOrgs?parentId=${org.id }&divisionId=${org.divisionId }&systemId=${searchModel.systemId }');">查看

@@ -63,7 +63,7 @@
 							<form id="form1" action="save" method="post" class="jqtransform">
 				               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
 				                 <tr>
-				                  <td class="td_right">区划全称：</td>
+				                  <td class="td_right">区划全称<span class="red">*</span>：</td>
 				                  <td class=""> 
 				                  <input type="hidden" name="id">
 				                  <input type="hidden" name="parentId">
@@ -71,13 +71,13 @@
 				                    <input type="text" name="fullname" class="input-text lh30" size="40">
 				                  </td></tr>
 				                <tr >
-				                  <td class="td_right">区划简称：</td><td><input type="text" name="name" class="input-text lh30" size="40"></td>
+				                  <td class="td_right">区划简称<span class="red">*</span>：</td><td><input type="text" name="name" class="input-text lh30" size="40"></td>
 				                </tr>
 				                <tr >
-				                  <td class="td_right">行政编码：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
+				                  <td class="td_right">行政编码<span class="red">*</span>：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
 				                  </tr>
 				                <tr>
-				                  <td class="td_right">区划级别：</td>
+				                  <td class="td_right">区划级别<span class="red">*</span>：</td>
 				                  <td class=""> 
 									<span class="fl">
 				                      <div class="select_border"> 
@@ -97,7 +97,7 @@
 				                    </span>
 				                  </td></tr>
 				                <tr >
-				                  <td class="td_right">所属大区：</td>
+				                  <td class="td_right">所属大区<span class="red">*</span>：</td>
 				                  <td class="">
 				 
 				                    <span class="fl">
@@ -119,7 +119,7 @@
 				                    </span>
 				                  </td></tr>
 				                <tr >
-				                  <td class="td_right">区划等级：</td>
+				                  <td class="td_right">区划等级<span class="red">*</span>：</td>
 				                  <td class="">
 				 
 				                    <span class="fl">

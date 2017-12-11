@@ -156,6 +156,8 @@ public class OrgAndUserController {
 	public ModelAndView save(
 			ModelAndView model,
 			Org org,@RequestParam(value="synApps",required=false) String synAppIds) {
+		model.addObject("backUrl", "listOrgs?divisionId="+org.getDivisionId());
+		model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
 		Long orgId = org.getId();
 		if(orgId==null){//新增
 			org.setId(System.currentTimeMillis());
@@ -174,14 +176,15 @@ public class OrgAndUserController {
 			}//验证code end
 			orgService.save(org);
 			List<Map> resultList = doTongBu("41",org,synAppIds,model);
-			
+			model.addObject("org", org);
+			model.addObject("id", org.getId());
 			return model;
 		}
 		//更新
 		this.orgService.updateNotNull(org);
 		doTongBu("42",org,synAppIds,model);
-		model.setViewName("redirect:list?divisionId="+org.getDivisionId()
-				+"&parentId="+org.getId());
+		model.addObject("org", org);
+		model.addObject("id", org.getId());
 		return model;
 	}
 
@@ -199,34 +202,35 @@ public class OrgAndUserController {
 	private List<Map> doTongBu(String optype, Org org, String synAppIds,
 			ModelAndView model) {
 		List<Map> list = new ArrayList<Map>();
-		if(synAppIds==null ||synAppIds.equals("")){
-			return list;
-		}
 		if(optype=="41"){//新增
-			for(String appId:synAppIds.split(",")){
-				Map u = orgService.synOneOrg(org,appId,"41","新增");
-				list.add(u);
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = orgService.synOneOrg(org,appId,"41","新增");
+					list.add(u);
+				}
 			}
 		}
 		if(optype=="42"){//更新
 			List<SynOrg> listInfo = synService.selectOrgSynInfo(org.getId());//已经同步过的APP
-			for(String appId:synAppIds.split(",")){
-				if(!getIsOpen(appId)){//没有同步权限
-					continue;
-				}
-				boolean isSyn = false;//是否已经同步过了
-				for(SynOrg synOrg:listInfo){
-					if(synOrg.getAppId().equals(appId)){
-						isSyn = true;
-						break;
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					if(!getIsOpen(appId)){//没有同步权限
+						continue;
 					}
-				}
-				if(isSyn){//如果同步过-》更新
-					Map u = orgService.synOneOrg(org,appId,"42","更新");
-					list.add(u);
-				}else{//如果没有通不过-》新增
-					Map u = orgService.synOneOrg(org,appId,"41","新增");
-					list.add(u);
+					boolean isSyn = false;//是否已经同步过了
+					for(SynOrg synOrg:listInfo){
+						if(synOrg.getAppId().equals(appId)){
+							isSyn = true;
+							break;
+						}
+					}
+					if(isSyn){//如果同步过-》更新
+						Map u = orgService.synOneOrg(org,appId,"42","更新");
+						list.add(u);
+					}else{//如果没有通不过-》新增
+						Map u = orgService.synOneOrg(org,appId,"41","新增");
+						list.add(u);
+					}
 				}
 			}
 			
@@ -236,11 +240,13 @@ public class OrgAndUserController {
 				}
 				boolean isSyn = true;//是否已经同步过了
 				String app="";
-				for(String appId:synAppIds.split(",")){
-					app = appId;
-					if(synOrg.getAppId().equals(appId)){
-						isSyn = false;
-						break;
+				if(!StringUtils.isEmpty(synAppIds)){
+					for(String appId:synAppIds.split(",")){
+						app = appId;
+						if(synOrg.getAppId().equals(appId)){
+							isSyn = false;
+							break;
+						}
 					}
 				}
 				if(isSyn){//以前同步过现在去掉同步 -》删除
@@ -250,16 +256,22 @@ public class OrgAndUserController {
 			}
 		}
 		if(optype=="43"){//删除
-			for(String appId:synAppIds.split(",")){
-				Map u = orgService.synOneOrg(org,appId,"43","删除");
-				list.add(u);
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = orgService.synOneOrg(org,appId,"43","删除");
+					list.add(u);
+				}
 			}
 		}
 		model.addObject("resultList", list);//同步结果
+		if(list.size()==0){
+			model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
+			return list;
+		}
 		int redirect=0;
 		String appCode="";
 		for(Map map:list){
-			if("42".equals(map.get("opType").toString())){//如果新增  则设置权限
+			if("41".equals(map.get("opTypeCode").toString())){//如果新增  则设置权限
 				if(map.get("isAuthorize")!=null && (Boolean)map.get("isAuthorize")){//如果要授权
 					redirect++;
 					appCode = map.get("appCode").toString();
@@ -267,18 +279,17 @@ public class OrgAndUserController {
 			}
 		}
 		if(redirect==0){//返回到列表页面
-			model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId()
-					+"&id="+org.getId()+"&parentId="+org.getParentId());
+			/*model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId());*/
+			model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
 		}
-		if(redirect==1){//TODO 一个app需要授权  直接打开授权页面
+		if(redirect==1){
 			model.setViewName("redirect:"
-					+ "../synuseraccount/ssoServiceBySession?xtbs="+appCode
+					+ "../syn/ssoServiceBySession?xtbs="+appCode
 					+"&TYPE="+
 					R.ORG_AUTHORIZE+"&ID="+org.getId());
 		}
-		if(redirect > 1){//TODO 多个app 需要授权   手动选择授权
-			model.setViewName("redirect:form/authorize?divisionId="+org.getDivisionId()
-					+"&id="+org.getId()+"&parentId="+org.getParentId());
+		if(redirect > 1){
+			model.setViewName("/org/synResult");
 		}
 		return list;
 	}
@@ -393,19 +404,22 @@ public class OrgAndUserController {
 	public ModelAndView user_save(UserAccount user,
 			@RequestParam(value="synApps",required=false) String synAppIds,
 			ModelAndView model,String isAdmin) throws Exception{
-		model.setViewName("listUsers?orgId="+user.getOrgId());
+		model.addObject("backUrl", "../listUsers?orgId="+user.getOrgId());
+		model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
 		if(StringUtil.isNotEmpty(user.getCode())){//更新
 			this.userAccountService.updateNotNull(user);
-			if(isAdmin.equals("true")){
+			if(isAdmin!=null && isAdmin.equals("true")){
 				try{
 				this.userRoleService.insertUserAccountRole(user.getCode(),this.adminId);
 				}catch(Exception e){//之前已存在  报主键重复错误
 					
 				}
-			}
-			if(isAdmin.equals("false")){
+			}else{
 				this.userRoleService.deleteUserAccountRole(user.getCode(),this.adminId);
 			}
+			List<Map> list = doTongBu("12", user, synAppIds, model);
+			this.updateUserSystem(user);//更新用户所属系统
+			model.addObject("id", user.getCode());
 			return model;
 		}
 		//新增
@@ -422,46 +436,70 @@ public class OrgAndUserController {
 		user.setPasswordExpired(true);
 		user.setCreateDate(DmDateUtil.Current());
 		user.setCreateUser(SecurityUtils.getCurrentUserName());
+		this.userAccountService.save(user);
 		// 设置角色
 		this.userRoleService.insertUserAccountRole(user.getCode(),this.normalRoleId);
 		if(isAdmin.equals("true")){
 			this.userRoleService.insertUserAccountRole(user.getCode(),this.adminId);
 		}
 		List<Map> list = doTongBu("11", user, synAppIds, model);
+		updateUserSystem(user);//更新用户所属系统
+		model.addObject("id", user.getCode());
 		return model;
 	}
-	
+	/**
+	 * 更新用户所属系统
+	 * @param user
+	 */
+	private void updateUserSystem(UserAccount user) {
+		List<SynUser> listInfo = synService.selectUserSynInfo(user.getCode());//已经同步过的APP
+		String sysStr = "";
+		for(SynUser syn:listInfo){
+			ApplicationInfo app = this.appService.selectByKey(syn.getAppId());
+			if(app!=null){
+				sysStr+=","+app.getAppName();
+			}
+		}
+		if(!sysStr.equals("")){
+			sysStr = sysStr.substring(1);
+		}
+		user.setSystemId(sysStr);
+		this.userAccountService.updateNotNull(user);
+		
+	}
+
 	private List<Map> doTongBu(String optype, UserAccount user, String synAppIds,
 			ModelAndView model) {
 		List<Map> list = new ArrayList<Map>();
-		if(synAppIds!=null&& !synAppIds.equals("")){
-			return list;
-		}
 		if(optype=="11"){//新增
-			for(String appId:synAppIds.split(",")){
-				Map u = userAccountService.synOneUser(user,appId,"11","新增");
-				list.add(u);
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = userAccountService.synOneUser(user,appId,"11","新增");
+					list.add(u);
+				}
 			}
 		}
 		if(optype=="12"){//更新
 			List<SynUser> listInfo = synService.selectUserSynInfo(user.getCode());//已经同步过的APP
-			for(String appId:synAppIds.split(",")){
-				if(!getIsOpen(appId)){//没有同步权限
-					continue;
-				}
-				boolean isSyn = false;//是否已经同步过了
-				for(SynUser synUser:listInfo){
-					if(synUser.getAppId().equals(appId)){
-						isSyn = true;
-						break;
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					if(!getIsOpen(appId)){//没有同步权限
+						continue;
 					}
-				}
-				if(isSyn){//如果同步过-》更新
-					Map u = userAccountService.synOneUser(user,appId,"12","更新");
-					list.add(u);
-				}else{//如果没有通不过-》新增
-					Map u = userAccountService.synOneUser(user,appId,"11","新增");
-					list.add(u);
+					boolean isSyn = false;//是否已经同步过了
+					for(SynUser synUser:listInfo){
+						if(synUser.getAppId().equals(appId)){
+							isSyn = true;
+							break;
+						}
+					}
+					if(isSyn){//如果同步过-》更新
+						Map u = userAccountService.synOneUser(user,appId,"12","更新");
+						list.add(u);
+					}else{//如果没有通不过-》新增
+						Map u = userAccountService.synOneUser(user,appId,"11","新增");
+						list.add(u);
+					}
 				}
 			}
 			
@@ -471,11 +509,13 @@ public class OrgAndUserController {
 				}
 				boolean isSyn = true;//是否已经同步过了
 				String app="";
-				for(String appId:synAppIds.split(",")){
-					app = appId;
-					if(synUser.getAppId().equals(appId)){
-						isSyn = false;
-						break;
+				if(!StringUtils.isEmpty(synAppIds)){
+					for(String appId:synAppIds.split(",")){
+						app = appId;
+						if(synUser.getAppId().equals(appId)){
+							isSyn = false;
+							break;
+						}
 					}
 				}
 				if(isSyn){//以前同步过现在去掉同步 -》删除
@@ -485,10 +525,39 @@ public class OrgAndUserController {
 			}
 		}
 		if(optype=="13"){//删除
-			for(String appId:synAppIds.split(",")){
-				Map u = userAccountService.synOneUser(user,appId,"13","删除");
-				list.add(u);
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = userAccountService.synOneUser(user,appId,"13","删除");
+					list.add(u);
+				}
 			}
+		}
+		model.addObject("resultList", list);//同步结果
+		if(list.size()==0){//不需要同步
+			model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
+			return list;
+		}
+		int redirect=0;
+		String appCode="";
+		for(Map map:list){
+			if("11".equals(map.get("opTypeCode").toString())){//如果新增  则设置权限
+				if(map.get("isAuthorize")!=null && (Boolean)map.get("isAuthorize")){//如果要授权
+					redirect++;
+					appCode = map.get("appCode").toString();
+				};
+			}
+		}
+		if(redirect==0){//返回到列表页面
+			model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
+		}
+		if(redirect==1){
+			model.setViewName("redirect:"
+					+ "/syn/ssoServiceBySession?xtbs="+appCode
+					+"&TYPE="+
+					R.ORG_AUTHORIZE+"&ID="+user.getCode());
+		}
+		if(redirect > 1){
+			model.setViewName("/user/synResult");
 		}
 		return list;
 	}
@@ -602,7 +671,13 @@ public class OrgAndUserController {
 			return ResponseUtil.success();
 			
 	}
-
+	@RequestMapping("/resetPass")
+	@ResponseBody
+	public Object resetPass(String id,String newp){
+		
+		return ResponseUtil.success();
+	}
+	
 	@RequestMapping("/excelExport")
 	public void excelExport(HttpServletRequest request, HttpServletResponse response,Org org,UserAccount user)
 	{

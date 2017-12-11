@@ -29,14 +29,14 @@
               <form id="form1" action="../saveApp" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
-                  <td class="td_right">系统名称：</td>
+                  <td class="td_right">系统名称<span class="red">*</span>：</td>
                   <td class=""> 
                   <input type="hidden" name="id" value="${appInfo.id }">
                     <input type="text" name="appName" value="${appInfo.appName }" class="input-text lh30" size="40">
                   </td>
                   </tr>
                   <tr>
-                  <td class="td_right">系统标识：</td><td><input type="text" name="appCode" value="${appInfo.appCode }" class="input-text lh30" size="40"></td>
+                  <td class="td_right">系统标识<span class="red">*</span>：</td><td><input type="text" name="appCode" value="${appInfo.appCode }" class="input-text lh30" size="40"></td>
                 </tr>
                  <tr>
                   <td class="td_right">系统地址：</td><td><input type="text" name="appPath" value="${appInfo.appPath }" class="input-text lh30" size="40"></td>
@@ -86,14 +86,7 @@
 				        required: true,
 				        minlength: 2,
 				        remote:{url:"../checkunique",data:{'name':'appCode','param':function(){return $("input[name='appCode']").val();},'id':function(){return $('input[name="id"]').val();}}}
-				      },
-			      synType:{required:true},
-			      packagename:{required:true},
-			      synPath:{required:true},
-			      appPath:{required:true},
-			      opLevel:{required:true},
-			      userLevel:{required:true},
-			      status:'required'
+				      }
 			},
 			messages:{appName:{remote:"名称重复，请重新填写！"},appCode:{remote:"编码重复，请重新填写！"}}
 		});

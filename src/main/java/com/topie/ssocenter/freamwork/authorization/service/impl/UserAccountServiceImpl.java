@@ -219,7 +219,9 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		ApplicationInfo app = appService.selectByKey(appId);
 		Map u = new HashMap();
 		u.put("opType", typeName);
+		u.put("opTypeCode", type);
 		u.put("appName", app.getAppName());
+		u.put("appCode", app.getAppCode());
 		u.put("appId", app.getId());
 		u.put("status", true);
 		if(app==null){
@@ -227,6 +229,11 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 			logger.info(s);
 			u.put("result", s);
 			u.put("status", false);
+			return u;
+		}
+		if(app.getStatus().equals("2")){
+			u.put("result", "系统维护中，暂无操作");
+			u.put("isAuthorize",false);
 			return u;
 		}
 		String today = DmDateUtil.Current();

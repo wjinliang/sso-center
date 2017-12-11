@@ -37,7 +37,7 @@
 							<input type="hidden" id="code" name="code" value="${searchModel.code}">
 							<input type="hidden" id="mergeUuid" name="mergeUuid" value="${searchModel.mergeUuid}">
 							<input type="hidden" id="id" name="id" value="${searchModel_org.id }">
-							<input type="hidden" id="id" name="id" value="${searchModel_org.divisionId }">
+							<input type="hidden" id="id" name="divisionId" value="${searchModel_org.divisionId }">
 							<input type="hidden" name="pagesize" value="${page.pageSize}">
 							<tr>
 								<td>用户名</td>
@@ -60,7 +60,7 @@
 				<div id="button" class="mt10">
 			<input type="button" onclick="javascript:dialogPage('添加关联','gotoMergeUser?code=${searchModel.code}',function(){window.location.reload();});" name="button" class="btn btn82 btn_add"
 				value="关联">
-       		<input type="button" onclick="javascript:openPage('listUsers?orgId=${searchModel_org.id }&id=${searchModel_org.id }&divisionId=${searchModel_org.divisionId }');" name="button" class="btn btn82 btn_back" value="返回"> 
+       		<input type="button" onclick="javascript:openPage('listUsers?orgId=${searchModel_org.id }&divisionId=${searchModel_org.divisionId }');" name="button" class="btn btn82 btn_back" value="返回"> 
 		<!-- <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
 			 <input type="button" name="button" class="btn btn82 btn_del" value="删除"> 

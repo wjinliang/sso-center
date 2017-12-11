@@ -60,7 +60,7 @@
 							<form id="form1" action="insertOrUpdate" method="post" class="jqtransform">
 				               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
 				                 <tr>
-				                  <td class="td_right">菜单名称：</td>
+				                  <td class="td_right">菜单名称<span class="red">*</span>：</td>
 				                  <td class=""> 
 					                  <input type="hidden" name="id">
 					                  <input type="hidden" name="pid">
@@ -68,10 +68,10 @@
 				                  </td>
 				                </tr>
 				                <tr >
-				                  <td class="td_right">菜单地址：</td><td><input type="text" name="menuurl" class="input-text lh30" size="40"></td>
+				                  <td class="td_right">菜单地址<span class="red">*</span>：</td><td><input type="text" name="menuurl" class="input-text lh30" size="40"></td>
 				                  </tr>
 				                <tr >
-				                  <td class="td_right">是否展示：</td>
+				                  <td class="td_right">是否展示<span class="red">*</span>：</td>
 				                  <td>
 				                  	<span>
 					                    <input type="radio" name="isshow" value="true"> 是
@@ -130,7 +130,8 @@
 			      name:  {
 				        required: true,
 				        minlength: 2
-				      }
+				      },
+				  menuurl:"required"
 			     
 			}
 		})

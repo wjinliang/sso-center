@@ -32,7 +32,7 @@
             <div class="col_6">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
-                  <td class="td_right">角色名称：</td>
+                  <td class="td_right">角色名称<span class="red">*</span>：</td>
                   <td class=""> 
                   <input type="hidden" name="code" value="${role.code }">
                     <input type="text" name="name" value="${role.name }" class="input-text lh30" size="40">
@@ -44,7 +44,7 @@
                 </tr>
                 
                 <tr >
-                  <td class="td_right">级别：</td>
+                  <td class="td_right">级别<span class="red">*</span>：</td>
                   <td class="">
  
                     <span class="fl">
@@ -65,7 +65,7 @@
                   
                  </tr>
                  <tr>
-                  <td class="td_right">状态：</td>
+                  <td class="td_right">状态<span class="red">*</span>：</td>
                   <td class="">
                   	<span>
 	                    <input type="radio" checked="checked"  name="enabled" value="true"> 可用
@@ -127,7 +127,7 @@
 			      name:  {
 			        required: true,
 			        minlength: 2
-			      },
+			      }
 			},
 			submitHandler: function(form) {
 				//获取修改过得菜单节点

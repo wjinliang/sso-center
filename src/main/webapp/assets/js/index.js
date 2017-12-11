@@ -181,3 +181,11 @@ function menuScroll(num) {
 function alertSucc(msg){
 	layer.msg(msg, {icon: 1,offset: 'rb'});
 }
+function alertInfo(msg,callBack){
+	layer.alert(msg, {
+//		  skin: 'layui-layer-molv', //样式类名
+		  closeBtn: 1
+		}, function(){
+			callBack();
+		});
+}

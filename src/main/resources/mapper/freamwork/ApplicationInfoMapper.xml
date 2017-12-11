@@ -19,6 +19,10 @@
     <result column="op_level" property="opLevel" jdbcType="VARCHAR" />
     <result column="user_level" property="userLevel" jdbcType="VARCHAR" />
     <result column="param_name" property="paramName" jdbcType="VARCHAR" />
+    <result column="is_org_syn" property="isOrgSyn" jdbcType="BIT" />
+    <result column="is_org_authorize" property="isOrgAuthorize" jdbcType="BIT" />
+    <result column="is_user_syn" property="isUserSyn" jdbcType="BIT" />
+    <result column="is_user_authorize" property="isUserAuthorize" jdbcType="BIT" />
     <result column="seq" property="seq" jdbcType="INTEGER" />
   </resultMap>
   <select id="selectSynAppsByUserId" resultMap="BaseResultMap" >
@@ -35,7 +39,7 @@
 				SELECT u. CODE  
 				FROM t_user_account u WHERE u.merge_uuid = #{mergeUuid} ) a 
 			LEFT JOIN syn_user syn ON a.CODE = syn.user_id) t  on app.id = t.app_id 
-		WHERE app.STATUS = '1' ) t1 
+		WHERE app.STATUS &lt;&gt; '0' ) t1 
 	WHERE t1.app_id is not null  order by seq asc
   </select>
 </mapper>

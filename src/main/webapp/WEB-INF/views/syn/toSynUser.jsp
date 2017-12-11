@@ -73,7 +73,7 @@
 										<td>${user.name}</td>
 										<td>${user.orgId}</td>
 										<td><a class="ext_btn"
-											href="javascript:confrimAction('synUser?appId=${appId }&orgId=${org.id }');">
+											href="javascript:confirmAction('synUser?appId=${appId }&orgId=${org.id }');">
 												同步</a></td>
 
 									</tr>

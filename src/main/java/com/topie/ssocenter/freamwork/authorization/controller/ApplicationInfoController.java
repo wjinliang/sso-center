@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageInfo;
-import com.topie.ssocenter.common.utils.KV;
 import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.common.utils.UUIDUtil;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
@@ -98,7 +97,7 @@ public class ApplicationInfoController {
 		public ModelAndView updateApp(ModelAndView model, ApplicationInfo app) {
 			//ApplicationInfo one = this.appService.selectByKey(app.getId());
 			this.appService.updateNotNull(app);
-			model.setViewName("redirect:/syn/listApp");
+			model.setViewName("redirect:listApp");
 			return model;
 		}
 

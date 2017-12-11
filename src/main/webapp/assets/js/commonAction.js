@@ -253,6 +253,14 @@ function showSuccess(msg){
 function alertSucc(msg){
 	layer.msg(msg, {icon: 1});
 }
+function prompt(msg,callback){
+	layer.prompt({title: msg, formType: 0}, function(text, index){
+		   var b = callback(text);
+		   if(b){
+			   layer.close(index);
+		   }
+		});
+}
 function getAction(url,success){
 		
 		$.ajax({

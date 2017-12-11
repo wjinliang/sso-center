@@ -101,6 +101,9 @@
 									<c:when test="${app.status=='1'}">
 										<font color="green">启用</font>
 									</c:when>
+									<c:when test="${app.status=='2'}">
+										<font color="green">维护中...</font>
+									</c:when>
 									<c:otherwise>
 										<font color="red">禁用</font>
 									</c:otherwise>
@@ -110,7 +113,7 @@
 							</a> <a class="ext_btn ext_btn_error" href="javascript:deleteAction('./delete?appid=${app.id}')">删除
 							</a> <c:choose> 
 									<c:when test="${app.status=='1'}">
-										<a class="ext_btn" href="javascript:postAction('./stopApp?appid=${app.id}')"> 禁用
+										<a class="ext_btn ext_btn_error" href="javascript:postAction('./stopApp?appid=${app.id}')"> 禁用
 										</a>
 									</c:when>
 									<c:otherwise>

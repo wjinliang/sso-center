@@ -1,6 +1,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c"%>
+<%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d"%>
+<%@ taglib uri="/WEB-INF/tlds/fn.tld" prefix="fn"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -98,6 +100,7 @@
 							</div>
 						</div>
 					</div>
+					<c:set var="apps" value="${d:gCAS() }"></c:set>
 					<div id="table" class="mt10">
 						<div class="box span10 oh">
 							<table width="100%" border="0" cellpadding="0" cellspacing="0"
@@ -122,22 +125,38 @@
 												${user.name}(${user.loginname })</a></td>
 										<td>${user.orgId}</td>
 										<td>${user.lastlogintime }</td>
-										<td><a class="ext_btn"
-											href="javascript:viewPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
-												查看 </a> <a class="ext_btn"
-											href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
-												编辑 </a>
-												<a class="ext_btn" data-dropdown="#dropdown-standard${user.code }">操作</a>
+										<td>
+											<c:set var="act" value="0" ></c:set>    
+											<c:forEach items="${apps}" var="ap" varStatus="status" >
+										      <c:if test="${fn:contains(user.systemId,ap.appName)}">
+										      	<c:set var="act" value="1" ></c:set>  
+										      </c:if> 
+											</c:forEach>
+											<c:if test="${act =='0'}">
+												<a class="ext_btn" href="javascript:viewPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">查看</a>
+											</c:if>
+											<c:if test="${act =='1'}">
+												<a class="ext_btn ext_btn_success" data-dropdown="#dropdown-standard${user.code }">操作</a>
 												<div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="dropdown-standard${user.code }">
 												<ul>
-													<li><a href="javascript:openPage('./listMergeUsers?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
-													关联用户</a></li>
-													<li><a href="#">Item 2</a></li>
+													<li>
+													<a 
+														href="javascript:viewPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+															查看 </a> </li>
+													<li><a
+													href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+														编辑 </a></li>
+													<li><a href="javascript:dialogPage('设置角色','user/setRole?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }')">设置角色</a></li>
+													<li><a href="javascript:repassword('${user.code }')">重置密码</a></li>
 													<li class="divider"></li>
-													<li><a href="#">Item 3</a></li>
+													<li><a href="javascript:openPage('./listMergeUsers?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+													关联用户</a></li>
+													<li><a href="javascript:openPage('./listMergeUsers?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+													用户授权</a></li>
 												</ul>
 												</div>
-												</td>
+											 </c:if> 		
+										</td>
 
 									</tr>
 								</c:forEach>
@@ -196,6 +215,37 @@
 					"${searchModelOrg.divisionId}", null);
 			zTree.selectNode(node);
 			zTree.expandNode(node, true, false);//指定选中ID节点展开  
+		}
+		function repassword(userId){
+			prompt('请输入新密码',function(text){
+				alert(text+""+userId);
+			var x=false;
+			$.ajax({
+				url:"resetPass",
+				type:'post',
+				async: false,
+				data:{newp:text,userId:userid},
+				beforeSend:function(){
+				  layer.msg('请稍后', {icon: 1});
+				},
+				success:function(data){
+					if(data.code==200){
+						showSuccess('操作成功');
+					}else if(data.code==301){
+						window.location.href=root+data.data;
+					}
+					else{
+						layer.msg('操作失败', {icon: 1});
+						
+					}
+				},
+				error:function(){
+					layer.msg('操作失败', {icon: 1});
+					//window.location.reload();
+				}
+			});
+			return x;
+		})
 		}
 	</script>
 </body>

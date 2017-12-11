@@ -31,7 +31,7 @@
               <form id="form1" action="../save" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
-                  <td class="td_right">机构名称：</td>
+                  <td class="td_right">机构名称<span class="red">*</span>：<span class="red">*</span>：</td>
                   <td class=""> 
 	                  <input type="hidden" name="id" value="${org.id }"/>
 					  <input type="hidden" name="parentId" value="${org.parentId}"/>
@@ -47,7 +47,7 @@
 	                  <input type="hidden" name="seq" class="input-text lh30" value="${org.seq }" size="40">
 					<input type="text" readonly="true" name="divisionName" class="input-text lh30" value="${division.name }" size="40">
                   </td>
-                  <td class="td_right">机构类型：</td>
+                  <td class="td_right">机构类型<span class="red">*</span>：<span class="red">*</span>：</td>
                   <td>
                   
                     <span class="fl">
@@ -87,11 +87,13 @@
                 <tr>
                   <td class="td_right">同步到系统：</td>
                   <td colspan="3">
-                  <c:if test="${ fn:length(d:gAS()) == 0}">
+                  <c:set var="apps" value="${d:gAS('org',org.id,'' ) }"></c:set>
+                  <c:if test="${ fn:length(apps) == 0}">
                   	您没有同步到其他系统得权限！
                   </c:if>
-                  <c:forEach var="app" items="${d:gAS() }">
-                    <input type="checkbox" name="synApps" value="${app.id }">${app.appName } 
+                  <c:forEach var="app" items="${apps }">
+                   <input type="checkbox" name="synApps" <c:if test="${app.status=='2' }"> onclick="return false;" </c:if><c:if test="${app.checked }"> checked="checked"</c:if> value="${app.id }">
+                   ${app.appName }<c:if test="${app.status=='2' }"><span class="red">(维护中...)</span> </c:if> 
                   </c:forEach>
                   </td>
                   
@@ -102,7 +104,7 @@
                    <td class="">
                      <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
                     <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
-                    <input type="button" name="button" onclick="javascript:window.location.href='../listOrgs?divisionId=${org.divisionId}&parentId=${org.parentId }'" class="btn btn82 btn_back" value="返回"> 
+                    <input type="button" name="button" onclick="javascript:window.location.href='../listOrgs?divisionId=${org.divisionId}'" class="btn btn82 btn_back" value="返回"> 
                    
                    </td>
                  </tr>

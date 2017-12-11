@@ -231,11 +231,11 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		
 		Map u = new HashMap();
 		u.put("opType", typeName);
+		u.put("opTypeCode", type);
 		u.put("appName", app.getAppName());
 		u.put("appId", app.getId());
 		u.put("appCode", app.getAppCode());
 		u.put("status", true);
-//		u.put(, );
 		if(app==null){
 			String s = "同步"+typeName+"Org时 {appId="+appId+"}未找到对应的应用";
 			logger.info(s);
@@ -243,6 +243,12 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 			u.put("status", false);
 			return u;
 		}
+		if(app.getStatus().equals("2")){
+			u.put("result", "系统维护中，暂无操作");
+			u.put("isAuthorize",false);
+			return u;
+		}
+//		u.put(, );
 		String result = "000";
 		String today = DmDateUtil.Current();
 		if(app.getIsOrgSyn()){//如果该系统要同步机构

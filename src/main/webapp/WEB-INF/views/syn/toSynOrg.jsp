@@ -69,7 +69,7 @@
 										<td>${org.name}</td>
 										<td>${org.code}</td>
 										<td><a class="ext_btn"
-											href="javascript:confrimAction('synOrg?appId=${appId }&orgId=${org.id }');">
+											href="javascript:confirmAction('synOrg?appId=${appId }&orgId=${org.id }');">
 												同步</a></td>
 
 									</tr>

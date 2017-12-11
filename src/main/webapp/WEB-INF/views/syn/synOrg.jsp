@@ -82,7 +82,7 @@
 										<td>${org.name}</td>
 										<td>${org.code}</td>
 										<td><a class="ext_btn"
-											href="javascript:confrimAction('delSynOrg?appId=${appId }&orgId=${org.id }');">
+											href="javascript:confirmAction('delSynOrg?appId=${appId }&orgId=${org.id }');">
 												取消同步</a></td>
 
 									</tr>

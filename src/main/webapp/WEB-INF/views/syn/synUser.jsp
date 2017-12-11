@@ -86,7 +86,7 @@
 										<td>${user.name}</td>
 										<td>${user.orgId}</td>
 										<td><a class="ext_btn"
-											href="javascript:confrimAction('delSynUser?appId=${appId }&userId=${user.code }');">
+											href="javascript:confirmAction('delSynUser?appId=${appId }&userId=${user.code }');">
 												取消同步</a></td>
 
 									</tr>
