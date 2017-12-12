@@ -51,7 +51,7 @@
 
     <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="XMLMAPPER" />
 
-    <table tableName="syn_Division" domainObjectName="synDivision">
+    <table tableName="t_notice" domainObjectName="Notice">
       <!-- <generatedKey column="id" sqlStatement="Mysql" identity="true"/> -->
     </table>
   </context>

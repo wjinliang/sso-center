@@ -40,6 +40,8 @@ public class SynIndexController {
 	String liantongIP;
 	@Value("${yidongIP}")
 	String yidongIP;
+	@Value("${encrypt.seed}")
+	private String seed;
 	
 	@RequestMapping("/listSynApp")
 	public ModelAndView listSynApps(ModelAndView model){
@@ -64,8 +66,7 @@ public class SynIndexController {
 			return model;
 		}
 		String uuid = SecurityUtils.getCurrentSecurityUser().getId();
-		String masterPassword = "zcpt@123456";
-			uuid = SimpleCrypto.encrypt(masterPassword, uuid);
+			uuid = SimpleCrypto.encrypt(seed, uuid);
 			String appPath = getAppPath(request,app);
 			if (appPath != null && !appPath.equals("")) {
 				if (appPath.indexOf("?") >= 0) {

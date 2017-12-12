@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,8 @@ public class IndexController {
 
     @Autowired
     private UserMenuService userMenuService;
+    @Value("${encrypt.seed}")
+	private String seed;
 
     @RequestMapping("/")
     public String root() {
@@ -73,7 +76,7 @@ public class IndexController {
     	ShaPasswordEncoder sha = new ShaPasswordEncoder();
 		sha.setEncodeHashAsBase64(false);
 		oldPassword = sha.encodePassword(oldPassword, null);
-		String encryptPassword = SimpleCrypto.encrypt("zcpt@123456",
+		String encryptPassword = SimpleCrypto.encrypt(seed,
 				newPassword);
 		model.addObject("infomsg", "修改成功下次登录生效");
 		try{

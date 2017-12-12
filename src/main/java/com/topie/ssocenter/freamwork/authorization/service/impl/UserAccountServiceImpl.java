@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -50,6 +51,8 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
     SynService synService;
     @Autowired
     ApplicationInfoService appService;
+    @Value("${encrypt.seed}")
+	private String seed;
 
     @Override
     public UserAccount findUserAccountByLoginName(String loginName) {
@@ -138,7 +141,7 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 			String enPassword) {
 		String dePassword ="";
 		try {
-			dePassword = SimpleCrypto.decrypt("zcpt@123456",
+			dePassword = SimpleCrypto.decrypt(seed,
 					enPassword);
 		} catch (Exception e) {
 			throw new RuntimeBusinessException("修改密码时解码错误");

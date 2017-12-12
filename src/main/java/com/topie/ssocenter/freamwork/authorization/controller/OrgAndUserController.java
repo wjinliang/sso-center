@@ -59,22 +59,24 @@ public class OrgAndUserController {
 	static final Logger logger = LoggerFactory.getLogger(OrgAndUserController.class);
 	
 	@Autowired
-	OrgService orgService;
+	private OrgService orgService;
 	@Autowired
-	UserAccountService userAccountService;
+	private UserAccountService userAccountService;
 	@Autowired
-	UserRoleService userRoleService;
+	private UserRoleService userRoleService;
 	@Autowired
-	DivisionService divisionService;
+	private DivisionService divisionService;
 	@Autowired
-	SynService synService;
+	private SynService synService;
 	@Autowired
-	ApplicationInfoService appService;
+	private ApplicationInfoService appService;
 	
 	@Value("${adminRole.id}")
-	String adminId;
+	private String adminId;
 	@Value("${normalRole.id}")
-	String normalRoleId;
+	private String normalRoleId;
+	@Value("${encrypt.seed}")
+	private String seed;
 
 	@RequestMapping({ "/listOrgs" })
 	public ModelAndView list(
@@ -428,7 +430,7 @@ public class OrgAndUserController {
 		sha.setEncodeHashAsBase64(false);
 		String password = user.getPassword();
 		user.setPassword(sha.encodePassword(password, null));
-		String encryptPassword = SimpleCrypto.encrypt("zcpt@123456",
+		String encryptPassword = SimpleCrypto.encrypt(seed,
 				password);
 		user.setSynpassword(encryptPassword);
 		user.setLocked(false);
@@ -681,10 +683,9 @@ public class OrgAndUserController {
 		user.setPassword(sha.encodePassword(password, null));
 		String encryptPassword="";
 		try {
-			encryptPassword = SimpleCrypto.encrypt("zcpt@123456",
+			encryptPassword = SimpleCrypto.encrypt(seed,
 					password);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		user.setSynpassword(encryptPassword);
@@ -692,13 +693,15 @@ public class OrgAndUserController {
 		return ResponseUtil.success();
 	}
 	
-	@RequestMapping("/user/rolePage")
-	public ModelAndView rolePage(ModelAndView model,String userId){
+	@RequestMapping("/user/getRole")
+	@ResponseBody
+	public Object rolePage(ModelAndView model,String userId){
 		//获取用户的权限
 		List<String> list = userRoleService.selectRolesByUserId(userId);
-		model.addObject("roles", list);
-		model.setViewName("/user/rolePage");
-		return model;
+//		model.addObject("roles", list);
+//		model.setViewName("/user/rolePage");
+//		return model;
+		return list;
 	}
 	@RequestMapping("/user/setRole")
 	@ResponseBody

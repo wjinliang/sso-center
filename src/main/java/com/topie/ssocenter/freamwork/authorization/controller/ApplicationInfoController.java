@@ -111,12 +111,12 @@ public class ApplicationInfoController {
 				Example example =new Example(ApplicationInfo.class);
 				example.createCriteria().andEqualTo(name,param);
 				List<ApplicationInfo> list = this.appService.selectByExample(example);
-				if (id != null && !id.equals("")) {
+				if (id != null && !id.equals("")) {//更新
 					if (list.size() > 1) {
 						return false;
 					} else if (list.size() == 1) {
 						ApplicationInfo applicationInfo = list.get(0);
-						if (applicationInfo.getId().equals(id)) {
+						if (applicationInfo.getId().equals(id)) {//是自己
 							return true;
 						} else {
 							return false;
@@ -124,7 +124,7 @@ public class ApplicationInfoController {
 					} else {
 						return true;
 					}
-				} else {
+				} else {//新增
 					if (list.size() > 0) {
 						return false;
 					} else {
