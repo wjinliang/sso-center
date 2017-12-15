@@ -45,6 +45,31 @@ public class SynLogController {
 				model.setViewName("/synlog/list");
 				return model;
 		}
+		
+		 /**
+		  * 系统列表
+		  * @param model
+		  * @param thispage
+		  * @param pagesize
+		  * @return
+		  */
+			@RequestMapping({ "/listSynLogJson" })
+			@ResponseBody
+			public Object listAppjson(
+					ModelAndView model,
+					@RequestParam(value = "thispage", required = false) Integer thispage,
+					@RequestParam(value = "pagesize", required = false) Integer pagesize,
+					SynLog synLog) {
+
+					if (pagesize == null) {
+						pagesize = Integer.valueOf(10);
+					}
+					if (thispage == null) {
+						thispage = Integer.valueOf(0);
+					}
+					PageInfo<SynLog> page = synLogService.findLogList(thispage, pagesize, synLog);
+					return page;
+			}
 
 
 

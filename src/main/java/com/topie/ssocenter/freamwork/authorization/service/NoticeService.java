@@ -17,6 +17,7 @@ public interface NoticeService extends IService<Notice, String> {
 	PageInfo<Notice> findCurrentUserNotice(Integer thispage, Integer pagesize);
 
 	int updateAll(Notice notice, String apps);
+	int updateNotNull(Notice notice, String apps);
 
 	int save(Notice notice, String apps);
 
@@ -26,4 +27,5 @@ public interface NoticeService extends IService<Notice, String> {
 	 * @return map.put("noticeId",noticeId) map.put("appId",appId)
 	 */
 	List<Map> selectNoticeApp(String noticeId);
+
 }

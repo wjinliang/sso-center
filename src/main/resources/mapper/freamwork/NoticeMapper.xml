@@ -48,5 +48,13 @@
 		ORDER BY ${seq}
 	</select>
 	
-	<insert id="insert"></insert>
+	<insert id="insertNoticeApps">
+		INSERT INTO `t_notice_app` (`notice_id`, `app_id`) VALUES (#{noticeId},#{appId});
+	</insert>
+	<select id="selectNoticeApp" resultType="java.util.Map">
+		SELECT * FROM `t_notice_app` WHERE notice_id=#{noticeId}
+	</select>
+	<delete id="deleteNoticeApp">
+		DELETE FROM t_notice_app WHERE notice_id=#{noticeId}
+	</delete>
 </mapper>

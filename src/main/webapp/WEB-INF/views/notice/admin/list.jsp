@@ -148,7 +148,7 @@
 						</tr>
 					</c:forEach>
 				</table>
-				<%@include file="../include/pageinfo.jsp"%>
+				<%@include file="../../include/pageinfo.jsp"%>
 
 			</div>
 		</div>

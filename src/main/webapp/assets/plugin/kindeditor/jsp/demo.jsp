@@ -39,7 +39,7 @@ String htmlData = request.getParameter("content1") != null ? request.getParamete
 <body>
 	<%=htmlData%>
 	<form name="example" method="post" action="demo.jsp">
-		<textarea name="content1" cols="100" rows="8" style="width:700px;height:200px;visibility:hidden;"><%=htmlspecialchars(htmlData)%></textarea>
+		<textarea name="content1" cols="100" rows="8" style="width:700px;height:200px;visibility:hidden;">i噢噢噢噢噢噢噢噢噢噢噢噢噢噢噢噢哦哦上了飞机就<%=htmlspecialchars(htmlData)%></textarea>
 		<br />
 		<input type="submit" name="button" value="提交内容" /> (提交快捷键: Ctrl + Enter)
 	</form>

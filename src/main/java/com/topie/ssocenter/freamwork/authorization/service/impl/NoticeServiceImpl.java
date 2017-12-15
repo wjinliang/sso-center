@@ -96,6 +96,17 @@ public class NoticeServiceImpl extends BaseServiceImpl<Notice, String>
 		}
 		return i;
 	}
+	@Override
+	public int updateNotNull(Notice entity,String appIds) {
+		int i =super.updateNotNull(entity);
+//		List<Map> record = this.noticeMapper.selectNoticeApp(entity.getId());
+		this.noticeMapper.deleteNoticeApp(entity.getId());
+		String[] ids = appIds.split(",");
+		for(String appId:ids){
+			 this.noticeMapper.insertNoticeApps(entity.getId(),appId);
+		}
+		return i;
+	}
 
 	@Override
 	public int updateNotNull(Notice entity) {

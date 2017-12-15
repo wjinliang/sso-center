@@ -111,7 +111,7 @@ public class IndexController {
 				} else {
 					map.put("pId", 0);
 				}
-				map.put("icon", new String(m.getIcon()));
+				//map.put("icon", new String(m.getIcon()));
 				map.put("url", m.getMenuurl());
 				/*if (m.getChildren().size() == 0) {
 					map.put("isLeaf", true);

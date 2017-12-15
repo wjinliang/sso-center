@@ -1,5 +1,7 @@
 package com.topie.ssocenter.freamwork.authorization.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,12 +79,16 @@ public class NoticeController {
 	@RequestMapping({ "/admin/save" })
 	public ModelAndView saveApp(ModelAndView model, Notice notice, String apps) {
 		if (StringUtil.isNotEmpty(notice.getId())) {
-			this.noticeService.updateAll(notice,apps);
+			this.noticeService.updateNotNull(notice,apps);
 			model.setViewName("redirect:list");
 			return model;
 		}
 		String uuid = UUIDUtil.getUUID();
 		notice.setId(uuid);
+		notice.setIsDelete(false);
+		notice.setIsPublish(false);
+		notice.setIsRevoke(false);
+		notice.setCreateTime(new Date());
 		this.noticeService.save(notice,apps);
 		model.setViewName("redirect:list");
 		return model;

@@ -41,6 +41,11 @@
 								<tr>
 									<td class="td_right">用户名：</td>
 									<td class=""> ${userAccount.name }</td>
+									<td class="td_right" rowspan="5">头像：</td>
+									<td rowspan="5">
+										<img src="<%=basePath%>/assets/images/a.jpg" width=80 height=80/>
+									</td>
+									
 								</tr>
 								<tr>
 									<td class="td_right">用户登录名：</td>
@@ -61,31 +66,24 @@
 								<tr>
 									<td class="td_right">办公电话：</td>
 									<td>${userAccount.bizphoneNo}</td>
-								</tr>
-								<tr>
 									<td class="td_right">传真：</td>
 									<td>${userAccount.faxNo}</td>
 								</tr>
 								<tr>
 									<td class="td_right">职务：</td>
 									<td>${userAccount.duty}</td>
-								</tr>
-								<tr>
 									<td class="td_right">学历：</td>
 									<td class="">${userAccount.schoolAge}</td>
 								</tr>
 								<tr>
 									<td class="td_right">专业：</td>
 									<td>${userAccount.speciality}</td>
-								</tr>
-								<tr>
 									<td class="td_right">职称：</td>
 									<td class="">${userAccount.title}</td>
 								</tr>
 								<tr>
 									<td class="td_right">地址：</td>
 									<td>${userAccount.address}</td>
-								</tr>
 								</tr>
 								</table>
 							</div></li>
@@ -99,7 +97,10 @@
 								<tr>
 									<td class="td_right">用户名：</td>
 									<td class="">${userAccount.name }</td>
-									
+									<td class="td_right" rowspan="4">头像：</td>
+									<td rowspan="4">
+										<img src="<%=basePath%>/assets/images/a.jpg" width=80 height=80/>
+									</td>
 								</tr>
 
 								<tr>
@@ -128,8 +129,6 @@
 									<td><input type="text" name="bizphoneNo"
 										value="${userAccount.bizphoneNo}" class="input-text lh30"
 										size="40"></td>
-								</tr>
-								<tr>
 									<td class="td_right">传真：</td>
 									<td><input type="text" name="faxNo"
 										value="${userAccount.faxNo}" class="input-text lh30" size="40"></td>
@@ -138,8 +137,6 @@
 									<td class="td_right">职务：</td>
 									<td><input type="text" name="duty"
 										value="${userAccount.duty}" class="input-text lh30" size="40"></td>
-								</tr>
-								<tr>
 									<td class="td_right">学历：</td>
 									<td class=""><span class="fl">
 											<div class="select_border">
@@ -175,8 +172,6 @@
 									<td><input type="text" name="speciality"
 										value="${userAccount.speciality}" class="input-text lh30"
 										size="40"></td>
-								</tr>
-								<tr>
 									<td class="td_right">职称：</td>
 									<td class=""><span class="fl">
 											<div class="select_border">
