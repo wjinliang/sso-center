@@ -8,11 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
@@ -34,12 +35,18 @@ import com.topie.ssocenter.common.utils.ExcelExportUtils;
 import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.common.utils.UUIDUtil;
 import com.topie.ssocenter.freamwork.authorization.exception.AuthBusinessException;
+import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
+import com.topie.ssocenter.freamwork.authorization.model.SynOrg;
+import com.topie.ssocenter.freamwork.authorization.model.SynUser;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
+import com.topie.ssocenter.freamwork.authorization.service.SynService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
+import com.topie.ssocenter.freamwork.authorization.service.UserRoleService;
 import com.topie.ssocenter.freamwork.authorization.utils.R;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 import com.topie.ssocenter.freamwork.authorization.utils.SimpleCrypto;
@@ -48,15 +55,28 @@ import com.topie.ssocenter.freamwork.authorization.utils.SimpleCrypto;
 @Controller
 @RequestMapping({ "/orgAndUser" })
 public class OrgAndUserController {
-	@Autowired
-	OrgService orgService;
-	@Resource
-	UserAccountService userAccountService;
-	@Autowired
-	DivisionService divisionService;
 	
-	@Value("${zhuisu.systemId}")
-	String ZSsystemId;
+	static final Logger logger = LoggerFactory.getLogger(OrgAndUserController.class);
+	
+	@Autowired
+	private OrgService orgService;
+	@Autowired
+	private UserAccountService userAccountService;
+	@Autowired
+	private UserRoleService userRoleService;
+	@Autowired
+	private DivisionService divisionService;
+	@Autowired
+	private SynService synService;
+	@Autowired
+	private ApplicationInfoService appService;
+	
+	@Value("${adminRole.id}")
+	private String adminId;
+	@Value("${normalRole.id}")
+	private String normalRoleId;
+	@Value("${encrypt.seed}")
+	private String seed;
 
 	@RequestMapping({ "/listOrgs" })
 	public ModelAndView list(
@@ -137,7 +157,9 @@ public class OrgAndUserController {
 	@RequestMapping("/save")
 	public ModelAndView save(
 			ModelAndView model,
-			Org org) {
+			Org org,@RequestParam(value="synApps",required=false) String synAppIds) {
+		model.addObject("backUrl", "listOrgs?divisionId="+org.getDivisionId());
+		model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
 		Long orgId = org.getId();
 		if(orgId==null){//新增
 			org.setId(System.currentTimeMillis());
@@ -155,27 +177,160 @@ public class OrgAndUserController {
 				org.setCode(getOrgCode(division));
 			}//验证code end
 			orgService.save(org);
-			//TODO 同步新增 ？
-			model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId()
-					+"&id="+org.getId()+"&parentId="+org.getParentId());
+			List<Map> resultList = doTongBu("41",org,synAppIds,model);
+			model.addObject("org", org);
+			model.addObject("id", org.getId());
 			return model;
 		}
 		//更新
 		this.orgService.updateNotNull(org);
-		//TODO 同步新增 更新
-		model.setViewName("redirect:list?divisionId="+org.getDivisionId()
-				+"&parentId="+org.getId());
+		doTongBu("42",org,synAppIds,model);
+		model.addObject("org", org);
+		model.addObject("id", org.getId());
 		return model;
 	}
+
+	private boolean getIsOpen(String appId) {
+		List<ApplicationInfo> list = appService.selectCurrentUserSynApps().getList();//当前admin 可以同步的APP
+		for(ApplicationInfo app:list){
+			if(app.getId().equals(appId)){//当前用户有操作权限
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private List<Map> doTongBu(String optype, Org org, String synAppIds,
+			ModelAndView model) {
+		List<Map> list = new ArrayList<Map>();
+		if(optype=="41"){//新增
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = orgService.synOneOrg(org,appId,"41","新增");
+					list.add(u);
+				}
+			}
+		}
+		if(optype=="42"){//更新
+			List<SynOrg> listInfo = synService.selectOrgSynInfo(org.getId());//已经同步过的APP
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					if(!getIsOpen(appId)){//没有同步权限
+						continue;
+					}
+					boolean isSyn = false;//是否已经同步过了
+					for(SynOrg synOrg:listInfo){
+						if(synOrg.getAppId().equals(appId)){
+							isSyn = true;
+							break;
+						}
+					}
+					if(isSyn){//如果同步过-》更新
+						Map u = orgService.synOneOrg(org,appId,"42","更新");
+						list.add(u);
+					}else{//如果没有通不过-》新增
+						Map u = orgService.synOneOrg(org,appId,"41","新增");
+						list.add(u);
+					}
+				}
+			}
+			
+			for(SynOrg synOrg:listInfo){
+				if(!getIsOpen(synOrg.getAppId())){//没有同步权限
+					continue;
+				}
+				boolean isSyn = true;//是否已经同步过了
+				String app="";
+				if(!StringUtils.isEmpty(synAppIds)){
+					for(String appId:synAppIds.split(",")){
+						app = appId;
+						if(synOrg.getAppId().equals(appId)){
+							isSyn = false;
+							break;
+						}
+					}
+				}
+				if(isSyn){//以前同步过现在去掉同步 -》删除
+					Map u = orgService.synOneOrg(org,app,"43","删除");
+					list.add(u);
+				}
+			}
+		}
+		if(optype=="43"){//删除
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = orgService.synOneOrg(org,appId,"43","删除");
+					list.add(u);
+				}
+			}
+		}
+		model.addObject("resultList", list);//同步结果
+		if(list.size()==0){
+			model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
+			return list;
+		}
+		int redirect=0;
+		String appCode="";
+		for(Map map:list){
+			if("41".equals(map.get("opTypeCode").toString())){//如果新增  则设置权限
+				if(map.get("isAuthorize")!=null && (Boolean)map.get("isAuthorize")){//如果要授权
+					redirect++;
+					appCode = map.get("appCode").toString();
+				};
+			}
+		}
+		if(redirect==0){//返回到列表页面
+			/*model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId());*/
+			model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
+		}
+		if(redirect==1){
+			model.setViewName("redirect:"
+					+ "../syn/ssoServiceBySession?xtbs="+appCode
+					+"&TYPE="+
+					R.ORG_AUTHORIZE+"&ID="+org.getId());
+		}
+		if(redirect > 1){
+			model.setViewName("/org/synResult");
+		}
+		return list;
+	}
+
+	@SuppressWarnings({ "unused", "rawtypes" })
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Object deleteOrg(String ids){
 		if(StringUtils.isEmpty(ids)){
 			return ResponseUtil.error("请选择要删除的项");
 		}
+		boolean result = true;
 		String[] idArr = ids.split(",");
 		for(int i =0 ;i<idArr.length;i++){
-			this.orgService.delete(Long.valueOf(idArr[i]));
+			Org org = orgService.selectByKey(Long.valueOf(idArr[i]));
+			List<SynOrg> listInfo = synService.selectOrgSynInfo(org.getId());//已经同步过的APP
+			String synAppIds = "";
+			for(SynOrg synOrg:listInfo){
+				synAppIds +=","+synOrg.getAppId();
+			}
+			if(synAppIds.equals("")){
+				int count = this.orgService.delete(Long.valueOf(idArr[i]));
+				return  ResponseUtil.success();
+			}else{
+				synAppIds = synAppIds.substring(1);
+				List<Map> resultList = doTongBu("43", org, synAppIds, null);
+				for(Map map:resultList){
+					if(!(boolean)map.get("status")){//同步有失败
+						result = false;
+						break;
+					}
+				}
+				if(result){
+					int count = this.orgService.delete(Long.valueOf(idArr[i]));
+					return ResponseUtil.success(resultList);
+				}else{//同步有失败
+					return ResponseUtil.error(resultList);
+				}
+			}
 		}
 		return ResponseUtil.success();
 	}
@@ -211,13 +366,19 @@ public class OrgAndUserController {
 			Org org) {
 		model.addObject("mode",mode);
 		model.addObject("org",org);
-		model.addObject("isadmin",false);
 		String useraccountid = user.getCode();
 		Long orgid = user.getOrgId();
 		if (mode != null && !mode.equals("new")) {//编辑
 			if (useraccountid != null) {
 				user = userAccountService.selectByKey(useraccountid);
-				//TODO 判断是否为admin 
+				//获取用户的权限 是否为管理员
+				List<String> list = userRoleService.selectRolesByUserId(useraccountid);
+				for(String m:list){
+					if(m.equals(adminId)){
+						model.addObject("isAdmin", "true");
+						break;
+					}
+				}
 			}
 		} else {//新增
 			if (orgid == null) {
@@ -231,6 +392,7 @@ public class OrgAndUserController {
 			String loginName = this.orgService.selectNextUserLoginNameByOrgCode(code);
 			user.setLoginname(loginName);
 			user.setEnabled(true);
+			
 		}
 //		UserAccount currentUserAccount = UserAccountUtil.getInstance()
 //				.getCurrentUserAccount();
@@ -241,11 +403,25 @@ public class OrgAndUserController {
 	}
 	
 	@RequestMapping("user/save")
-	public ModelAndView user_save(UserAccount user, ModelAndView model) throws Exception{
-		model.setViewName("listUsers?orgId="+user.getOrgId());
+	public ModelAndView user_save(UserAccount user,
+			@RequestParam(value="synApps",required=false) String synAppIds,
+			ModelAndView model,String isAdmin) throws Exception{
+		model.addObject("backUrl", "../listUsers?orgId="+user.getOrgId());
+		model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
 		if(StringUtil.isNotEmpty(user.getCode())){//更新
 			this.userAccountService.updateNotNull(user);
-			
+			if(isAdmin!=null && isAdmin.equals("true")){
+				try{
+				this.userRoleService.insertUserAccountRole(user.getCode(),this.adminId);
+				}catch(Exception e){//之前已存在  报主键重复错误
+					
+				}
+			}else{
+				this.userRoleService.deleteUserAccountRole(user.getCode(),this.adminId);
+			}
+			List<Map> list = doTongBu("12", user, synAppIds, model);
+			this.updateUserSystem(user);//更新用户所属系统
+			model.addObject("id", user.getCode());
 			return model;
 		}
 		//新增
@@ -254,7 +430,7 @@ public class OrgAndUserController {
 		sha.setEncodeHashAsBase64(false);
 		String password = user.getPassword();
 		user.setPassword(sha.encodePassword(password, null));
-		String encryptPassword = SimpleCrypto.encrypt("zcpt@123456",
+		String encryptPassword = SimpleCrypto.encrypt(seed,
 				password);
 		user.setSynpassword(encryptPassword);
 		user.setLocked(false);
@@ -262,10 +438,133 @@ public class OrgAndUserController {
 		user.setPasswordExpired(true);
 		user.setCreateDate(DmDateUtil.Current());
 		user.setCreateUser(SecurityUtils.getCurrentUserName());
-		
-		//TODO 设置角色
+		this.userAccountService.save(user);
+		// 设置角色
+		this.userRoleService.insertUserAccountRole(user.getCode(),this.normalRoleId);
+		if(isAdmin.equals("true")){
+			this.userRoleService.insertUserAccountRole(user.getCode(),this.adminId);
+		}
+		List<Map> list = doTongBu("11", user, synAppIds, model);
+		updateUserSystem(user);//更新用户所属系统
+		model.addObject("id", user.getCode());
 		return model;
 	}
+	/**
+	 * 更新用户所属系统
+	 * @param user
+	 */
+	private void updateUserSystem(UserAccount user) {
+		List<SynUser> listInfo = synService.selectUserSynInfo(user.getCode());//已经同步过的APP
+		String sysStr = "";
+		for(SynUser syn:listInfo){
+			ApplicationInfo app = this.appService.selectByKey(syn.getAppId());
+			if(app!=null){
+				sysStr+=","+app.getAppName();
+			}
+		}
+		if(!sysStr.equals("")){
+			sysStr = sysStr.substring(1);
+		}
+		user.setSystemId(sysStr);
+		this.userAccountService.updateNotNull(user);
+		
+	}
+
+	private List<Map> doTongBu(String optype, UserAccount user, String synAppIds,
+			ModelAndView model) {
+		List<Map> list = new ArrayList<Map>();
+		if(optype=="11"){//新增
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = userAccountService.synOneUser(user,appId,"11","新增");
+					list.add(u);
+				}
+			}
+		}
+		if(optype=="12"){//更新
+			List<SynUser> listInfo = synService.selectUserSynInfo(user.getCode());//已经同步过的APP
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					if(!getIsOpen(appId)){//没有同步权限
+						continue;
+					}
+					boolean isSyn = false;//是否已经同步过了
+					for(SynUser synUser:listInfo){
+						if(synUser.getAppId().equals(appId)){
+							isSyn = true;
+							break;
+						}
+					}
+					if(isSyn){//如果同步过-》更新
+						Map u = userAccountService.synOneUser(user,appId,"12","更新");
+						list.add(u);
+					}else{//如果没有通不过-》新增
+						Map u = userAccountService.synOneUser(user,appId,"11","新增");
+						list.add(u);
+					}
+				}
+			}
+			
+			for(SynUser synUser:listInfo){
+				if(!getIsOpen(synUser.getAppId())){//没有同步权限
+					continue;
+				}
+				boolean isSyn = true;//是否已经同步过了
+				String app="";
+				if(!StringUtils.isEmpty(synAppIds)){
+					for(String appId:synAppIds.split(",")){
+						app = appId;
+						if(synUser.getAppId().equals(appId)){
+							isSyn = false;
+							break;
+						}
+					}
+				}
+				if(isSyn){//以前同步过现在去掉同步 -》删除
+					Map u = userAccountService.synOneUser(user,app,"13","删除");
+					list.add(u);
+				}
+			}
+		}
+		if(optype=="13"){//删除
+			if(!StringUtils.isEmpty(synAppIds)){
+				for(String appId:synAppIds.split(",")){
+					Map u = userAccountService.synOneUser(user,appId,"13","删除");
+					list.add(u);
+				}
+			}
+		}
+		model.addObject("resultList", list);//同步结果
+		if(list.size()==0){//不需要同步
+			model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
+			return list;
+		}
+		int redirect=0;
+		String appCode="";
+		for(Map map:list){
+			if("11".equals(map.get("opTypeCode").toString())){//如果新增  则设置权限
+				if(map.get("isAuthorize")!=null && (Boolean)map.get("isAuthorize")){//如果要授权
+					redirect++;
+					appCode = map.get("appCode").toString();
+				};
+			}
+		}
+		if(redirect==0){//返回到列表页面
+			model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
+		}
+		if(redirect==1){
+			model.setViewName("redirect:"
+					+ "/syn/ssoServiceBySession?xtbs="+appCode
+					+"&TYPE="+
+					R.ORG_AUTHORIZE+"&ID="+user.getCode());
+		}
+		if(redirect > 1){
+			model.setViewName("/user/synResult");
+		}
+		return list;
+	}
+
+	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Org setCurrentDivisionList(Org org, ModelAndView model) {
@@ -302,6 +601,7 @@ public class OrgAndUserController {
 			ModelAndView model,
 			@RequestParam(value = "thispage", required = false) Integer thispage,
 			UserAccount user,
+			Org org,
 			@RequestParam(value = "pagesize", required = false) Integer pagesize) {
 			if (pagesize == null) {
 				pagesize = Integer.valueOf(10);
@@ -309,97 +609,115 @@ public class OrgAndUserController {
 			if (thispage == null) {
 				thispage = Integer.valueOf(0);
 			}
-			PageInfo<UserAccount> userList = this.orgService.listMergeUsers(
+			PageInfo<UserAccount> userList = this.userAccountService.listMergeUsers(
 					user, thispage, pagesize);
 			model.addObject(R.SEARCHMODEL, user);
+			model.addObject(R.SEARCHMODEL+"_org",org);
 			model.addObject(R.PAGE, userList);
-			model.setViewName("/org/listMergeUsers");
+			model.setViewName("/user/listMergeUsers");
 			return model;
 	}
 
-	
 	@RequestMapping({ "/gotoMergeUser" })
 	public ModelAndView gotoMergeUser(
 			ModelAndView model,
 			@RequestParam(value = "thispage", required = false, defaultValue = "0") Integer thispage,
-			@RequestParam(value = "pagesize", required = false, defaultValue = "6") Integer pagesize,
-			@RequestParam(value = "tj", required = false) String name,
-			@RequestParam(value = "xt", required = false) String systemId,
-			@RequestParam(value = "userid", required = true) String userid) {
-		//TODO 用户关联列表
-			/*List<UserAccount> userList = this.orgAndUserService.listUsers(null,
-					systemId, name, thispage, pagesize);
-			List<Order> orders = new ArrayList<Order>();
-			orders.add(new Order(Direction.ASC, "seq"));
-			List<ApplicationInfo> appList = this.commonDAO
-					.findAll(ApplicationInfo.class,orders);
-			model.addObject("appList", appList);
-			model.addObject("userList", userList);
-			model.addObject("userid", userid);
-			model.setViewName("/pages/admin/useraccount/user");*/
+			UserAccount user,
+			@RequestParam(value = "pagesize", required = false, defaultValue = "6") Integer pagesize){	
+			PageInfo<UserAccount> page = userAccountService.listNotMergeUsers(thispage, pagesize, user);
+			model.addObject(R.SEARCHMODEL, user);
+			model.addObject(R.PAGE, page);
+			model.setViewName("/user/listNotMergeUsers");
 			return model;
 	}
 
 	@RequestMapping({ "/mergeUser" })
-	public ModelAndView mergeUser(ModelAndView model,
-			@RequestParam(value = "userid", required = true) String userid,
+	@ResponseBody
+	public Object mergeUser(ModelAndView model,
+			@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "userIds", required = true) String userIds) {
-		//TODO 用户关联
-			/*UserAccount currentUser = UserAccountUtil.getInstance()
-					.getCurrentUserAccount();
-			UserAccount user = this.commonDAO
-					.findOne(UserAccount.class, userid);
+			UserAccount user = this.userAccountService.selectByKey(userId);
 			String[] userIdArray = userIds.trim().split(",");
 			String uuid = null;
-			if (user.getMergeUuid() != null && !user.getMergeUuid().equals("")) {
-				uuid = user.getMergeUuid();
-			} else {
+			if (user.getMergeUuid() == null || user.getMergeUuid().equals("")) {
 				uuid = UUIDUtil.getUUID();
 				user.setMergeUuid(uuid);
+			} else {
+				uuid = user.getMergeUuid();
 			}
 			for (int i = 0; i < userIdArray.length; i++) {
 				String infoCode = userIdArray[i];
-				UserAccount mergeUser = this.commonDAO.findOne(
-						UserAccount.class, infoCode);
+				UserAccount mergeUser =  this.userAccountService.selectByKey(infoCode);
 				mergeUser.setMergeUuid(uuid);
-				this.userAccountService.updateUser(mergeUser);
+				this.userAccountService.updateAll(mergeUser);
 			}
-			this.userAccountService.updateUser(user);
-			model.addObject("userid", userid);
-			return NewRedirect(model, "/orgAndUser/listMergeUsers");*/
-		return model;
+			this.userAccountService.updateAll(user);
+			return ResponseUtil.success(); 
 	}
 
 	@RequestMapping({ "/deleteMerge" })
-	public void deleteMerge(HttpServletRequest request,
+	@ResponseBody
+	public Object deleteMerge(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "userid", required = false) String userid)
-			throws Exception {
+			{
 		
-		//TODO 用户关联删除
-		/*response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		try {
 			if (userid != null) {
 				String[] rid = userid.split(",");
 				for (String str : rid) {
-					UserAccount findOne = this.commonDAO.findOne(
-							UserAccount.class, str);
+					UserAccount findOne = this.userAccountService.selectByKey(str);
 					findOne.setMergeUuid(null);
-					this.userAccountService.updateUser(findOne);
+					this.userAccountService.updateAll(findOne);
 				}
 			}
-			out.write("ok");
-			out.flush();
-			out.close();
+			return ResponseUtil.success();
+			
+	}
+	@RequestMapping("/resetPass")
+	@ResponseBody
+	public Object resetPass(String userId,String newp){
+		ShaPasswordEncoder sha = new ShaPasswordEncoder();
+		UserAccount user = this.userAccountService.selectByKey(userId);
+		sha.setEncodeHashAsBase64(false);
+		String password = newp;
+		user.setPassword(sha.encodePassword(password, null));
+		String encryptPassword="";
+		try {
+			encryptPassword = SimpleCrypto.encrypt(seed,
+					password);
 		} catch (Exception e) {
 			e.printStackTrace();
-			out.write("error");
-			out.flush();
-			out.close();
-		}*/
+		}
+		user.setSynpassword(encryptPassword);
+		this.userAccountService.updateAll(user);
+		return ResponseUtil.success();
 	}
-
+	
+	@RequestMapping("/user/getRole")
+	@ResponseBody
+	public Object rolePage(ModelAndView model,String userId){
+		//获取用户的权限
+		List<String> list = userRoleService.selectRolesByUserId(userId);
+//		model.addObject("roles", list);
+//		model.setViewName("/user/rolePage");
+//		return model;
+		return list;
+	}
+	@RequestMapping("/user/setRole")
+	@ResponseBody
+	public Object setRole(String userId,String isAdmin){
+		
+		// 设置角色
+		if(isAdmin.equals("true")){
+			try{
+			this.userRoleService.insertUserAccountRole(userId,this.adminId);
+			}catch(Exception e){}
+		}else{
+			this.userRoleService.deleteUserAccountRole(userId,this.adminId);
+		}
+		return ResponseUtil.success();
+	}
+	
 	@RequestMapping("/excelExport")
 	public void excelExport(HttpServletRequest request, HttpServletResponse response,Org org,UserAccount user)
 	{

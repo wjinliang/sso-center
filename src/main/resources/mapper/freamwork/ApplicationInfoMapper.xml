@@ -19,6 +19,27 @@
     <result column="op_level" property="opLevel" jdbcType="VARCHAR" />
     <result column="user_level" property="userLevel" jdbcType="VARCHAR" />
     <result column="param_name" property="paramName" jdbcType="VARCHAR" />
+    <result column="is_org_syn" property="isOrgSyn" jdbcType="BIT" />
+    <result column="is_org_authorize" property="isOrgAuthorize" jdbcType="BIT" />
+    <result column="is_user_syn" property="isUserSyn" jdbcType="BIT" />
+    <result column="is_user_authorize" property="isUserAuthorize" jdbcType="BIT" />
     <result column="seq" property="seq" jdbcType="INTEGER" />
   </resultMap>
+  <select id="selectSynAppsByUserId" resultMap="BaseResultMap" >
+  	select a.* from app_applicationinfo a  WHERE a.id in
+  	(
+	SELECT app_id FROM syn_user u  WHERE u.user_id = #{userId}
+	) 
+	and a.status = '1' order by seq asc
+  </select>
+  <select id="selectSynAppsByMergeUuid" resultMap="BaseResultMap">
+  	SELECT DISTINCT(t1.id) distid,t1.* FROM (	
+		SELECT * FROM 	app_applicationinfo app LEFT JOIN (
+			SELECT syn.app_id FROM ( 
+				SELECT u. CODE  
+				FROM t_user_account u WHERE u.merge_uuid = #{mergeUuid} ) a 
+			LEFT JOIN syn_user syn ON a.CODE = syn.user_id) t  on app.id = t.app_id 
+		WHERE app.STATUS &lt;&gt; '0' ) t1 
+	WHERE t1.app_id is not null  order by seq asc
+  </select>
 </mapper>

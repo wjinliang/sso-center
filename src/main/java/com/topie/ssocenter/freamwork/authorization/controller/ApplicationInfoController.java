@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageInfo;
-import com.topie.ssocenter.common.utils.KV;
 import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.common.utils.UUIDUtil;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
@@ -21,7 +20,7 @@ import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoServic
 import com.topie.ssocenter.freamwork.authorization.utils.R;
 
 @Controller
-@RequestMapping({ "/syn" })
+@RequestMapping({ "/app" })
 public class ApplicationInfoController {
 
 	 @Autowired
@@ -98,7 +97,7 @@ public class ApplicationInfoController {
 		public ModelAndView updateApp(ModelAndView model, ApplicationInfo app) {
 			//ApplicationInfo one = this.appService.selectByKey(app.getId());
 			this.appService.updateNotNull(app);
-			model.setViewName("redirect:/syn/listApp");
+			model.setViewName("redirect:listApp");
 			return model;
 		}
 
@@ -112,12 +111,12 @@ public class ApplicationInfoController {
 				Example example =new Example(ApplicationInfo.class);
 				example.createCriteria().andEqualTo(name,param);
 				List<ApplicationInfo> list = this.appService.selectByExample(example);
-				if (id != null && !id.equals("")) {
+				if (id != null && !id.equals("")) {//更新
 					if (list.size() > 1) {
 						return false;
 					} else if (list.size() == 1) {
 						ApplicationInfo applicationInfo = list.get(0);
-						if (applicationInfo.getId().equals(id)) {
+						if (applicationInfo.getId().equals(id)) {//是自己
 							return true;
 						} else {
 							return false;
@@ -125,7 +124,7 @@ public class ApplicationInfoController {
 					} else {
 						return true;
 					}
-				} else {
+				} else {//新增
 					if (list.size() > 0) {
 						return false;
 					} else {

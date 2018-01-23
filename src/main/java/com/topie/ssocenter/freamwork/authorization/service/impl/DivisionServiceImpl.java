@@ -4,18 +4,19 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
-import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseService;
+import com.topie.ssocenter.freamwork.database.baseservice.impl.BaseServiceImpl;
 
 /**
  */
 @Service
-public class DivisionServiceImpl extends BaseService<Division> implements DivisionService {
+public class DivisionServiceImpl extends BaseServiceImpl<Division,String> implements DivisionService {
 
 	@Override
 	public PageInfo<Division> findPage(int pageNum, int pageSize,
@@ -98,4 +99,55 @@ public class DivisionServiceImpl extends BaseService<Division> implements Divisi
 		this.getMapper().updateByPrimaryKeySelective(t2);
 		
 	}
+
+	@Override
+	public Mapper<Division> getMapper() {
+		
+		return super.getMapper();
+	}
+
+	@Override
+	public Division selectByKey(String key) {
+		
+		return super.selectByKey(key);
+	}
+
+	@Override
+	public int save(Division entity) {
+		
+		return super.save(entity);
+	}
+
+	@Override
+	public int delete(String key) {
+		
+		return super.delete(key);
+	}
+
+	@Override
+	public int updateAll(Division entity) {
+		
+		return super.updateAll(entity);
+	}
+
+	@Override
+	public int updateNotNull(Division entity) {
+		
+		return super.updateNotNull(entity);
+	}
+
+	@Override
+	public List<Division> selectByExample(Example example) {
+		
+		return super.selectByExample(example);
+	}
+
+	@Override
+	public List<Division> selectAll() {
+		
+		return super.selectAll();
+	}
+
+	
+	
 }

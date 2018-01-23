@@ -43,10 +43,11 @@
         if (subMenus.length > 0) {
             ele += "<ul>";
             $.each(subMenus, function (i, m) {
-                ele += ('<li >'
-                + '<a href="' +root+ m.url
+            	var on = m.url=="/infoCenter"?"on":"";
+                ele += ('<li class="'+on+'">'
+                + '<a href="javascript:void();" data-url="' +root+ m.url
                 + '" data-title="' + m.name
-                + '" target="rightMain"><i class="' + (m.icon == null ? "" : m.icon) + '"></i> '
+                + '"><i class="' + (m.icon == null ? "" : m.icon) + '"></i> '
                 + m.name
                 + '</a>');
                 var sMenus = getSubMenu(menus, m.id);
@@ -83,6 +84,16 @@
                             var h3 = $(ele);
                             
                             $(div).append(h3);
+                        });
+                        var lis = $(div).find("li");
+                        lis.on("mousedown",function(e){
+                        	 e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+                        	 $(div).find("li.on").removeClass("on");
+                        	var li = $(this);
+                        	li.addClass("on");
+                        	var url = li.find("a").data("url");
+                        	$("#rightMain").attr("src",url);
+                        	
                         });
                         
                             $(".sideMenu").slide({
@@ -134,6 +145,14 @@ function scrollWW() {
         n = 1;
     }
 }
+function menuHide(){
+	$(".main").toggleClass("menuHide");
+	$(".menubtn").toggleClass("menuHide");
+}
+function menuHide(){
+	$(".main").toggleClass("menuHide");
+	$(".menubtn").toggleClass("menuHide");
+}
 
 var n = 1;
 
@@ -158,4 +177,15 @@ function menuScroll(num) {
             n = n - 1;
         }
     }
+}
+function alertSucc(msg){
+	layer.msg(msg, {icon: 1,offset: 'rb'});
+}
+function alertInfo(msg,callBack){
+	layer.alert(msg, {
+//		  skin: 'layui-layer-molv', //样式类名
+		  closeBtn: 1
+		}, function(){
+			callBack();
+		});
 }

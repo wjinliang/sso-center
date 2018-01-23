@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/mvc
@@ -38,7 +42,9 @@
 		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
 	<context:component-scan
-		base-package="com.topie.ssocenter.freamwork.*.handler,com.topie.ssocenter.freamwork.**.controller" />
+		base-package="com.topie.ssocenter.freamwork.*.handler,com.topie.ssocenter.freamwork.**.controller,com.topie.ssocenter.freamwork.*.aop" />
+	<!-- 开启AOP自动代理 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<!-- 静态资源(js/image)的访问 -->
 	<mvc:resources location="/favicon.ico" mapping="/favicon.ico" />
 	<mvc:resources location="/assets/" mapping="/assets/**" />
@@ -83,9 +89,18 @@
 			</props>
 		</property>
 	</bean>
-
+<!-- 支持文件上传 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+         <!-- 请求编码格式 -->  
+         <property name="defaultEncoding" value="utf-8"></property>  
+         <!-- 上传文件大小(单位:字节) -->  
+         <property name="maxUploadSize" value="250000000"></property>  
+         <!-- 缓冲区大小(单位:KB) -->  
+         <property name="maxInMemorySize" value="1024"></property>  
+    </bean>  
 	<!-- 自定义标签 -->
 	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
 	<!-- 自定义标签结束 -->
 	<bean id="appUtil" class="com.topie.ssocenter.common.utils.AppUtil" />
+	
 </beans>

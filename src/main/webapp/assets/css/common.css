@@ -10,6 +10,7 @@ html, body {
 .fr{float: right;}
 .clear{clear: both;}
 .oh{overflow: hidden;}
+.dn{display:none;}
 a{text-decoration: none;color: #1497ec;}
 img{border:none;}
 input,img,select{border-style: none;vertical-align: middle;}
@@ -57,3 +58,7 @@ select{*vertical-align: top;}
 .wh100{width: 100px;}
 /*配色表*/
 .color307fb1{color: #307fb1;}
+.red{color: #FF0000;}
+.yellow{color: #EEEE00;}
+.green{color: #00DD00;}
+.blue{color: #0000CC ;}

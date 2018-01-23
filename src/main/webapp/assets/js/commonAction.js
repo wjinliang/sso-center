@@ -22,13 +22,10 @@
 	      }
 	    }
 	    else if($oinput.attr("type")=="radio"){
-	      $oinput.each(function(){
-	        var radioObj = $("[name="+name+"]");
-	        for(var i=0;i<radioObj.length;i++){
-	          if(radioObj[i].value == ival){
-	            radioObj[i].click();
+	      $oinput.each(function(i,that){
+	          if($(that).val() == ""+ival){
+	        	  $(that).click();
 	          }
-	        }
 	      });
 	    }
 	    else if($oinput.attr("type")=="textarea"){
@@ -65,7 +62,7 @@
 					},
 					success:function(data){
 						if(data.code==200){
-							layer.msg('操作成功', {icon: 1});	
+							showSuccess('操作成功');	
 							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
@@ -108,7 +105,50 @@
 					},
 					success:function(data){
 						if(data.code==200){
-							layer.msg('操作成功', {icon: 1});	
+							showSuccess('操作成功');	
+							if(isReload||isReload===undefined){
+								window.location.reload();
+							}
+						}
+						else if(data.code==301){
+							window.location.href=root+data.data;
+						}
+						else{
+							layer.msg('删除失败', {icon: 1});
+							//window.location.reload();
+						}
+					},
+					error:function(){
+						layer.msg('操作失败', {icon: 1});
+						//window.location.reload();
+					}
+				});
+			}, function(){
+			  return;
+			});
+	};
+	function confirmItemAction(url,isReload){
+		var ids = [];
+	    var checkboxs = this.$(".list_table").find("input[type='checkbox']:checked").each(
+	        function () {
+	            ids.push($(this).val());
+	        });
+	    if(ids.length<1){
+	    	layer.msg('请选择要操作的项', {icon: 1});
+	    	return;
+	    }
+	    layer.confirm('确认操作吗？', {
+			  btn: ['确定','取消'] //按钮
+			}, function(){
+				$.ajax({
+					url:url,
+					data:"ids="+ids,
+					beforeSend:function(){
+					  layer.msg('请稍后', {icon: 1});
+					},
+					success:function(data){
+						if(data.code==200){
+							showSuccess('操作成功');	
 							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
@@ -142,7 +182,7 @@
 					},
 					success:function(data){
 						if(data.code==200){
-							layer.msg('操作成功', {icon: 1});	
+							showSuccess('操作成功');	
 							if(isReload||isReload===undefined){
 								window.location.reload();
 							}
@@ -174,7 +214,7 @@
 			},
 			success:function(data){
 				if(data.code==200){
-					layer.msg('操作成功', {icon: 1});
+					showSuccess('操作成功');
 					if(isReload||isReload===undefined){
 						window.location.reload();
 					}}
@@ -193,13 +233,41 @@
 		});
 		
 	};
+	function dialogPage(title,url,endCall){
+		 layer.open({
+		      type: 2,
+		      title: title,
+		      shadeClose: true,
+		      shade: [0.1,'#fff'],
+		      maxmin: true, //开启最大化最小化按钮
+		      area: ['700px', '480px'],
+		      content: url,
+		      end:function(){
+		    	  endCall();
+		    	}
+		    });
+	}
+function showSuccess(msg){
+	parent.alertSucc(msg);
+}
+function alertSucc(msg){
+	layer.msg(msg, {icon: 1});
+}
+function prompt(msg,callback){
+	layer.prompt({title: msg, formType: 0}, function(text, index){
+		   var b = callback(text);
+		   if(b){
+			   layer.close(index);
+		   }
+		});
+}
 function getAction(url,success){
 		
 		$.ajax({
 			url:url,
-			type:'post',
+			type:'get',
 			beforeSend:function(){
-			  layer.msg('请稍后', {icon: 1});
+			  //layer.msg('请稍后', {icon: 1});
 			},
 			success:function(data){
 				if(data.code==200){

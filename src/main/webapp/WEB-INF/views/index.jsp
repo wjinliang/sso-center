@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
@@ -17,53 +18,15 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="<%=basePath%>/assets/css/common.css">
     <link rel="stylesheet" href="<%=basePath%>/assets/css/style.css">
+    <link rel="stylesheet" href="<%=basePath%>/assets/css/index.css">
     <script type="text/javascript">var root = "<%=path%>";</script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.SuperSlide.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
     <script type="text/javascript" src="<%=basePath%>/assets/js/index.js"></script>
-    <style type="text/css">
-	   
-	    #top_t {
-		    height: 36px;
-		}
-		.top{
-			height: 81px;
-		}
-		.side{
-			top:81px;
-		}
-		.main{
-			top:81px;
-		}
-		#side_here {
-		     height: 0px; 
-/* 		     background: #fff url(../images/here.gif) 0px 0px repeat-x;  */
-		}
-		#side_here_l {
-		    width: 0px;
-		    height: 0px;
-		    /* background: url(../images/side_top.gif) 0px 0px no-repeat; */
-		}
-		.menubtn{
-			position: fixed;
-		    left: 205px;
-/* 		    height: 32px; */
-/* 		    border: 1px solid #c3bdbd; */
-/* 		    line-height: 30px; */
-/* 		    top: 50%; */
-		    z-index:999;
-		}
-		.menubtn a{
-		    width: 30px;
-    		height: 30px;
-		    background: url(./assets/images/menu-toggler.png) 5px 7px no-repeat;
-		    background-color: #9a9292;
-		    display: inline-block;
-		}
-		 .menuHide{
-	    	left:0px;
-	    }
-    </style>
+<!--[if lt IE 9]>
+<script src="<%=basePath%>/assets/js/IE9.js"></script>
+<![endif]-->
     <title>后台首页</title>
 </head>
 <body>
@@ -76,13 +39,12 @@
             </div>
             <div id="base_info" class="fr">
                 <div class="help_info">
-                    <a href="1" id="hp">&nbsp;</a>
-                    <a href="2" id="gy">&nbsp;</a>
-                    <a href="<%=basePath%>/security/logout" id="out">&nbsp;</a>
+                    <a href="javascript:void();" id="hp" style="color:#fff">${d:gUN() }</a>
+                    <a href="<%=basePath%>/security/logout" id="out" style="color:#fff">退出</a>
                 </div>
                 <div class="info_center">
-                    admin
-                    <span id="nt">通知</span><span><a href="#" id="notice">3</a></span>
+                    ${d:gON() }
+<!--                     <span id="nt">通知</span><span><a href="#" id="notice">3</a></span> -->
                 </div>
             </div>
         </div>
@@ -96,14 +58,12 @@
     </div>
 </div>
 <div class="main">
-<iframe name="rightMain" id="rightMain" src="orgAndUser/listOrgs" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
+<iframe name="rightMain" id="rightMain" src="infoCenter" frameborder="no" scrolling="auto" width="100%" height="auto" allowtransparency="true"></iframe>
 
 </div>
-<div class="menuShow">
-<a href="javascritp:menuHide()">&lt;&lt;</a>
-</div>
+
 <div class="bottom">
-    <div id="bottom_bg">版权</div>
+    <div id="bottom_bg">版权&copy;-中国动物疫病预防控制中心</div>
 </div>
 <div class="scroll">
     <a href="javascript:;" class="per" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(1);"></a>
@@ -111,10 +71,5 @@
 </div>
 
 </body>
-<script type="text/javascript">
-function menuHide(){
-	$(".main").toggleClass("menuHide");
-	$(".menubtn").toggleClass("menuHide");
-}
-</script>
+
 </html>

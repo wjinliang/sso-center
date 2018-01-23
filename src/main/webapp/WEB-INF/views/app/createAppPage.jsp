@@ -29,14 +29,14 @@
               <form id="form1" action="../saveApp" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
-                  <td class="td_right">系统名称：</td>
+                  <td class="td_right">系统名称<span class="red">*</span>：</td>
                   <td class=""> 
                     <input type="text" name="appName" class="input-text lh30" size="40">
                   </td>
-                  <td class="td_right">系统标识：</td><td><input type="text" name="appCode" class="input-text lh30" size="40"></td>
+                  <td class="td_right">系统标识<span class="red">*</span>：</td><td><input type="text" name="appCode" class="input-text lh30" size="40"></td>
                 </tr>
                 <tr>
-                  <td class="td_right">同步类型：</td>
+                  <td class="td_right">同步类型<span class="red">*</span>：</td>
                   <td class=""> 
 					<span class="fl">
                       <div class="select_border"> 
@@ -50,18 +50,18 @@
                       </div> 
                     </span>
                   </td>
-                  <td class="td_right">命名空间：</td><td><input type="text" name="packagename" class="input-text lh30" size="40"></td>
+                  <td class="td_right">命名空间<span class="red">*</span>：</td><td><input type="text" name="packagename" class="input-text lh30" size="40"></td>
                   </tr>
                   <tr>
                   <td class="td_right">参数名：</td><td><input type="text" name="paramName" class="input-text lh30" size="40"></td>
-                  <td class="td_right">同步地址：</td><td><input type="text" name="synPath" class="input-text lh30" size="40"></td>
+                  <td class="td_right">同步地址<span class="red">*</span>：</td><td><input type="text" name="synPath" class="input-text lh30" size="40"></td>
                   </tr>
                   <tr>
-                  <td class="td_right">单点地址(联通)：</td><td><input type="text" name="appPath" class="input-text lh30" size="40"></td>
+                  <td class="td_right">单点地址(联通)<span class="red">*</span>：</td><td><input type="text" name="appPath" class="input-text lh30" size="40"></td>
                   <td class="td_right">单点地址(电信)：</td><td><input type="text" name="appPath1" class="input-text lh30" size="40"></td>
                 </tr>
                 <tr >
-                  <td class="td_right">操作级别：</td>
+                  <td class="td_right">操作级别<span class="red">*</span>：</td>
                   <td class="">
  
                     <span class="fl">
@@ -79,7 +79,7 @@
                       </div> 
                     </span>
                   </td>
-                  <td class="td_right">用户级别：</td>
+                  <td class="td_right">用户级别<span class="red">*</span>：</td>
                   <td class="">
  
                     <span class="fl">
@@ -106,10 +106,11 @@
                   </td>
                  </tr>
                  <tr>
-                  <td class="td_right">状态：</td>
+                  <td class="td_right">状态<span class="red">*</span>：</td>
                   <td class="">
                   	<span>
 	                    <input type="radio" name="status" value="1"> 可用
+	                    <input type="radio" name="status" value="2"> 维护中
 	                    <input type="radio" name="status" value="0"> 禁用
                     </span>
                   </td>

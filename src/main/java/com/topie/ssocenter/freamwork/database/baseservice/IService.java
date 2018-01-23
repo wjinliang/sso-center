@@ -24,27 +24,29 @@
 
 package com.topie.ssocenter.freamwork.database.baseservice;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * 通用接口
  */
 @Service
-public interface IService<T> {
+public interface IService<T,K> {
 
-    T selectByKey(Object key);
+    T selectByKey(K key);
 
     int save(T entity);
 
-    int delete(Object key);
+    int delete(K key);
 
     int updateAll(T entity);
 
     int updateNotNull(T entity);
 
-    List<T> selectByExample(Object example);
+    List<T> selectByExample(Example example);
 
     List<T> selectAll();
 

@@ -91,7 +91,7 @@
     </bean>
     <aop:aspectj-autoproxy/>
     <aop:config>
-        <aop:pointcut id="appService" expression="execution(* com.topie.ssocenter.freamwork.*.service.*.*impl(..)) "/>
+        <aop:pointcut id="appService" expression="execution(* com.topie.ssocenter.freamwork.*.service.*.*(..)) "/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="appService"/>
     </aop:config>
 

@@ -76,7 +76,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public String getDefaultAction(String roleId) {
-        UserRole role = roleService.findUserRoleById(roleId);
+        UserRole role = roleService.selectByKey(roleId);
         if (StringUtils.isNotBlank(role.getHomepage()))
             return role.getHomepage();
         return "";

@@ -101,6 +101,13 @@
 	background:   url('../images/btn_res_hover.png') 0px 0px no-repeat;
 	color: #fff;
 }
+.btn_back{
+	background:   url('../images/btn_back.jpg') 0px -1px no-repeat;
+}
+.btn_back:hover{
+	background:   url('../images/btn_back_hover.jpg') 0px 0px no-repeat;
+	color: #fff;
+}
 /*table*/
 .list_table{
 	width: 100%;
@@ -220,6 +227,7 @@ border:1px solid #bac7d2;
 padding:4px 3px; 
 font-size:12px; 
 height:30px; 
+*height:20px;
 *margin:-1px; 
 /* border-radius: 2px; */
 box-shadow: 2px 2px 2px  #e7f1f7 inset; 
@@ -390,7 +398,7 @@ input.ext_btn_big,button.ext_btn_big{
 }
 
 .row {
- 
+ overflow:hidden;
 }
 .col_1, .col_2, .col_3, .col_4, .col_5, .col_6, .col_7, .col_8, .col_9, .col_10, .col_11, .col_12 {
   position: relative;

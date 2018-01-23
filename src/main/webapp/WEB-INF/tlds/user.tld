@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee [url]http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd[/url]"
+	version="2.0">
+	<tlib-version>1.0</tlib-version>
+	<short-name>d</short-name>
+	<function>
+		<description>根据用户id获取最后登录ip</description>
+		<name>gIp</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getRemoteIpAddr(java.lang.String)
+		</function-signature>
+		<example>${d:gIp(userId)}</example>
+	</function>
+	<function>
+		<description>根据用户id获取最后登录时间</description>
+		<name>gLL</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getLastLoginTime(java.lang.String)
+		</function-signature>
+		<example>${d:gLL(userId)}</example>
+	</function>
+	<function>
+		<description>获取当前用户得区划ID</description>
+		<name>gDID</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurretUserDivisionId()
+		</function-signature>
+		<example>${d:gDID()}</example>
+	</function>
+	<function>
+		<description>获取当前用户名</description>
+		<name>gUN</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurretUserName()
+		</function-signature>
+		<example>${d:gUN()}</example>
+	</function>
+	<function>
+		<description>获取当前用户机构名</description>
+		<name>gON</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurrentUserOrgName()
+		</function-signature>
+		<example>${d:gON()}</example>
+	</function>
+	<function>
+		<description>获取当前用户可以同步得权限Apps,权限限制（操作等级，用户等级，当前操作的用户权限，当前被操作的用户权限）</description>
+		<name>gAS</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurrentUserApps(java.lang.String,java.lang.Long,java.lang.String)
+		</function-signature>
+		<example>${d:gAS('org',orgId,userId)}</example>
+	</function>
+	<function>
+		<description>获取当前用户可以同步得权限Apps, 没有 权限限制（操作等级，用户等级，当前操作的用户权限，当前被操作的用户权限）</description>
+		<name>gCAS</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getCurrentUserApps()
+		</function-signature>
+		<example>${d:gCAS()}</example>
+	</function>
+</taglib>

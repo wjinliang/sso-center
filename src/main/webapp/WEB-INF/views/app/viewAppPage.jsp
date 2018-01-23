@@ -29,15 +29,15 @@
               <form id="form1" action="../updateApp" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
-                  <td class="td_right">系统名称：</td>
+                  <td class="td_right">系统名称<span class="red">*</span>：</td>
                   <td class=""> 
                   <input type="hidden" name="id" value="${appInfo.id }">
                     <input type="text" name="appName" value="${appInfo.appName }" class="input-text lh30" size="40">
                   </td>
-                  <td class="td_right">系统标识：</td><td><input type="text" name="appCode" value="${appInfo.appCode }" class="input-text lh30" size="40"></td>
+                  <td class="td_right">系统标识<span class="red">*</span>：</td><td><input type="text" name="appCode" value="${appInfo.appCode }" class="input-text lh30" size="40"></td>
                 </tr>
                 <tr>
-                  <td class="td_right">同步类型：</td>
+                  <td class="td_right">同步类型<span class="red">*</span>：</td>
                   <td class=""> 
 					<span class="fl">
                       <div class="select_border"> 
@@ -51,18 +51,18 @@
                       </div> 
                     </span>
                   </td>
-                  <td class="td_right">命名空间：</td><td><input type="text" name="packagename" value="${appInfo.packagename }" class="input-text lh30" size="40"></td>
+                  <td class="td_right">命名空间<span class="red">*</span>：</td><td><input type="text" name="packagename" value="${appInfo.packagename }" class="input-text lh30" size="40"></td>
                   </tr>
                   <tr>
                   <td class="td_right">参数名：</td><td><input type="text" name="paramName" value="${appInfo.paramName }" class="input-text lh30" size="40"></td>
-                  <td class="td_right">同步地址：</td><td><input type="text" name="synPath" value="${appInfo.synPath }" class="input-text lh30" size="40"></td>
+                  <td class="td_right">同步地址<span class="red">*</span>：</td><td><input type="text" name="synPath" value="${appInfo.synPath }" class="input-text lh30" size="40"></td>
                   </tr>
                   <tr>
-                  <td class="td_right">单点地址(联通)：</td><td><input type="text" name="appPath" value="${appInfo.appPath }" class="input-text lh30" size="40"></td>
+                  <td class="td_right">单点地址(联通)<span class="red">*</span>：</td><td><input type="text" name="appPath" value="${appInfo.appPath }" class="input-text lh30" size="40"></td>
                   <td class="td_right">单点地址(电信)：</td><td><input type="text" name="appPath1" value="${appInfo.appPath1 }" class="input-text lh30" size="40"></td>
                 </tr>
                 <tr >
-                  <td class="td_right">操作级别：</td>
+                  <td class="td_right">操作级别<span class="red">*</span>：</td>
                   <td class="">
  
                     <span class="fl">
@@ -80,7 +80,7 @@
                       </div> 
                     </span>
                   </td>
-                  <td class="td_right">用户级别：</td>
+                  <td class="td_right">用户级别<span class="red">*</span>：</td>
                   <td class="">
  
                     <span class="fl">
@@ -106,10 +106,11 @@
                   </td>
                  </tr>
                  <tr>
-                  <td class="td_right">状态：</td>
+                  <td class="td_right">状态<span class="red">*</span>：</td>
                   <td class="">
                   	<span>
 	                    <input type="radio" <c:if test="${appInfo.status=='1' }"> checked="checked"</c:if> name="status" value="1"> 可用
+	                    <input type="radio" <c:if test="${appInfo.status=='2' }"> checked="checked"</c:if> name="status" value="2"> 维护中
 	                    <input type="radio" <c:if test="${appInfo.status=='0' }"> checked="checked"</c:if> name="status" value="0"> 禁用
                     </span>
                   </td>
@@ -123,7 +124,7 @@
                      <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
                     <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
                    </c:if>
-                   <input type="button" name="button" onclick="javascript:window.location.href='../listApp'" class="btn btn82 btn_save2" value="返回"> 
+                   <input type="button" name="button" onclick="javascript:window.location.href='../listApp'" class="btn btn82 btn_back" value="返回"> 
                    </td>
                  </tr>
                </table>

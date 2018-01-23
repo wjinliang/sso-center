@@ -70,11 +70,7 @@ ul.ztree {
 	src="<%=basePath%>/assets/plugin/jquery.cookie/jquery.cookie.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>/assets/js/commonAction.js"></script>
-<script type="text/javascript"
-	src="<%=basePath%>/assets/plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
-	<script type="text/javascript"
-	src="<%=basePath%>/assets/plugin/zTree/js/jquery.ztree.excheck-3.5.js"></script>
-	<script type="text/javascript" src="<%=basePath%>/assets/plugin/zTree/js/jquery.ztree.exedit-3.5.js"></script>
+<%@include file="../include/ztree.jsp"%>
 </head>
 <body>
 	<div class="container">
@@ -83,19 +79,16 @@ ul.ztree {
 				<div class="container">
 					<div class="box_border">
 						<div class="box_top">
-							<b class="pl15">区划树</b>
+							<b class="pl15">菜单树</b>
+							<span class="fr pr5">
+								<a class="ext_btn"
+											href="javascript:addTopMenu();">
+												添加顶级菜单 </a>
+							</span>
 						</div>
 						<div class="box_center">
-							<div class="ztree" id="divisionTree" style="height: 500px;overflow-y: auto;"></div>
+							<div class="ztree" id="menuTree" style="height: 500px;overflow-y: auto;"></div>
 						</div>
-						<div id="rMenu">
-			<ul class="dropdown-menu dropdown-context">
-				<li class="nav-header" id="m_add" onclick="addMenu();">增加子菜单</li>
-				<li class="nav-header" id="m_addroot" onclick="addTopMenu();">增加顶级菜单</li>
-				<li class="nav-header" id="m_del" onclick="deleteMenu();">删除菜单</li>
-				<li class="nav-header" id="m_edit" onclick="editMenu();">编辑菜单</li>
-			</ul>
-			</div>
 					</div>
 				</div>
 			</div>
@@ -106,84 +99,38 @@ ul.ztree {
 							<b class="pl15" id='viewTitle'>查看</b>
 						</div>
 						<div class="box_center">
-							<form id="form1" action="save" method="post" class="jqtransform">
+							<form id="form1" action="insertOrUpdate" method="post" class="jqtransform">
 				               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
 				                 <tr>
-				                  <td class="td_right">区划全称：</td>
+				                  <td class="td_right">菜单名称<span class="red">*</span>：</td>
 				                  <td class=""> 
-				                  <input type="hidden" name="id">
-				                  <input type="hidden" name="parentId">
-				                  
-				                    <input type="text" name="fullname" class="input-text lh30" size="40">
-				                  </td></tr>
-				                <tr >
-				                  <td class="td_right">区划简称：</td><td><input type="text" name="name" class="input-text lh30" size="40"></td>
+					                  <input type="hidden" name="id">
+					                  <input type="hidden" name="pid">
+				                      <input type="text" name="name" class="input-text lh30" size="40">
+				                  </td>
 				                </tr>
 				                <tr >
-				                  <td class="td_right">行政编码：</td><td><input type="text" name="code" class="input-text lh30" size="40"></td>
+				                  <td class="td_right">菜单地址<span class="red">*</span>：</td><td><input type="text" name="menuurl" class="input-text lh30" size="40"></td>
 				                  </tr>
-				                <tr>
-				                  <td class="td_right">区划级别：</td>
-				                  <td class=""> 
-									<span class="fl">
-				                      <div class="select_border"> 
-				                        <div class="select_containers "> 
-				                        <select name="type" class="select"> 
-				                        	<option value="0">中央</option>
-											<option value="1">省级</option>
-											<option value="2">直辖市</option>
-											<option value="3">计划单列市</option>
-											<option value="4">市级</option>
-											<option value="5">区县</option>
-											<option value="6">乡镇</option>
-											<option value="7">村</option>
-										</select>
-				                        </div> 
-				                      </div> 
-				                    </span>
-				                  </td></tr>
 				                <tr >
-				                  <td class="td_right">所属大区：</td>
-				                  <td class="">
-				 
-				                    <span class="fl">
-				                      <div class="select_border"> 
-				                        <div class="select_containers "> 
-				                        <select name="bigdivision" class="select"> 
-				                        	<option value="1" >华北</option>
-											<option value="2" >东北</option>
-											<option value="3" >华东</option>
-											<option value="4" >华中</option>
-											<option value="5" >西南</option>
-											<option value="6" >西北</option>
-											<option value="7" >华南</option>
-											<option value="8" >港澳台地区</option>
-											<option value="9" >兵团</option>
-										</select>
-				                        </div> 
-				                      </div> 
-				                    </span>
-				                  </td></tr>
-				                <tr >
-				                  <td class="td_right">区划等级：</td>
-				                  <td class="">
-				 
-				                    <span class="fl">
-				                      <div class="select_border"> 
-				                        <div class="select_containers "> 
-				                        <select name="level" class="select"> 
-				                        	<option value="0" >0</option>
-											<option value="1" >1</option>
-											<option value="2" >2</option>
-											<option value="3" >3</option>
-											<option value="4" >4</option>
-											<option value="5" >5</option>
-				                        </select> 
-				                        </div> 
-				                      </div> 
+				                  <td class="td_right">是否展示<span class="red">*</span>：</td>
+				                  <td>
+				                  	<span>
+					                    <input type="radio" name="isshow" value="true"> 是
+					                    <input type="radio" name="isshow" value="false"> 否
 				                    </span>
 				                  </td>
-				                 </tr>
+				                </tr>
+				                <tr >
+				                  <td class="td_right">菜单描述：</td>
+				                  <td>
+				                  <textarea name="detail" id="" cols="30" rows="10" class="textarea"></textarea>
+				                  </td>
+				                </tr>
+				                <tr >
+				                  <td class="td_right">排序：</td><td><input type="text" name="seq" class="input-text lh30" size="40"></td>
+				                  </tr>
+				                <tr >
 				                 <tr>
 				                   <td class="td_right">&nbsp;</td>
 				                   <td class="">
@@ -203,51 +150,33 @@ ul.ztree {
 	</div>
 	<%@include file="../include/formValidate.jsp"%>
 	<script type="text/javascript">
-	var zNodes =${divisionStr};
-	var COOKIE_LASRNODEID = "LAST_DIVISION_ID_7_";
+	var zNodes =${menuStr};
+	var COOKIE_LASRNODEID = "LAST_menu_ID_7";
 	var zTree;
-	var autoEx = true;
 	jQuery(document).ready(function() {
-		$.fn.zTree.init($("#divisionTree"), settingMenu, zNodes);
-		zTree = $.fn.zTree.getZTreeObj("divisionTree");
-		setTimeout("autoEx=false;",3000);
-		for(var i =0;i<2;i++){
-			var currentTableId = $.cookie(COOKIE_LASRNODEID+i);
+		$.fn.zTree.init($("#menuTree"), settingMenu, zNodes);
+		zTree = $.fn.zTree.getZTreeObj("menuTree");
+			var currentTableId = $.cookie(COOKIE_LASRNODEID);
 			var node = zTree.getNodeByParam('id', currentTableId);//获取id为1的点  
 			if(node){
 				 if(!node.isParent){
-					tableTree.selectNode(node);//选择点  
+					 zTree.selectNode(node);//选择点  
 				}else{
 					zTree.expandNode(node, true, false);//指定选中ID节点展开  
 				}
 			}
 			//console.log(node);
-		}
 		// 提交时验证表单
 		var validator = $("#form1").validate({
 			rules: {
-			      fullname:  {
-			        required: true,
-			        minlength: 2
-			      },
 			      name:  {
 				        required: true,
 				        minlength: 2
 				      },
-			      code:{required:true,
-			    	  remote:{  
-		                url: "checkCode",  
-		                data: {  
-		                    'code': function () { return $("input[name='code']").val();},
-		                    'id':function(){return $("input[name='id']").val(); }
-		                }  
-		            }  },
-			      level:{required:true},
-			      bigDivision:{required:true},
-			      type:{required:true}
-			},
-			messages:{code:{remote:"编码重复，请重新填写！"}}
-		});
+				  menuurl:"required"
+			     
+			}
+		})
 	});
 	var zTree;
 	var rMenu;
@@ -279,24 +208,17 @@ ul.ztree {
 		}
 	},
 	async : {
-		<%-- enable : true,
-		dataType : "text",
-		url : "load",
-		autoParam : [ "id", "name", "pId" ] --%>
-		enable: true,
-		url:"loadSonDivision",
-		autoParam:["id=divisionid"]
+		enable: true
 	},
 	callback : {
 		beforeDrag: beforeDrag,
 		beforeDrop: beforeDrop,
 		onDrop: onDrop,
 		onExpand: zTreeOnExpand,
-		onAsyncSuccess: zTreeOnAsyncSuccess,
 		onClick : function(event, treeId, treeNode) {
 			currentTableId = treeNode.id;
-			//if(treeNode.pId==1)
-				$.cookie(COOKIE_LASRNODEID+treeNode.level,currentTableId,{expires:7});
+			//if(treeNode.pid==1)
+				$.cookie(COOKIE_LASRNODEID,currentTableId,{expires:7});
 				editDivsion(currentTableId);
 			//alert(currentTableId);
 		}
@@ -304,20 +226,6 @@ ul.ztree {
 };
 	function zTreeOnExpand(event, treeId, treeNode) {
 		currentTableId = treeNode.id;
-		$.cookie(COOKIE_LASRNODEID+treeNode.level,currentTableId,{expires:7});
-	};
-//加载完成后打开上次操作的节点
-	function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
-		if(!autoEx){return;}
-		var currentTableId = $.cookie(COOKIE_LASRNODEID+(treeNode.level+1));
-		var node = zTree.getNodeByParam('id', currentTableId);//获取id为1的点  
-		if(node){
-			 if(!node.isParent){
-				zTree.selectNode(node);//选择点  
-			}else{
-				zTree.expandNode(node, true, false);//指定选中ID节点展开  
-			}
-		}
 	};
 function changeGrag(){
 	var fl = document.getElementById("isdrag").checked;
@@ -354,12 +262,12 @@ function addHoverDom(treeId, treeNode) {
 	var sObj = $("#" + treeNode.tId + "_span");
 	if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
 	var addStr ="<span class='button2 add' id='addBtn_" + treeNode.tId
-		+ "' title='增加子级区划' onfocus='this.blur();'></span>"+
+		+ "' title='增加子级菜单' onfocus='this.blur();'></span>"+
 		"<span class='button2 edit' id='editBtn_" + treeNode.tId
-		+ "' title='编辑区划' onfocus='this.blur();'></span>"+
+		+ "' title='编辑菜单' onfocus='this.blur();'></span>"+
 
 		"<span class='button2 delete' id='removeBtn_" + treeNode.tId
-		+ "' title='删除区划' onfocus='this.blur();'></span>"+
+		+ "' title='删除菜单' onfocus='this.blur();'></span>"+
 		"<span class='button2 up' id='upBtn_" + treeNode.tId
 		+ "' title='上移' onfocus='this.blur();'></span>"+
 		"<span class='button2 down' id='downBtn_" + treeNode.tId
@@ -462,7 +370,7 @@ function addMenu() {
 		var orgid = zTree.getSelectedNodes()[0].id;
 		newDivsion(orgid);
 	} else {
-		alert("请选中父区划节点");
+		alert("请选中父菜单节点");
 	}
 }
 function addTopMenu() {
@@ -481,8 +389,8 @@ function expandAll(flag){
 function deleteMenu() {
 	if (zTree.getSelectedNodes()[0]) {
 
-		var orgid = zTree.getSelectedNodes()[0].id;
-		deleteAction("delete?divisionid="+orgid);
+		var id = zTree.getSelectedNodes()[0].id;
+		deleteAction("menu_del?id="+id);
 	}
 }
 
@@ -490,13 +398,13 @@ var form1 = $("#form1");
 function newDivsion(pid){
 	setTitle('新增');
 	form1[0].reset();
-	form1.find("input[name='parentId']").val(pid);	
+	form1.find("input[name='pid']").val(pid);	
 	form1.find("input[name='id']").val('');	
 }
 function editDivsion(id){
 	setTitle('编辑');
 	form1[0].reset();
-	var url = "loadOne?divisionId="+id;
+	var url = "menu_load?id="+id;
 	getAction(url,function(res){form1.setForm(res.data);});
 }
 function setTitle(title){

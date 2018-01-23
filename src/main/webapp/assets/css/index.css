@@ -1,0 +1,63 @@
+@CHARSET "UTF-8";
+#top_t {
+		    height: 36px;
+		    *height: 36px;
+		}
+		.top{
+			height: 81px;
+			*height: 81px;
+		}
+		.side{
+			top:81px;
+			*top:81px;
+		}
+		.main{
+			top:81px;
+			*top:81px;
+		}
+		#side_here {
+		     height: 0px; 
+		     *height: 0px; 
+/* 		     background: #fff url(../images/here.gif) 0px 0px repeat-x;  */
+		}
+		#side_here_l {
+		    width: 0px;
+		    height: 0px;
+		    *width: 0px;
+		    *height: 0px;
+		    /* background: url(../images/side_top.gif) 0px 0px no-repeat; */
+		}
+		
+		.menubtn a{
+		    width: 30px;
+    		height: 30px;
+    		*width: 30px;
+    		*line-height: 30px;
+		    background: url(../images/menu-toggler.png) 5px 7px no-repeat;
+		    background-color: #9a9292;
+		    display: inline-block;
+		}
+		
+	    .menubtn{
+			position: fixed;
+		    left: 205px;
+		    *left: 205px;
+/* 		    height: 32px; */
+/* 		    border: 1px solid #c3bdbd; */
+/* 		    line-height: 30px; */
+/* 		    top: 50%; */
+		    z-index:999;
+		}
+	/*IE 6*/
+html { *padding:81px 0 25px 0;}
+.top { *height:81px; *margin-top:-81px;}
+.side { *height:100%; *float:left; *margin-right:-206px;}
+.main { *height:100%; *margin-left:206px;}
+.bottom { *height:25px;}
+.top, .side, .main, .bottom {*position:relative; *top:0; *right:0; *bottom:0; *left:0;}
+
+ .menuHide{
+	    	left:0px;
+	    	*left:0px;
+	    }	
+		
