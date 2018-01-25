@@ -226,21 +226,20 @@
 								<tr>
 									<td class="td_right">原密码：</td>
 									<td class=""> <input
-										type="text" name="oldPassword" class="input-text lh30"
+										type="password" name="oldPassword" class="input-text lh30"
 										value="" size="40"></td>
 									
 								</tr>
 								<tr>
 									<td class="td_right">新密码：</td>
 									<td class=""> <input
-										type="text" name="newPassword" class="input-text lh30"
+										type="password" name="newPassword" class="input-text lh30"
 										value="" size="40"></td>
 									
 								</tr>
 								<tr>
 									<td class="td_right">确认密码：</td>
-									<td class=""> <input
-										type="text" name="checkpwd" class="input-text lh30"
+									<td class=""> <input type="password" name="checkpwd" class="input-text lh30"
 										value="" size="40"></td>
 									
 								</tr>
