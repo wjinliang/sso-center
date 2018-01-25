@@ -108,6 +108,9 @@
 								</c:choose></td>
 							<td><a class="ext_btn"
 								href="javascript:viewPage('./form/update?id=${cont.id}')">预览
+							</a>
+							<a class="ext_btn"
+								href="javascript:viewPage('./form/update?id=${cont.id}')">编辑
 							</a> 
 						</td>
 						</tr>

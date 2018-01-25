@@ -1,6 +1,8 @@
 package com.topie.ssocenter.freamwork.authorization.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,9 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.StringUtil;
 import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.common.utils.UUIDUtil;
+import com.topie.ssocenter.freamwork.authorization.model.FileEntity;
 import com.topie.ssocenter.freamwork.authorization.model.Notice;
+import com.topie.ssocenter.freamwork.authorization.service.FileEntityService;
 import com.topie.ssocenter.freamwork.authorization.service.NoticeService;
 import com.topie.ssocenter.freamwork.authorization.utils.R;
 
@@ -24,6 +28,8 @@ public class NoticeController {
 
 	@Autowired
 	private NoticeService noticeService;
+	@Autowired
+	private FileEntityService fileService;
 
 	@RequestMapping({ "/admin/list" })
 	public ModelAndView alist(
@@ -46,7 +52,9 @@ public class NoticeController {
 		model.addObject("systemId", systemId);
 		model.setViewName("/notice/admin/list");
 		return model;
-	}@RequestMapping({ "/list" })
+	}
+
+	@RequestMapping({ "/list" })
 	public ModelAndView list(
 			ModelAndView model,
 			@RequestParam(value = "thispage", required = false) Integer thispage,
@@ -58,9 +66,26 @@ public class NoticeController {
 		if (thispage == null) {
 			thispage = Integer.valueOf(0);
 		}
-		PageInfo<Notice> page = noticeService.findCurrentUserNotice(thispage, pagesize);
+		PageInfo<Notice> page = noticeService.findCurrentUserNotice(thispage,
+				pagesize);
 		model.addObject(R.PAGE, page);
 		model.setViewName("/notice/list");
+		return model;
+	}
+
+	@RequestMapping({ "/info/{nid}" })
+	public ModelAndView info(ModelAndView model, @PathVariable String nid) {
+		Notice notice = noticeService.selectByKey(nid);
+		model.addObject("notice", notice);
+		List<FileEntity> files = new ArrayList<FileEntity>();
+		String fileIds = notice.getFileIds();
+		for (String id : fileIds.split(",")) {
+			FileEntity f = fileService.selectByKey(id);
+			if (f != null)
+				files.add(f);
+		}
+		model.addObject("files", files);
+		model.setViewName("/notice/admin/viewPage");
 		return model;
 	}
 
@@ -68,9 +93,17 @@ public class NoticeController {
 	public ModelAndView form(ModelAndView model, @PathVariable String mode,
 			@RequestParam(value = "noticeId", required = false) String noticeId) {
 		if ((mode != null) && (!mode.equals("new"))) {
-			Notice appInfo = noticeService.selectByKey(noticeId);
-			model.addObject("notice", appInfo);
+			Notice notice = noticeService.selectByKey(noticeId);
+			model.addObject("notice", notice);
 			model.addObject("apps", noticeService.selectNoticeApp(noticeId));
+			List<FileEntity> files = new ArrayList<FileEntity>();
+			String fileIds = notice.getFileIds();
+			for (String id : fileIds.split(",")) {
+				FileEntity f = fileService.selectByKey(id);
+				if (f != null)
+					files.add(f);
+			}
+			model.addObject("files", files);
 		}
 		model.setViewName("/notice/admin/viewPage");
 		return model;
@@ -79,7 +112,7 @@ public class NoticeController {
 	@RequestMapping({ "/admin/save" })
 	public ModelAndView saveApp(ModelAndView model, Notice notice, String apps) {
 		if (StringUtil.isNotEmpty(notice.getId())) {
-			this.noticeService.updateNotNull(notice,apps);
+			this.noticeService.updateNotNull(notice, apps);
 			model.setViewName("redirect:list");
 			return model;
 		}
@@ -89,7 +122,7 @@ public class NoticeController {
 		notice.setIsPublish(false);
 		notice.setIsRevoke(false);
 		notice.setCreateTime(new Date());
-		this.noticeService.save(notice,apps);
+		this.noticeService.save(notice, apps);
 		model.setViewName("redirect:list");
 		return model;
 	}
@@ -106,14 +139,4 @@ public class NoticeController {
 		return ResponseUtil.success();
 	}
 
-	@RequestMapping({ "admin/stopApp" })
-	@ResponseBody
-	public Object stopApp(
-			@RequestParam(value = "appid", required = true) String appid) {
-		if (appid != null) {
-			Notice findOne = this.noticeService.selectByKey(appid);
-			this.noticeService.updateNotNull(findOne);
-		}
-		return ResponseUtil.success();
-	}
 }

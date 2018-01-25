@@ -56,6 +56,12 @@ public class Notice {
      * 内容
      */
     private String content;
+    
+    /**
+     * 附件
+     */
+    @Column(name = "file_ids")
+    private String fileIds;
 
     /**
      * @return id
@@ -219,4 +225,18 @@ public class Notice {
     public void setContent(String content) {
         this.content = content;
     }
+    /**
+     * 附件IDs
+     * @return
+     */
+	public String getFileIds() {
+		return fileIds;
+	}
+	/**
+     * 附件IDs
+     */
+	public void setFileIds(String fileIds) {
+		this.fileIds = fileIds;
+	}
+    
 }
