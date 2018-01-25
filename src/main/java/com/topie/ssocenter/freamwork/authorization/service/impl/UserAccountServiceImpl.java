@@ -139,13 +139,13 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 	@Override
 	public void updatePassword(String userId, String oldPassword,
 			String enPassword) {
-		/*String dePassword ="";
+		String dePassword ="";
 		try {
 			dePassword = SimpleCrypto.decrypt(seed,
 					enPassword);
 		} catch (Exception e) {
 			throw new RuntimeBusinessException("修改密码时解码错误");
-		}*/
+		}
 		UserAccount record = getMapper().selectByPrimaryKey(userId);
 		if(!record.getPassword().equals(oldPassword)){
 			throw new RuntimeBusinessException("原密码输入错误");
@@ -155,7 +155,7 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		user.setSynpassword(enPassword);
 		ShaPasswordEncoder sha = new ShaPasswordEncoder();
 		sha.setEncodeHashAsBase64(false);
-		user.setPassword(sha.encodePassword(enPassword, null));
+		user.setPassword(sha.encodePassword(dePassword, null));
 		getMapper().updateByPrimaryKeySelective(user);
 	}
 

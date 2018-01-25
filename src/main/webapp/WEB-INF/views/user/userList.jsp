@@ -130,6 +130,9 @@
 											<c:forEach items="${apps}" var="ap" varStatus="status" >
 										      <c:if test="${fn:contains(user.systemId,ap.appName)}">
 										      	<c:set var="act" value="1" ></c:set>  
+										      </c:if>
+										      <c:if test="${empty user.systemId}">
+										      	<c:set var="act" value="1" ></c:set>  
 										      </c:if> 
 											</c:forEach>
 											<c:if test="${act =='0'}">
@@ -216,23 +219,12 @@
 			zTree.expandNode(node, true, false);//指定选中ID节点展开  
 		}
 		function repassword(userId){
-			
-			  layer.open({
-			    type: 1
-			    ,title: '重置密码'
-			    ,moveType: 1
-			    ,id: 'Lay_layer_resetp'
-			    ,content: $('#resetp')
-			    ,shade: false
-			    ,resize: false
-			    ,fixed: false
-			    ,maxWidth: '100%'
-			    ,success: function(layero, index){
-			      $(layero).find('input[name="userId"]').val(userId);
-			    }
-			  });
+			layer.prompt(function(val, index){
+					commitRep(val,userId);
+				  layer.close(index);
+				});
 		}
-		function commitRep(){
+		function commitRep(text,userid){
 			$.ajax({
 				url:"resetPass",
 				type:'post',
