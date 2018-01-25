@@ -61,14 +61,15 @@
                  <tr>
                   <td class="td_right">附件：</td>
                   <td class="" colspan="3"> 
+                  <input type="hidden" id="fileIds" value="${fileIds }" name="fileIds">
+                  	<input type="file" id="fileupload_input" class="input-text lh30" name="imgFile" size="10">
+                    <input type="button" id="upfilebtn" class="ext_btn" value="上传">
+                    </br>
 	              <span id="files_span">
 	                  <c:forEach var="file" items="${files}">
 		                  <span> ${file.realname }<a href="javascript:resFile('${file.id }')">删除</a></span>
 	                  </c:forEach>
 	              </span>
-                  <input type="hidden" id="fileIds" value="${fileIds }" name="fileIds">
-                  	<input type="file" id="fileupload_input" class="input-text lh30" name="imgFile" size="10">
-                    <input type="button" id="upfilebtn" class="btn" value="上传">
                   </td>
                   </tr>
                  <tr>
@@ -119,7 +120,6 @@ $.validator.setDefaults({
 		}
 	},
     submitHandler: function(form) {
-    	
       form.submit();
     }
 });
@@ -144,6 +144,12 @@ $.validator.setDefaults({
                     });
                 });
 		$("#upfilebtn").on("click",function(){
+			if($("#fileupload_input").val()==null ||$("#fileupload_input").val()==''){
+				layer.alert("请选择文件后点击上传");
+				return false;
+			}else{
+			}
+				
 			$.ajaxFileUpload({
                 url:root+'/KE/file_upload?dir=file',//用于文件上传的服务器端请求地址
                 secureuri:false ,//一般设置为false
@@ -154,7 +160,7 @@ $.validator.setDefaults({
                 	if(data.error=="0"){
 	                   var file = '<span data-id="'+data.id+'">'+data.name+'<a href="javascript:resFile(\''+data.id+'\')">删除</a></span>';
 	                   $("#files_span").append(file);
-	                   resFile(111111111);
+	                   resFile(111111);
                 	}else{
                 		layer.alert(data.message);
                 	}
@@ -165,8 +171,17 @@ $.validator.setDefaults({
                 }
             });
 		});
-		
+// 		initFiles();
 	});
+	
+	/* function initFiles(){
+		var list = eval('[{name:"附件一：收到甲方的是开发.xml",id:"123"},{name:"附件二：收到甲方的是开发.xml",id:"324"}]');
+		for(var i = 0; i < list.length; i++) {
+			var data = list[i];
+			var file = '<span data-id="'+data.id+'">'+data.name+'<a href="javascript:resFile(\''+data.id+'\')">删除</a></span>';
+	        $("#files_span").append(file);
+		}
+	} */
 	
 	function resFile(fileId){
 		$("#files_span").find('span[data-id="'+fileId+'"]').remove();
@@ -196,8 +211,6 @@ $.validator.setDefaults({
 			uploadJson : root+'/KE/file_upload',//
 			fileManagerJson : root+'/KE/file_manager',//
 			allowFileManager : true,
-// 			width: 
-//         	height:
 			 afterBlur: function(){this.sync();}
 			
 		});

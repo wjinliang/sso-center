@@ -32,7 +32,7 @@
 					<span class="">修改</span>
 					<span class="">修改密码</span>
 				</div>
-				<div id="" class="layui-layer-content" >
+				<div id="" class="layui-layer-content" style="width:100%;" >
 					<ul class="layui-layer-tabmain">
 						<li class="layui-layer-tabli" style="display: list-item;">
 						<div style="padding: 20px;">
@@ -41,27 +41,25 @@
 								<tr>
 									<td class="td_right">用户名：</td>
 									<td class=""> ${userAccount.name }</td>
-									<td class="td_right" rowspan="5">头像：</td>
+									<td class="td_right">地址：</td>
+									<td>${userAccount.address}</td>
+									<!-- <td class="td_right" rowspan="5">头像：</td>
 									<td rowspan="5">
 										<img src="<%=basePath%>/assets/images/a.jpg" width=80 height=80/>
-									</td>
+									</td> -->
 									
 								</tr>
 								<tr>
 									<td class="td_right">用户登录名：</td>
 									<td>${userAccount.loginname }</td>
-								</tr>
-								<tr>
 									<td class="td_right">性别：</td>
 									<td class="">${userAccount.gender}</td>
 								</tr>
 								<tr>
 									<td class="td_right">联系电话：</td>
 									<td>${userAccount.mobile}</td>
-								</tr>
-								<tr>
-									<td class="td_right">电子邮箱：</td>
-									<td>${userAccount.email}</td>
+									<td class="td_right">职务：</td>
+									<td>${userAccount.duty}</td>
 								</tr>
 								<tr>
 									<td class="td_right">办公电话：</td>
@@ -70,8 +68,8 @@
 									<td>${userAccount.faxNo}</td>
 								</tr>
 								<tr>
-									<td class="td_right">职务：</td>
-									<td>${userAccount.duty}</td>
+									<td class="td_right">电子邮箱：</td>
+									<td>${userAccount.email}</td>
 									<td class="td_right">学历：</td>
 									<td class="">${userAccount.schoolAge}</td>
 								</tr>
@@ -82,8 +80,6 @@
 									<td class="">${userAccount.title}</td>
 								</tr>
 								<tr>
-									<td class="td_right">地址：</td>
-									<td>${userAccount.address}</td>
 								</tr>
 								</table>
 							</div></li>
@@ -96,15 +92,21 @@
 								cellpadding="0" cellspacing="0">
 								<tr>
 									<td class="td_right">用户名：</td>
-									<td class="">${userAccount.name }</td>
-									<td class="td_right" rowspan="4">头像：</td>
+									<td class=""><input type="text" name="name"
+										value="${userAccount.name }" class="input-text lh30"
+										size="40"></td>
+									<td class="td_right">登录名：</td>
+									<td>${userAccount.loginname }</td>
+									<!-- <td class="td_right" rowspan="4">头像：</td>
 									<td rowspan="4">
 										<img src="<%=basePath%>/assets/images/a.jpg" width=80 height=80/>
-									</td>
+									</td> -->
 								</tr>
-
 								<tr>
-									
+									<td class="td_right">联系电话：</td>
+									<td><input type="text" name="mobile"
+										value="${userAccount.mobile}" class="input-text lh30"
+										size="40"></td>
 									<td class="td_right">性别：</td>
 									<td class=""><span> <input type="radio"
 											checked="checked" name="gender" value="男"> 男 <input
@@ -112,17 +114,6 @@
 											<c:if test="${userAccount.gender=='女'}"> checked="checked"</c:if>
 											value="女"> 女
 									</span></td>
-								</tr>
-								<tr>
-									<td class="td_right">联系电话：</td>
-									<td><input type="text" name="mobile"
-										value="${userAccount.mobile}" class="input-text lh30"
-										size="40"></td>
-								</tr>
-								<tr>
-									<td class="td_right">电子邮箱：</td>
-									<td><input type="text" name="email"
-										value="${userAccount.email}" class="input-text lh30" size="40"></td>
 								</tr>
 								<tr>
 									<td class="td_right">办公电话：</td>
@@ -134,9 +125,10 @@
 										value="${userAccount.faxNo}" class="input-text lh30" size="40"></td>
 								</tr>
 								<tr>
-									<td class="td_right">职务：</td>
-									<td><input type="text" name="duty"
-										value="${userAccount.duty}" class="input-text lh30" size="40"></td>
+										<td class="td_right">电子邮箱：</td>
+									<td><input type="text" name="email"
+										value="${userAccount.email}" class="input-text lh30" size="40">
+										</td>
 									<td class="td_right">学历：</td>
 									<td class=""><span class="fl">
 											<div class="select_border">
@@ -198,6 +190,9 @@
 									</span></td>
 								</tr>
 								<tr>
+									<td class="td_right">职务：</td>
+									<td><input type="text" name="duty"
+										value="${userAccount.duty}" class="input-text lh30" size="40"></td>
 									<td class="td_right">地址：</td>
 									<td><input type="text" name="address"
 										value="${userAccount.address}" class="input-text lh30"
@@ -220,7 +215,7 @@
 						<li class="layui-layer-tabli" style="display: none;">
 							<div style="padding: 20px;">
 								<form id="form2" action="./updatePassword" method="post"
-							class="jqtransform">
+							class="jqtransform" style="width:45%; margin:0 auto;">
 							<table class="form_table pt15 pb15" width="100%" border="0"
 								cellpadding="0" cellspacing="0">
 								<tr>

@@ -6,6 +6,7 @@
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="author" property="author" jdbcType="VARCHAR" />
     <result column="origin" property="origin" jdbcType="VARCHAR" />
+    <result column="file_ids" property="fileIds" jdbcType="VARCHAR" />
     <result column="is_publish" property="isPublish" jdbcType="BIT" />
     <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -17,6 +18,7 @@
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="author" property="author" jdbcType="VARCHAR" />
     <result column="origin" property="origin" jdbcType="VARCHAR" />
+    <result column="file_ids" property="fileIds" jdbcType="VARCHAR" />
     <result column="is_publish" property="isPublish" jdbcType="BIT" />
     <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
