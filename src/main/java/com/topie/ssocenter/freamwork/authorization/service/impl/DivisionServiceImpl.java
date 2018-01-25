@@ -72,6 +72,20 @@ public class DivisionServiceImpl extends BaseServiceImpl<Division,String> implem
 			return;
 		}
 		if(moveMode.equals("same")){//同级内移动
+			List<Division> list = findByPid(t2.getParentId());
+			int seq=0;
+			for(int i=0;i<list.size();i++){
+				Division d = list.get(i);
+				if(d.getSeq()<=seq){
+					d.setSeq(seq+1);
+					this.getMapper().updateByPrimaryKeySelective(d);
+					if(d.getId().equals(currentid))
+						t2=d;
+					if(d.getId().equals(targetid))
+						t1=d;
+				}
+				seq = d.getSeq();
+			}
 		}else{//垮父级移动
 			t2.setParentId(t1.getParentId());
 		}
