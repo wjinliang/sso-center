@@ -441,7 +441,7 @@ public class OrgAndUserController {
 		this.userAccountService.save(user);
 		// 设置角色
 		this.userRoleService.insertUserAccountRole(user.getCode(),this.normalRoleId);
-		if(isAdmin.equals("true")){
+		if(isAdmin!=null && isAdmin.equals("true")){
 			this.userRoleService.insertUserAccountRole(user.getCode(),this.adminId);
 		}
 		List<Map> list = doTongBu("11", user, synAppIds, model);
