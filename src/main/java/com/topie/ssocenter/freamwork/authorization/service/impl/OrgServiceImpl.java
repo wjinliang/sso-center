@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		Example ex = new Example(Org.class);
 		Criteria c = ex.createCriteria();
 		String did = org.getDivisionId();
-		if(did ==null){
+		if(StringUtils.isNotEmpty(did)){
 			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
 			Org o = this.getMapper().selectByPrimaryKey(orgId);
 			if(o==null){//如果当前用户的机构不存在   返回空
@@ -65,8 +66,11 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 			}
 			org.setDivisionId(o.getDivisionId());//设置
 		}
-		if(org.getName()!=null){//要查询当前用户所能看到的所有机构匹配的
+		if(StringUtils.isNotEmpty(org.getName())){//要查询当前用户所能看到的所有机构匹配的
 			c.andLike("name", "%"+org.getName()+"%");
+			Division d = divisionService.selectByKey(did);
+			d.getLevel();
+			d.getType();
 		}
 		if(org.getParentId()!=null){//查看子机构   子区划下的机构
 			//c.andEqualTo("parentId", org.getId());
@@ -158,7 +162,6 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 	public PageInfo<UserAccount> selectCurrentOrgUserPage(Integer pageNum,
 			Integer pageSize, Org org, UserAccount user) {
 		if(user.getOrgId()==null){
-			
 			return ResponseUtil.emptyPage();
 		}
 		PageHelper.startPage(pageNum, pageSize);

@@ -82,7 +82,7 @@ public class userTDL {
 		return "-";
 	}
 	/**
-	 * 获取当前用户可以的权限Apps, 没有 权限限制
+	 * 获取当前用户可以登录的权限Apps, 没有 权限限制
 	 * @return
 	 */
 	public static List<ApplicationInfo> getCurrentUserApps() {

@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<title>登录</title>
+<link rel="stylesheet" type="text/css" href="css/load.css">
+<script type="text/javascript" src="js/jquery-1.12.1.min.js"></script>
+</head>
+
+<body>
+	<div class="login">
+    	<div class="login-top"><div style="text-align:center; padding-top:80px;"><img src="img/load.png" height="62"></div></div>
+        <div class="loginDiv">
+        	
+            <div class="login-con">
+                <div class="login-tit">登录</div>
+                <div class="login-form">
+                    <form id="loginForm" action="" method="">
+                        <p class="p1"><input type="text" class="alterInput" id="username" datavalue="手机号/会员名/邮箱" value=""></p>
+                        <div class="error">用户名错误</div>
+                        <p class="p2"><input type="text" class="alterInput" id="passwords" datavalue="请输入密码" value=""></p>
+                        <div class="error">密码错误</div>
+                        <p class="p3 clearfix">
+                            <input type="text" class="alterInput" id="acreditcode" datavalue="请输入验证码" value="" style="border-left:1px solid #ccc; width:55%; float:left;">
+                            <a href="" class="acreditImg"><img src="img/yzm.jpg"></a>
+                        </p>
+                        <div class="error">验证码错误</div>
+                        <p style="padding-left:0px;"><input type="submit" value="登录" class="btn btn1"><input type="reset" value="重置" class="btn btn2"></p>
+                    </form>	
+                </div>
+            </div>
+        </div>
+        <div class="login-footer">版权所有 © 2014-2017</div>
+    </div>
+</body>
+<script  type="text/javascript">
+    $(function(){
+       function placeholder(target){
+                $(target).val($(target).attr("datavalue")).addClass("inp");
+                $(target).focus(function() {
+                    if($(this).val() == $(this).attr("datavalue")) {
+                        $(this).val("").removeClass("inp").addClass("inpp");
+                    } 
+                })
+                $(target).blur(function(){
+                    if($(this).val() == "" || $(this).val() == $(this).attr("datavalue")) {
+                        $(this).val($(target).attr("datavalue")).addClass("inp").removeClass("inpp");
+                    }
+                })
+        }
+placeholder("#username");
+placeholder("#passwords");
+placeholder("#acreditcode");
+})
+</script>
+<script type="text/javascript">
+	var screenHeight =  $(window).height();
+	var loginTopHeight = $(".login-top").height();
+	var footerHeight = $(".login-footer").innerHeight();
+	var loginConHeight = screenHeight-loginTopHeight-footerHeight;
+	$(".loginDiv").css("height",loginConHeight+'px');
+</script>
+</html>

@@ -23,6 +23,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="true" />
     <import resource="classpath*:/config/spring/spring-*.xml"/>
     <bean id="synInfoServiceImpl" class="com.topie.ssocenter.freamwork.authorization.services.impl.SynInfoServiceImpl"></bean>
+	<bean id="clientServiceImpl" class="com.topie.ssocenter.freamwork.authorization.services.impl.ClientServiceImpl"></bean>
 	<bean id="applicationContext"
         class="org.apache.axis2.extensions.spring.receivers.ApplicationContextHolder" />
 </beans>

@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: cgj
-  Date: 2015/9/1
-  Time: 18:08
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c" %>
 <%
@@ -12,12 +5,15 @@
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
 %>
 <!doctype html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="<%=basePath%>/assets/css/login.css">
-    <script type="text/javascript" src="<%=basePath%>/assets/js/jquery.min.js"></script>
-    <title>后台登陆</title>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<title>登录</title>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/login/css/load.css">
+<script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-1.12.1.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
 </head>
 <script type="text/javascript">
         if (self!=top){
@@ -25,41 +21,48 @@
             }
 </script>
 <body>
-<div id="login_top">
-    <div id="welcome">
-        管理系统
-    </div>
-    <div id="back">
-        <a href="#">返回首页</a>&nbsp;&nbsp; | &nbsp;&nbsp;
-        <a href="#">帮助</a>
-    </div>
-</div>
-<div id="login_center">
-    <c:if test="${param.error==true}">
-        <div class="alert alert-danger display-show">
-            <button class="close" data-close="alert"></button>
-            <span>${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message} </span>
-        </div>
-    </c:if>
-    <div id="login_area">
-        <div id="login_form">
-            <form action="<%=basePath%>/j_spring_security_check" method="post">
-                <div id="login_tip">
-                    用户登录&nbsp;&nbsp;UserLogin
+	<div class="login">
+    	<div class="login-top"><div style="text-align:center; padding-top:80px;"><img src="<%=basePath%>/assets/login/img/load.png" height="62"></div></div>
+        <div class="loginDiv">
+        	
+            <div class="login-con">
+                <div class="login-tit">登录</div>
+                <div class="login-form">
+                    <form id="loginForm" action="<%=basePath%>/j_spring_security_check" method="post">
+                        <c:if test="${param.error==true}">
+                        	<div class="error">${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}</div>
+                        </c:if>
+                        <p class="p1"><input type="text" class="alterInput" name="j_username" id="username" placeholder="请输入登录名" value=""></p>
+                        <p class="p2"><input type="password" class="alterInput" name="j_password" id="passwords" placeholder="请输入密码" value=""></p>
+<!--                         <div class="error">密码错误</div> -->
+	                        <p class="p3 clearfix">
+	                            <input type="text" class="alterInput" id="acreditcode" placeholder="请输入验证码" value="" name="j_captcha" style="border-left:1px solid #ccc; width:55%; float:left;">
+	                            <a href="javascript:void(0);" class="acreditImg"><img src="<%=basePath%>/security/web/captcha"></a>
+	                        </p>
+<!--                         <div class="error">验证码错误</div> -->
+                        <p style="padding-left:0px;"><input type="submit" value="登录" class="btn btn1"><input type="reset" value="重置" class="btn btn2"></p>
+                    </form>	
                 </div>
-                <div><input type="text" class="username" name="j_username"></div>
-                <div><input type="text" class="pwd" name="j_password"></div>
-                <div id="btn_area">
-                    <input type="submit" name="submit" id="sub_btn" value="登&nbsp;&nbsp;录">&nbsp;&nbsp;
-                    <input type="text" class="verify" name="j_captcha">
-                    <img src="<%=basePath%>/security/web/captcha" alt="" width="80" height="40">
-                </div>
-            </form>
+            </div>
         </div>
+        <div class="login-footer">copy Right© 2017-2022</div>
     </div>
-</div>
-<div id="login_bottom">
-    版权所有
-</div>
 </body>
+<script type="text/javascript">
+	var screenHeight =  $(window).height();
+	if(screenHeight<600){
+		screenHeight = 600;
+	}
+	var loginTopHeight = $(".login-top").height();
+	var footerHeight = $(".login-footer").innerHeight();
+	var loginConHeight = screenHeight-loginTopHeight-footerHeight;
+	$(".loginDiv").css("height",loginConHeight+'px');
+	
+	$(function(){
+		$("a[class='acreditImg']").bind("click",function(){
+			$(this).find("img").attr("src","<%=basePath%>/security/web/captcha?"+new Date());
+			
+		})
+	});
+</script>
 </html>

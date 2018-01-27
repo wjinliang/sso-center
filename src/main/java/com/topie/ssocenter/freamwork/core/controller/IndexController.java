@@ -48,9 +48,15 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String index(Model model) {
-        String userId = SecurityUtils.getCurrentSecurityUser().getId();
+        //String userId = SecurityUtils.getCurrentSecurityUser().getId();
         //List<String> roleIds = userService.findUserAccountRoleByUserAccountId(userId);
         return "index";
+    }
+    @RequestMapping("/home")
+    public String home(Model model) {
+        //String userId = SecurityUtils.getCurrentSecurityUser().getId();
+        //List<String> roleIds = userService.findUserAccountRoleByUserAccountId(userId);
+        return "home";
     }
     @RequestMapping("/infoCenter")
     public ModelAndView infoCenter(ModelAndView model){

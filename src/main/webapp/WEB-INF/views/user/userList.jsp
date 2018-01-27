@@ -219,7 +219,7 @@
 			zTree.expandNode(node, true, false);//指定选中ID节点展开  
 		}
 		function repassword(userId){
-			layer.prompt(function(val, index){
+			layer.prompt({title: "请输入要重置的密码！", formType: 1},function(val, index){
 					commitRep(val,userId);
 				  layer.close(index);
 				});

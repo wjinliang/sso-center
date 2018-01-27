@@ -27,7 +27,7 @@ public class SecurityUtils {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = null;
         if (principal instanceof OrangeSideSecurityUser)
-            userName = ((OrangeSideSecurityUser) principal).getUsername();
+            userName = ((OrangeSideSecurityUser) principal).getDisplayName();
         return userName;
     }
 
