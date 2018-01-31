@@ -1,6 +1,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -31,7 +32,7 @@
 		<div id="search_bar" class="mt10">
 			<div class="box">
 				<div class="box_border">
-					<form action="./listApp" method="get" id="serchForm">
+					<form action="./list" method="get" id="serchForm">
 						<div class="box_center pt10 pb10">
 							<table class="form_table" border="0" cellpadding="0"
 								cellspacing="0">
@@ -90,7 +91,7 @@
 						<th width="30">#</th>
 						<th width="30">#</th>
 						<th>标题</th>
-						<th>创建时间</th>
+						<th>发布时间</th>
 						<th>发布状态</th>
 						<th>操作</th>
 					</tr>
@@ -102,46 +103,47 @@
 							<td class="td_center">
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${cont.title}</td>
-							<td>${cont.publishTime}</td>
+							<td><fmt:formatDate value="${cont.publishTime}" pattern="yyyy-MM-dd" /></td>
 							<td><c:choose>
 									<c:when test="${cont.isRevoke}">
-										<font color="yellow">已撤回</font>
+										<font>已撤回</font>
 									</c:when>
-									<c:when test="${app.isPublish}">
+									<c:when test="${cont.isPublish}">
 										<font color="green">已发布</font>
 									</c:when>
 									<c:otherwise>
 										<font>未发布</font>
 									</c:otherwise>
 								</c:choose></td>
-							<td><a class="ext_btn"
-								href="javascript:viewPage('./form/update?id=${cont.id}')">预览
-							</a> <c:choose>
+							<td> <c:choose>
 									<c:when test="${cont.isRevoke}">
+									<a class="ext_btn" href="../notice_${cont.id}" target="_blank">预览</a>
 										<a class="ext_btn"
-											href="javascript:viewPage('./form/update?id=${cont.id}')">编辑
+											href="javascript:openPage('./form/update?noticeId=${cont.id}')">编辑
 										</a>
 										<a class="ext_btn ext_btn_submit"
-											href="javascript:viewPage('./form/update?id=${cont.id}')">重新发布
+											href="javascript:postAction('./publish?id=${cont.id}')">重新发布
 										</a>
 										<a class="ext_btn ext_btn_error"
-											href="javascript:viewPage('./form/update?id=${cont.id}')">删除
+											href="javascript:viewPage('./form/delete?id=${cont.id}')">删除
 										</a>
 									</c:when>
-									<c:when test="${app.isPublish}">
+									<c:when test="${cont.isPublish}">
+									<a class="ext_btn" href="../notice_${cont.id}" target="_blank">查看</a>
 										<a class="ext_btn ext_btn_error"
-											href="javascript:viewPage('./form/update?id=${cont.id}')">撤回
+											href="javascript:postAction('./revoke?id=${cont.id}')">撤回
 										</a>
 									</c:when>
 									<c:otherwise>
+									<a class="ext_btn" href="../notice_${cont.id}" target="_blank">预览</a>
 										<a class="ext_btn"
-											href="javascript:viewPage('./form/update?id=${cont.id}')">编辑
+											href="javascript:openPage('./form/update?noticeId=${cont.id}')">编辑
 										</a>
 										<a class="ext_btn ext_btn_submit"
-											href="javascript:viewPage('./form/update?id=${cont.id}')">发布
+											href="javascript:postAction('./publish?id=${cont.id}')">发布
 										</a>
 										<a class="ext_btn ext_btn_error"
-											href="javascript:viewPage('./form/update?id=${cont.id}')">删除
+											href="javascript:viewPage('./form/delete?id=${cont.id}')">删除
 										</a>
 									</c:otherwise>
 								</c:choose></td>

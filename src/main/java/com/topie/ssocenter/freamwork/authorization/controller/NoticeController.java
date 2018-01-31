@@ -54,10 +54,12 @@ public class NoticeController {
 		return model;
 	}
 
-	@RequestMapping({ "/list" })
+	@RequestMapping({ "/{type}s","/{type}s_{num}" })
 	public ModelAndView list(
 			ModelAndView model,
 			@RequestParam(value = "thispage", required = false) Integer thispage,
+			@RequestParam(value = "num", required = false)@PathVariable(value = "num") Integer num,
+			@RequestParam(value = "type", required = false)@PathVariable(value = "type") String type,
 			@RequestParam(value = "pagesize", required = false) Integer pagesize) {
 
 		if (pagesize == null) {
@@ -66,6 +68,9 @@ public class NoticeController {
 		if (thispage == null) {
 			thispage = Integer.valueOf(0);
 		}
+		if(num!=null){
+			thispage = num;
+		}
 		PageInfo<Notice> page = noticeService.findCurrentUserNotice(thispage,
 				pagesize);
 		model.addObject(R.PAGE, page);
@@ -73,19 +78,39 @@ public class NoticeController {
 		return model;
 	}
 
-	@RequestMapping({ "/info/{nid}" })
+	/*@RequestMapping({ "/info/{nid}" })
 	public ModelAndView info(ModelAndView model, @PathVariable String nid) {
 		Notice notice = noticeService.selectByKey(nid);
 		model.addObject("notice", notice);
 		List<FileEntity> files = new ArrayList<FileEntity>();
 		String fileIds = notice.getFileIds();
+		if(fileIds!=null){
 		for (String id : fileIds.split(",")) {
 			FileEntity f = fileService.selectByKey(id);
 			if (f != null)
 				files.add(f);
 		}
+		}
 		model.addObject("files", files);
 		model.setViewName("/notice/admin/viewPage");
+		return model;
+	}*/
+	@RequestMapping({ "/{type}_{id}" })
+	public ModelAndView content(ModelAndView model, @PathVariable String id, @PathVariable String type) {
+		Notice notice = noticeService.selectByKey(id);
+		model.addObject("notice", notice);
+		List<FileEntity> files = new ArrayList<FileEntity>();
+		String fileIds = notice.getFileIds();
+		if(fileIds!=null){
+			for (String fid : fileIds.split(",")) {
+				FileEntity f = fileService.selectByKey(fid);
+				if (f != null)
+					files.add(f);
+			}
+		}
+		model.addObject("files", files);
+		model.addObject("type",type);
+		model.setViewName("/notice/content");
 		return model;
 	}
 
@@ -98,12 +123,14 @@ public class NoticeController {
 			model.addObject("apps", noticeService.selectNoticeApp(noticeId));
 			List<FileEntity> files = new ArrayList<FileEntity>();
 			String fileIds = notice.getFileIds();
-			for (String id : fileIds.split(",")) {
-				FileEntity f = fileService.selectByKey(id);
-				if (f != null)
-					files.add(f);
+			if(fileIds!=null){
+				for (String id : fileIds.split(",")) {
+					FileEntity f = fileService.selectByKey(id);
+					if (f != null)
+						files.add(f);
+				}
+				model.addObject("files", files);
 			}
-			model.addObject("files", files);
 		}
 		model.setViewName("/notice/admin/viewPage");
 		return model;
@@ -137,6 +164,31 @@ public class NoticeController {
 			}
 		}
 		return ResponseUtil.success();
+	}
+	@RequestMapping({ "admin/publish" })
+	@ResponseBody
+	public Object publish(@RequestParam(value = "id", required = true) String id) {
+		if (id != null) {
+			Notice notice = this.noticeService.selectByKey(id);
+			notice.setIsPublish(true);
+			notice.setIsRevoke(false);
+			notice.setPublishTime(new Date());
+			this.noticeService.updateNotNull(notice);
+			return ResponseUtil.success();
+		}
+		return ResponseUtil.error();
+	}
+	@RequestMapping({ "admin/revoke" })
+	@ResponseBody
+	public Object revoke(@RequestParam(value = "id", required = true) String id) {
+		if (id != null) {
+			Notice notice = this.noticeService.selectByKey(id);
+			notice.setIsRevoke(true);
+			//notice.setPublishTime(new Date());
+			this.noticeService.updateNotNull(notice);
+			return ResponseUtil.success();
+		}
+		return ResponseUtil.error();
 	}
 
 }

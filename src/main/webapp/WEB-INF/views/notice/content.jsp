@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String path = request.getContextPath();
@@ -52,48 +52,35 @@
     	<div class="headTop"></div>
         <div class="headBtm"><span>${d:gON() } -</span><span>【${d:gUN() }】 欢迎使用单点登录云平台！</span><span id="showTime"></span></div>
     </div>
-    <div class="systemCon clearfix">
-    	<div class="left">
-        	<div class="newsWrapper">
-                <div class="news-con">
-                    <h1 class="tith1 titbg1"><a href="./notice/notices" target="_blank">通知公告</a></h1>
-                    <div class="newsList">
-                        <ul>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                        </ul>
+     <div class="systemCon clearfix" style="width:1150px; margin:0 auto;">
+    	<div class="pageLeft">
+        	<ul class="newsListTwo" id="newsList">
+            	<li class='<c:if test="${type eq 'notice'}">activeNav</c:if>'><a href="./notices" >通知公告</a></li>
+            	
+                <li class='<c:if test="${type eq 'download'}">activeNav</c:if>'><a href="./downloads" >资料下载</a></li>
+            </ul>
+        </div>
+        <div class="pageRight">
+        	<div class="newsListCon">	
+            	<div class="pagePosition"><a href="../index" >首页</a>&gt;&gt;通知公告&gt;&gt;<span>${notice.title }</span></div>
+                <div class="article">
+                	<div class="artTit">
+                    	<h1 class="h1Tit">${notice.title }</h1>
+                        <p class="otherInfo">
+                        <span>来源：${notice.origin } </span>
+                        <span>日期： <fmt:formatDate value="${notice.publishTime}" pattern="yyyy-MM-dd" /></span>
+                        <span>作者：${notice.author }</span></p>
                     </div>
-                </div>	
-                <div class="news-con" style="margin-top:20px;">
-                    <h1 class="tith1 titbg2"><a href="./notice/downloads" target="_blank">资料下载</a></h1>
-                    <div class="newsList">
-                        <ul>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名通知信息名称</a><span>12-22</span></li>
-                        </ul>
+                    <div class="artCon">
+                    	${notice.content }
+                    	<div class="dowload" style="margin-top:10px;">
+		                    <c:forEach var="file" items="${files}">
+                            	<a href="javascript:void(0)"><img src="<%=basePath%>/assets/index/img/dowload.png" width="20">${file.realname }</a>&nbsp;&nbsp;&nbsp;
+			                  </c:forEach>
+                        </div>
                     </div>
                 </div>	
             </div>
-        </div>
-    	<div class="right">
-        	 <c:set var="synAppList" value="${d:gCAS()}"></c:set>
-        	<ul class="systemList systemList${ fn:length(synAppList)} clearfix">
-        	<c:forEach items="${synAppList}" var="app" varStatus="status">
-            	<li><a href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
-            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span>
-            	<p>${app.appName}</p></a></li>
-            </c:forEach>
-                <li><a href="./home"><span><img src="<%=basePath%>/assets/index/img/icon13.png"></span><p>单点登录</p></a></li>
-                
-            </ul>
         </div>
     </div>
     <div class="systemFooter">© Copyright 2017 ### | Powered by ### | Top</div>

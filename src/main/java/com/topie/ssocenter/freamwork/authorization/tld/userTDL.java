@@ -11,12 +11,14 @@ import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.common.utils.AppUtil;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
+import com.topie.ssocenter.freamwork.authorization.model.Notice;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.SynOrg;
 import com.topie.ssocenter.freamwork.authorization.model.SynUser;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
+import com.topie.ssocenter.freamwork.authorization.service.NoticeService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.SynService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
@@ -203,6 +205,13 @@ public class userTDL {
 				.getBean("userService");
 		UserAccount user = userService.selectByKey(userId);
 		return user;
+	}
+	
+	public static PageInfo<Notice> getNews(Integer pageNum,Integer pageSize) {
+		NoticeService noticeService = (NoticeService) AppUtil
+				.getBean("noticeServiceImpl");
+		PageInfo<Notice> page = noticeService.findCurrentUserNotice(pageNum, pageSize);
+		return page;
 	}
 
 }

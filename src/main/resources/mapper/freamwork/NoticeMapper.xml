@@ -44,7 +44,7 @@
 		<if test="systemIds!=null">
 			AND na.app_id in 
 			<foreach collection="systemIds" item="sysId" open="(" close=")" separator=",">
-				sysId
+				#{sysId}
 			</foreach>
 		</if>
 		ORDER BY ${seq}

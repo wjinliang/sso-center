@@ -58,7 +58,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		Example ex = new Example(Org.class);
 		Criteria c = ex.createCriteria();
 		String did = org.getDivisionId();
-		if(StringUtils.isNotEmpty(did)){
+		if(StringUtils.isEmpty(did)){
 			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
 			Org o = this.getMapper().selectByPrimaryKey(orgId);
 			if(o==null){//如果当前用户的机构不存在   返回空
@@ -68,11 +68,37 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		}
 		if(StringUtils.isNotEmpty(org.getName())){//要查询当前用户所能看到的所有机构匹配的
 			c.andLike("name", "%"+org.getName()+"%");
-			Division d = divisionService.selectByKey(did);
-			d.getLevel();
-			d.getType();
-		}
-		if(org.getParentId()!=null){//查看子机构   子区划下的机构
+			Division d = divisionService.selectByKey(org.getDivisionId());
+			String dCode = d.getCode()+"";
+			//d.getLevel();
+			String type = d.getType();
+			int end = 0;
+			switch (type) {
+				case "0"://中央
+					break;
+				case "1"://省级 
+				case "2"://直辖市 
+				case "3"://计划单列市 
+					end = 2;
+					if(dCode.length()>=end)
+						c.andLike("code", dCode.substring(0,end)+"%");
+					break;
+				case "4"://市级 
+					end = 4;
+					if(dCode.length()>=end)
+						c.andLike("code", dCode.substring(0,end)+"%");
+					break;
+				case "5"://区县 
+				case "6"://乡镇 
+				case "7"://村 
+					end = 6;
+					if(dCode.length()>=end)
+						c.andLike("code", dCode.substring(0,end)+"%");
+					break;
+				default:
+					break;
+			}
+		}else if(org.getParentId()!=null){//查看子机构   子区划下的机构
 			//c.andEqualTo("parentId", org.getId());
 			List<Division> list = this.divisionService.findByPid(org.getDivisionId());
 			if(list.size()==0){
@@ -167,13 +193,44 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		PageHelper.startPage(pageNum, pageSize);
 		Example ex = new Example(UserAccount.class);
 		Criteria ca = ex.createCriteria();
-		ca.andEqualTo("orgId", user.getOrgId());
-		if(user.getLoginname()!=null){
-			ca.andEqualTo("loginname", user.getLoginname());
-		}
 		if(user.getName()!=null){
 			ca.andLike("name", "%"+user.getName() +"%");
-		}		
+			Division d = divisionService.selectByKey(org.getDivisionId());
+			String dCode = d.getCode()+"";
+			//d.getLevel();
+			String type = d.getType();
+			int end = 0;
+			switch (type) {
+				case "0"://中央
+					break;
+				case "1"://省级 
+				case "2"://直辖市 
+				case "3"://计划单列市 
+					end = 2;
+					if(dCode.length()>=end)
+						ca.andLike("loginname", dCode.substring(0,end)+"%");
+					break;
+				case "4"://市级 
+					end = 4;
+					if(dCode.length()>=end)
+						ca.andLike("loginname", dCode.substring(0,end)+"%");
+					break;
+				case "5"://区县 
+				case "6"://乡镇 
+				case "7"://村 
+					end = 6;
+					if(dCode.length()>=end)
+						ca.andLike("loginname", dCode.substring(0,end)+"%");
+					break;
+				default:
+					break;
+			}
+		}else{		
+			ca.andEqualTo("orgId", user.getOrgId());
+			if(user.getLoginname()!=null){
+				ca.andEqualTo("loginname", user.getLoginname());
+			}
+		}
 		List<UserAccount> list = this.userService.selectByExample(ex);
 		return new PageInfo<UserAccount>(list);
 	}

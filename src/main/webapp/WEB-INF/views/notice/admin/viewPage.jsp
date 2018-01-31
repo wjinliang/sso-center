@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d"%>
 <%@ taglib uri="/WEB-INF/tlds/fn.tld" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
@@ -47,7 +48,7 @@
                 <tr>
                   <td class="td_right">发布时间：</td>
                   <td class=""> 
-                    <input type="text" role="date-input" id="publishTime" name="publishTime" class="input-text lh30" size="40">
+                    <input type="text" role="date-input" id="publishTime" name="publishTime" value="<fmt:formatDate value='${notice.publishTime}' pattern='yyyy-MM-dd' />"class="input-text lh30" size="40">
                   </td>
                   <td class="td_right">来源<span class="red">*</span>：</td><td><input type="text" name="origin" value="${notice.origin }" class="input-text lh30" size="40"></td>
                   </tr>
@@ -75,11 +76,19 @@
                  <tr>
                   <td class="td_right">系统：</td>
                   <td colspan="3">
-                  <input type="checkbox" name="apps" value="123">单点平台
-                  <c:set var="apps" value="${d:gAS('org','','' ) }"></c:set>
-                  <c:forEach var="app" items="${apps }">
-                   <input type="checkbox" name="apps" <c:if test="${app.checked }"> checked="checked"</c:if> value="${app.id }">
-                   ${app.appName }<c:if test="${app.status=='2' }"><span class="green">(维护中...)</span> </c:if> 
+                  <input type="checkbox" name="apps"
+                  <c:forEach var="capp" items="${apps }">
+	                   <c:if test="${'123'==capp.app_id }"> checked="checked"</c:if> 
+	                  </c:forEach>
+                   value="123">单点平台
+                  <c:set var="ownapps" value="${d:gCAS() }"></c:set>
+                  <c:forEach var="app" items="${ownapps }">
+	                   <input type="checkbox" name="apps" 
+	                  <c:forEach var="capp" items="${apps }">
+	                   <c:if test="${app.id==capp.app_id }"> checked="checked"</c:if> 
+	                  </c:forEach>
+	                   value="${app.id }">
+	                   ${app.appName }<c:if test="${app.status=='2' }"><span class="green">(维护中...)</span> </c:if> 
                   </c:forEach>
                   </td>
                   
@@ -140,7 +149,7 @@ $.validator.setDefaults({
                 function () {
                     laydate({
                         istime: true,
-                        format: 'YYYY-MM-DD hh:mm:ss'
+                        format: 'YYYY-MM-DD'
                     });
                 });
 		$("#upfilebtn").on("click",function(){

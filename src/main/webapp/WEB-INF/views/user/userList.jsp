@@ -123,7 +123,7 @@
 										<td><a
 											href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
 												${user.name}(${user.loginname })</a></td>
-										<td>${user.orgId}</td>
+										<td>${d:gOBID(user.orgId).name}</td>
 										<td>${user.lastlogintime }</td>
 										<td>
 											<c:set var="act" value="0" ></c:set>    
