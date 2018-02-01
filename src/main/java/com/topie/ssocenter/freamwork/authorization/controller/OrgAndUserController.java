@@ -689,6 +689,7 @@ public class OrgAndUserController {
 			e.printStackTrace();
 		}
 		user.setSynpassword(encryptPassword);
+		user.setLocked(false);
 		this.userAccountService.updateAll(user);
 		return ResponseUtil.success();
 	}

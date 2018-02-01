@@ -50,7 +50,7 @@
 <body onLoad="showDT()">
 	<div class="systemHead">
     	<div class="headTop"></div>
-        <div class="headBtm"><span>${d:gON() } -</span><span>【${d:gUN() }】 欢迎使用单点登录云平台！</span><span id="showTime"></span></div>
+        <div class="headBtm"><span>${d:gON() } -</span><span>【${d:gUN() }】 欢迎使用单点登录云平台！  <a href="<%=basePath%>/security/logout" class="logoutBtn">【退出登录】</a></span><span id="showTime"></span></div>
     </div>
      <div class="systemCon clearfix" style="width:1150px; margin:0 auto;">
     	<div class="pageLeft">
@@ -62,17 +62,22 @@
         </div>
         <div class="pageRight">
         	<div class="newsListCon">	
-            	<div class="pagePosition"><a href="../index" >首页</a>&gt;&gt;<span>通知公告</span></div>	
+            	<div class="pagePosition"><a href="../index" >首页</a>&gt;&gt;<span>
+            	<c:if test="${type eq 'download'}">资料下载</c:if>
+            	<c:if test="${type eq 'notice'}">通知公告</c:if>
+            	</span></div>	
                 <div class="newsListTit">
                 	<ul>
 					<c:forEach items="${page.list}" var="cont" varStatus="status">
-                    	<li><a href="./${type}_${cont.id }" target="_blank">${cont.title}</a>
+                    	<li><a href="./${type}_${cont.id }" >${cont.title}</a>
                     	<span><fmt:formatDate value="${cont.publishTime}" pattern="yyyy-MM-dd" /></span><div class="clear"></div></li>
                     </c:forEach>
                     </ul>
                     <div class="pageNav"><span>第${page.pageNum }页/共${page.pages }页（共${page.total }条记录）</span>
+                    <a href="./${type}s">首页</a>
                     <a href="./${type}s_${page.prePage}">上一页</a>
-                    <a href="./${type}s_${page.nextPage}">下一页</a></div>
+                    <a href="./${type}s_${page.nextPage}">下一页</a>
+                    <a href="./${type}s_${page.pages}">末页</a></div>
                 </div>
             </div>
         </div>

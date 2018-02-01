@@ -68,4 +68,12 @@
 		</function-signature>
 		<example>${d:gCAS()}</example>
 	</function>
+	<function>
+		<description>获取当前用户通知</description>
+		<name>gNEWS</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>String getNews(java.lang.Integer,java.lang.Integer,java.lang.String)
+		</function-signature>
+		<example>${d:gNEWS(1,5,'notice')}</example>
+	</function>
 </taglib>

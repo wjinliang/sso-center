@@ -41,10 +41,11 @@ public class NoticeServiceImpl extends BaseServiceImpl<Notice, String>
 		List<Notice> list = noticeMapper.findByExample(notice , systemIds ,"create_time desc");
 		return new PageInfo<Notice>(list);
 	}
+	
 
 	@Override
 	public PageInfo<Notice> findCurrentUserNotice(Integer pageNum,
-			Integer pageSize) {
+			Integer pageSize,String type) {
 		List<String> systemIds = new ArrayList<String>();
 		PageInfo<ApplicationInfo> page = appService.selectCurrentUserSynApps();
 		List<ApplicationInfo> apps =  page.getList();
@@ -53,7 +54,11 @@ public class NoticeServiceImpl extends BaseServiceImpl<Notice, String>
 			systemIds.add(a.getId());
 		};
 		PageHelper.startPage(pageNum, pageSize);
-		List<Notice> list = noticeMapper.findByExample(null , systemIds ,"publish_time desc");
+		Notice notice = new Notice();
+		notice.setIsPublish(true);
+		notice.setType(type);
+		notice.setIsRevoke(false);
+		List<Notice> list = noticeMapper.findByExample(notice , systemIds ,"publish_time desc");
 		return new PageInfo<Notice>(list);
 	}
 
@@ -104,6 +109,13 @@ public class NoticeServiceImpl extends BaseServiceImpl<Notice, String>
 		String[] ids = appIds.split(",");
 		for(String appId:ids){
 			 this.noticeMapper.insertNoticeApps(entity.getId(),appId);
+		}
+		if(entity.getFileIds()==null){
+			Notice n = this.getMapper().selectByPrimaryKey(entity.getId());
+			if(StringUtils.isNotEmpty(n.getFileIds())){
+				n.setFileIds(null);
+				this.updateAll(n);
+			}
 		}
 		return i;
 	}

@@ -63,7 +63,7 @@ public class userTDL {
 		Org o = getOrg(orgId);
 		return o;
 	}
-	private static Org getOrg(Long orgId) {
+	public static Org getOrg(Long orgId) {
 		OrgService orgService = (OrgService) AppUtil
 				.getBean("orgServiceImpl");
 		Org o = orgService.selectByKey(orgId);
@@ -207,10 +207,10 @@ public class userTDL {
 		return user;
 	}
 	
-	public static PageInfo<Notice> getNews(Integer pageNum,Integer pageSize) {
+	public static PageInfo<Notice> getNews(Integer pageNum,Integer pageSize,String type) {
 		NoticeService noticeService = (NoticeService) AppUtil
 				.getBean("noticeServiceImpl");
-		PageInfo<Notice> page = noticeService.findCurrentUserNotice(pageNum, pageSize);
+		PageInfo<Notice> page = noticeService.findCurrentUserNotice(pageNum, pageSize,type);
 		return page;
 	}
 

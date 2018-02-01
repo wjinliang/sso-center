@@ -123,7 +123,10 @@
 										<td><a
 											href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
 												${user.name}(${user.loginname })</a></td>
-										<td>${d:gOBID(user.orgId).name}</td>
+										<td><c:set var="uorg" value="${d:gOBID(user.orgId)}">
+										</c:set>
+										${uorg.name}
+										</td>
 										<td>${user.lastlogintime }</td>
 										<td>
 											<c:set var="act" value="0" ></c:set>    
@@ -149,7 +152,8 @@
 													<li><a
 													href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
 														编辑 </a></li>
-													<li><a href="javascript:dialogPage('设置角色','user/setRole?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }')">设置角色</a></li>
+<%-- 													<li><a href="javascript:dialogPage('设置角色','user/setRole?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }')">设置角色</a></li> --%>
+													<li><a href="javascript:repassword('${user.code }')">重置密码</a></li>
 													<li><a href="javascript:repassword('${user.code }')">重置密码</a></li>
 													<li class="divider"></li>
 													<li><a href="javascript:openPage('./listMergeUsers?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">

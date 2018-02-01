@@ -22,7 +22,7 @@
 </script>
 <body>
 	<div class="login">
-    	<div class="login-top"><div style="text-align:center; padding-top:80px;"><img src="<%=basePath%>/assets/login/img/load.png" height="62"></div></div>
+    	<div class="login-top"><div style="text-align:center; padding-top:50px;"><img src="<%=basePath%>/assets/login/img/load.png" height="62"></div></div>
         <div class="loginDiv">
         	
             <div class="login-con">

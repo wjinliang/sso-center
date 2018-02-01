@@ -190,7 +190,6 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		if(user.getOrgId()==null){
 			return ResponseUtil.emptyPage();
 		}
-		PageHelper.startPage(pageNum, pageSize);
 		Example ex = new Example(UserAccount.class);
 		Criteria ca = ex.createCriteria();
 		if(user.getName()!=null){
@@ -231,6 +230,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 				ca.andEqualTo("loginname", user.getLoginname());
 			}
 		}
+		PageHelper.startPage(pageNum, pageSize);
 		List<UserAccount> list = this.userService.selectByExample(ex);
 		return new PageInfo<UserAccount>(list);
 	}

@@ -32,7 +32,7 @@
 		<div id="search_bar" class="mt10">
 			<div class="box">
 				<div class="box_border">
-					<form action="./list" method="get" id="serchForm">
+					<form action="./${type }s" method="get" id="serchForm">
 						<div class="box_center pt10 pb10">
 							<table class="form_table" border="0" cellpadding="0"
 								cellspacing="0">
@@ -70,7 +70,7 @@
 				</div>
 
 				<div id="button" class="mt10">
-					<input type="button" onclick="javascript:openPage('./form/new');"
+					<input type="button" onclick="javascript:openPage('./${type }/new');"
 						name="button" class="btn btn82 btn_add" value="新增">
 					<!-- <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
@@ -117,25 +117,25 @@
 								</c:choose></td>
 							<td> <c:choose>
 									<c:when test="${cont.isRevoke}">
-									<a class="ext_btn" href="../notice_${cont.id}" target="_blank">预览</a>
+									<a class="ext_btn" href="../${type }_${cont.id}" target="_blank">预览</a>
 										<a class="ext_btn"
-											href="javascript:openPage('./form/update?noticeId=${cont.id}')">编辑
+											href="javascript:openPage('./${type }/update?noticeId=${cont.id}')">编辑
 										</a>
 										<a class="ext_btn ext_btn_submit"
 											href="javascript:postAction('./publish?id=${cont.id}')">重新发布
 										</a>
 										<a class="ext_btn ext_btn_error"
-											href="javascript:viewPage('./form/delete?id=${cont.id}')">删除
+											href="javascript:deleteAction('./delete?id=${cont.id}')">删除
 										</a>
 									</c:when>
 									<c:when test="${cont.isPublish}">
-									<a class="ext_btn" href="../notice_${cont.id}" target="_blank">查看</a>
+									<a class="ext_btn" href="../${type }_${cont.id}" target="_blank">查看</a>
 										<a class="ext_btn ext_btn_error"
 											href="javascript:postAction('./revoke?id=${cont.id}')">撤回
 										</a>
 									</c:when>
 									<c:otherwise>
-									<a class="ext_btn" href="../notice_${cont.id}" target="_blank">预览</a>
+									<a class="ext_btn" href="../${type }_${cont.id}" target="_blank">预览</a>
 										<a class="ext_btn"
 											href="javascript:openPage('./form/update?noticeId=${cont.id}')">编辑
 										</a>
@@ -143,7 +143,7 @@
 											href="javascript:postAction('./publish?id=${cont.id}')">发布
 										</a>
 										<a class="ext_btn ext_btn_error"
-											href="javascript:viewPage('./form/delete?id=${cont.id}')">删除
+											href="javascript:deleteAction('./delete?id=${cont.id}')">删除
 										</a>
 									</c:otherwise>
 								</c:choose></td>

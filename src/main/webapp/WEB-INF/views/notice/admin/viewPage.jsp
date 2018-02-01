@@ -41,14 +41,16 @@
                   <td class="td_right">标题<span class="red">*</span>：</td>
                   <td class=""> 
                   <input type="hidden" name="id" value="${notice.id }">
+                  <input type="hidden" name="type" value="${type }">
                     <input type="text" name="title" value="${notice.title }" class="input-text lh30" size="40">
                   </td>
-                  <td class="td_right">作者<span class="red">*</span>：</td><td><input type="text" name="author" value="${notice.author }" class="input-text lh30" size="40"></td>
+                  <td class="td_right">作者：</td><td><input type="text" name="author" value="${notice.author }" class="input-text lh30" size="40"></td>
                 </tr>
                 <tr>
                   <td class="td_right">发布时间：</td>
-                  <td class=""> 
-                    <input type="text" role="date-input" id="publishTime" name="publishTime" value="<fmt:formatDate value='${notice.publishTime}' pattern='yyyy-MM-dd' />"class="input-text lh30" size="40">
+                  <td class="">
+                    <input type="text" role="date-input" id="publishTime" name="publishTime"
+                     value="<fmt:formatDate value='${notice.publishTime}' pattern='YYYY-MM-DD hh:mm:ss' />"class="input-text lh30" size="40">
                   </td>
                   <td class="td_right">来源<span class="red">*</span>：</td><td><input type="text" name="origin" value="${notice.origin }" class="input-text lh30" size="40"></td>
                   </tr>
@@ -62,13 +64,13 @@
                  <tr>
                   <td class="td_right">附件：</td>
                   <td class="" colspan="3"> 
-                  <input type="hidden" id="fileIds" value="${fileIds }" name="fileIds">
+                  <input type="hidden" id="fileIds" value="${notice.fileIds }" name="fileIds">
                   	<input type="file" id="fileupload_input" class="input-text lh30" name="imgFile" size="10">
                     <input type="button" id="upfilebtn" class="ext_btn" value="上传">
                     </br>
 	              <span id="files_span">
 	                  <c:forEach var="file" items="${files}">
-		                  <span> ${file.realname }<a href="javascript:resFile('${file.id }')">删除</a></span>
+		                  <span> ${file.name }<a href="javascript:resFile('${file.id }')">删除</a></span>
 	                  </c:forEach>
 	              </span>
                   </td>
@@ -80,7 +82,7 @@
                   <c:forEach var="capp" items="${apps }">
 	                   <c:if test="${'123'==capp.app_id }"> checked="checked"</c:if> 
 	                  </c:forEach>
-                   value="123">单点平台
+                   value="123">单点平台(<span style="color:red;">所有用户都能查看</span>)
                   <c:set var="ownapps" value="${d:gCAS() }"></c:set>
                   <c:forEach var="app" items="${ownapps }">
 	                   <input type="checkbox" name="apps" 
@@ -102,7 +104,7 @@
                      <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
                     <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
                    </c:if>
-                   <input type="button" name="button" onclick="javascript:window.location.href='../list'" class="btn btn82 btn_back" value="返回"> 
+                   <input type="button" name="button" onclick="javascript:window.location.href='../${type}s'" class="btn btn82 btn_back" value="返回"> 
                    </td>
                  </tr>
                </table>
@@ -138,7 +140,7 @@ $.validator.setDefaults({
 		var validator = $("#form1").validate({
 			rules: {
 			      title:{required:true},
-			      author:{required:true},
+			      //author:{required:true},
 			      origin:{required:true},
 			      apps:{required:true}
 			}
@@ -149,7 +151,7 @@ $.validator.setDefaults({
                 function () {
                     laydate({
                         istime: true,
-                        format: 'YYYY-MM-DD'
+                        format: 'YYYY-MM-DD hh:mm:ss'
                     });
                 });
 		$("#upfilebtn").on("click",function(){
@@ -220,7 +222,7 @@ $.validator.setDefaults({
 			uploadJson : root+'/KE/file_upload',//
 			fileManagerJson : root+'/KE/file_manager',//
 			allowFileManager : true,
-			 afterBlur: function(){this.sync();}
+			 afterBlur: function(){this.sync();},resizeType : 1,width:"85%",height:"400px"
 			
 		});
 		//prettyPrint();

@@ -11,9 +11,9 @@ html, body {
 }
 .error{color:#F00; font-size:12px; margin-top:5px;}
 .login{width:100%; height:100%; background:url(../img/loadbg.jpg) no-repeat left top; background-size:cover;}
-.login-top{width:100%; height:175px; text-align:center;}
+.login-top{width:100%; height:135px; text-align:center;}
 .loginDiv{ position:relative; width:100%; margin:0 auto;}
-.login-con{padding:20px 45px; background:#f9f9f9; width:410px; height:300px; box-sizing:border-box; -webkit-box-sizing:border-box; position:absolute; left:0; right:0; bottom:0; top:0; margin:auto;}
+.login-con{border-top: solid 3px #33aeee;padding:20px 45px; background:#f9f9f9; width:410px; height:300px; box-sizing:border-box; -webkit-box-sizing:border-box; position:absolute; left:0; right:0; bottom:0; top:0; margin:auto;}
 .login-con .login-tit{ font-size: 22px;color: #000;margin: 10px 0;border-bottom: solid 1px #ccc;}
 .inp{color:#666;}
 .inpp{box-shadow:0 0 5px #06F; -webkit-box-shadow:0 0 5px #06F}

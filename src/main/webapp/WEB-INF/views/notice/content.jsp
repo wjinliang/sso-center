@@ -50,7 +50,7 @@
 <body onLoad="showDT()">
 	<div class="systemHead">
     	<div class="headTop"></div>
-        <div class="headBtm"><span>${d:gON() } -</span><span>【${d:gUN() }】 欢迎使用单点登录云平台！</span><span id="showTime"></span></div>
+        <div class="headBtm"><span>${d:gON() } -</span><span>【${d:gUN() }】 欢迎使用单点登录云平台！  <a href="<%=basePath%>/security/logout" class="logoutBtn">【退出登录】</a></span><span id="showTime"></span></div>
     </div>
      <div class="systemCon clearfix" style="width:1150px; margin:0 auto;">
     	<div class="pageLeft">
@@ -62,7 +62,12 @@
         </div>
         <div class="pageRight">
         	<div class="newsListCon">	
-            	<div class="pagePosition"><a href="../index" >首页</a>&gt;&gt;通知公告&gt;&gt;<span>${notice.title }</span></div>
+            	<div class="pagePosition"><a href="../index" >首页</a>&gt;&gt;
+            	<a href="./${type }s" >
+	            	<c:if test="${type eq 'download'}">资料下载</c:if>
+	            	<c:if test="${type eq 'notice'}">通知公告</c:if>
+            	</a>
+            	&gt;&gt;<span>${notice.title }</span></div>
                 <div class="article">
                 	<div class="artTit">
                     	<h1 class="h1Tit">${notice.title }</h1>
@@ -75,7 +80,9 @@
                     	${notice.content }
                     	<div class="dowload" style="margin-top:10px;">
 		                    <c:forEach var="file" items="${files}">
-                            	<a href="javascript:void(0)"><img src="<%=basePath%>/assets/index/img/dowload.png" width="20">${file.realname }</a>&nbsp;&nbsp;&nbsp;
+		                    <p style="margin-top:10px;">
+                            	<a href="javascript:download('<%=basePath%>/KE/download/${file.id }')"><img src="<%=basePath%>/assets/index/img/dowload.png" width="20">${file.name }</a>&nbsp;&nbsp;&nbsp;
+		                    </p>
 			                  </c:forEach>
                         </div>
                     </div>
@@ -84,20 +91,7 @@
         </div>
     </div>
     <div class="systemFooter">© Copyright 2017 ### | Powered by ### | Top</div>
-    <script type="text/javascript">
-    	<!--截取字段--> 
-			function wordlimit(cname,wordlength){
-		　		 for(var i=0;i<cname.length;i++){
-		　　　　		var nowLength=cname[i].innerHTML.length;
-		　　　　			if(nowLength>wordlength){
-		　　　　　　cname[i].innerHTML=cname[i].innerHTML.substr(0,wordlength)+'...';
-			　　　　}
-			　　}　
-			}
-			var pText1 = $(".pText1");
-			wordlimit(pText1,26);
-		<!--截取字段结束-->
-    </script>
+    <script type="text/javascript" src="<%=basePath%>/assets/js/commonAction.js"></script>
     <script type="text/javascript">
 		var screenHeight =  $(document).height();
 		if(screenHeight<600){

@@ -31,9 +31,10 @@ public class NoticeController {
 	@Autowired
 	private FileEntityService fileService;
 
-	@RequestMapping({ "/admin/list" })
+	@RequestMapping({ "/admin/{type}s" })
 	public ModelAndView alist(
 			ModelAndView model,
+			@PathVariable(value = "type") String type,
 			@RequestParam(value = "thispage", required = false) Integer thispage,
 			@RequestParam(value = "pagesize", required = false) Integer pagesize,
 			@RequestParam(value = "systemId", required = false) String systemId,
@@ -45,10 +46,12 @@ public class NoticeController {
 		if (thispage == null) {
 			thispage = Integer.valueOf(0);
 		}
+		notice.setType(type);
 		PageInfo<Notice> page = noticeService.findList(thispage, pagesize,
 				notice, systemId);
 		model.addObject(R.PAGE, page);
 		model.addObject(R.SEARCHMODEL, notice);
+		model.addObject("type", type);
 		model.addObject("systemId", systemId);
 		model.setViewName("/notice/admin/list");
 		return model;
@@ -59,7 +62,7 @@ public class NoticeController {
 			ModelAndView model,
 			@RequestParam(value = "thispage", required = false) Integer thispage,
 			@RequestParam(value = "num", required = false)@PathVariable(value = "num") Integer num,
-			@RequestParam(value = "type", required = false)@PathVariable(value = "type") String type,
+			@PathVariable(value = "type") String type,
 			@RequestParam(value = "pagesize", required = false) Integer pagesize) {
 
 		if (pagesize == null) {
@@ -72,8 +75,9 @@ public class NoticeController {
 			thispage = num;
 		}
 		PageInfo<Notice> page = noticeService.findCurrentUserNotice(thispage,
-				pagesize);
+				pagesize,type);
 		model.addObject(R.PAGE, page);
+		model.addObject("type", type);
 		model.setViewName("/notice/list");
 		return model;
 	}
@@ -114,8 +118,8 @@ public class NoticeController {
 		return model;
 	}
 
-	@RequestMapping({ "/admin/form/{mode}" })
-	public ModelAndView form(ModelAndView model, @PathVariable String mode,
+	@RequestMapping({ "/admin/{type}/{mode}" })
+	public ModelAndView form(ModelAndView model, @PathVariable String mode, @PathVariable String type,
 			@RequestParam(value = "noticeId", required = false) String noticeId) {
 		if ((mode != null) && (!mode.equals("new"))) {
 			Notice notice = noticeService.selectByKey(noticeId);
@@ -132,15 +136,17 @@ public class NoticeController {
 				model.addObject("files", files);
 			}
 		}
+		model.addObject("type", type);
 		model.setViewName("/notice/admin/viewPage");
 		return model;
 	}
 
 	@RequestMapping({ "/admin/save" })
 	public ModelAndView saveApp(ModelAndView model, Notice notice, String apps) {
+		String type = notice.getType();
 		if (StringUtil.isNotEmpty(notice.getId())) {
 			this.noticeService.updateNotNull(notice, apps);
-			model.setViewName("redirect:list");
+			model.setViewName("redirect:"+type+"s");
 			return model;
 		}
 		String uuid = UUIDUtil.getUUID();
@@ -150,7 +156,7 @@ public class NoticeController {
 		notice.setIsRevoke(false);
 		notice.setCreateTime(new Date());
 		this.noticeService.save(notice, apps);
-		model.setViewName("redirect:list");
+		model.setViewName("redirect:"+type+"s");
 		return model;
 	}
 

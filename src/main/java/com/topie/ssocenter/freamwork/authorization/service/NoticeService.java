@@ -14,7 +14,7 @@ public interface NoticeService extends IService<Notice, String> {
 	PageInfo<Notice> findList(int pageNum, int pageSize, Notice notice,
 			String systemId);
 
-	PageInfo<Notice> findCurrentUserNotice(Integer thispage, Integer pagesize);
+	PageInfo<Notice> findCurrentUserNotice(Integer thispage, Integer pagesize, String type);
 
 	int updateAll(Notice notice, String apps);
 	int updateNotNull(Notice notice, String apps);

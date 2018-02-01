@@ -50,7 +50,7 @@
 <body onLoad="showDT()">
 	<div class="systemHead">
     	<div class="headTop"></div>
-        <div class="headBtm"><span>${d:gON() } -</span><span>【${d:gUN() }】 欢迎使用单点登录云平台！</span><span id="showTime"></span></div>
+        <div class="headBtm"><span>${d:gON() } -</span><span>【${d:gUN() }】 欢迎使用单点登录云平台！  <a href="<%=basePath%>/security/logout" class="logoutBtn">【退出登录】</a></span><span id="showTime"></span></div>
     </div>
     <div class="systemCon clearfix">
     	<div class="left">
@@ -59,12 +59,12 @@
                     <h1 class="tith1 titbg1"><a href="./notice/notices" target="_blank">通知公告</a></h1>
                     <div class="newsList">
                         <ul>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
+                        <c:set var="page" value="${d:gNEWS(1,5,'notice')}"></c:set>
+                        <c:forEach items="${page.list}" var="cont" varStatus="status">
+                    		<li><a href="./notice/notice_${cont.id }" target="_blank" class="pText1">${cont.title}</a>
+                    			<span><fmt:formatDate value="${cont.publishTime}" pattern="MM-dd" /></span>
+                    		</li>
+                    	</c:forEach>
                         </ul>
                     </div>
                 </div>	
@@ -72,12 +72,12 @@
                     <h1 class="tith1 titbg2"><a href="./notice/downloads" target="_blank">资料下载</a></h1>
                     <div class="newsList">
                         <ul>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名称</a><span>12-22</span></li>
-                            <li><a href="" target="_blank" class="pText1">通知通知信息名通知信息名称</a><span>12-22</span></li>
+                            <c:set var="page" value="${d:gNEWS(1,5,'download')}"></c:set>
+	                        <c:forEach items="${page.list}" var="cont" varStatus="status">
+	                    		<li><a href="./notice/download_${cont.id }" target="_blank" class="pText1">${cont.title}</a>
+	                    			<span><fmt:formatDate value="${cont.publishTime}" pattern="MM-dd" /></span>
+	                    		</li>
+	                    	</c:forEach>
                         </ul>
                     </div>
                 </div>	
@@ -110,8 +110,6 @@
 			var pText1 = $(".pText1");
 			wordlimit(pText1,26);
 		<!--截取字段结束-->
-    </script>
-    <script type="text/javascript">
 		var screenHeight =  $(document).height();
 		if(screenHeight<600){
 			screenHeight=600;

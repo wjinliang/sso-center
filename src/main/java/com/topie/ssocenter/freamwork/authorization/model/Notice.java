@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Table(name = "t_notice")
 public class Notice {
     @Id
@@ -25,16 +27,22 @@ public class Notice {
      * 来源
      */
     private String origin;
+    /**
+     * 类型
+     */
+    private String type;
 
     /**
      * 发布时间
      */
     @Column(name = "is_publish")
+    @DateTimeFormat(pattern="yyyy-MM-dd hh:mm:ss")
     private Boolean isPublish;
     /**
      * 发布时间
      */
     @Column(name = "publish_time")
+    @DateTimeFormat(pattern="yyyy-MM-dd hh:mm:ss")
     private Date publishTime;
 
     /**
@@ -77,7 +85,16 @@ public class Notice {
         this.id = id;
     }
 
-    /**
+    
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
      * 获取标题
      *
      * @return title - 标题
