@@ -32,15 +32,13 @@
                         <c:if test="${param.error==true}">
                         	<div class="error">${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}</div>
                         </c:if>
-                        <p class="p1"><input type="text" class="alterInput" name="j_username" id="username" placeholder="请输入登录名" value=""></p>
-                        <p class="p2"><input type="password" class="alterInput" name="j_password" id="passwords" placeholder="请输入密码" value=""></p>
-<!--                         <div class="error">密码错误</div> -->
+                        <p class="p1"><input type="text" autocomplete="off" class="alterInput" name="j_username" id="username" placeholder="请输入登录名" value=""></p>
+                        <p class="p2"><input type="password" autocomplete="off" class="alterInput" name="j_password" id="passwords" placeholder="请输入密码" value=""></p>
 	                        <p class="p3 clearfix">
-	                            <input type="text" class="alterInput" id="acreditcode" placeholder="请输入验证码" value="" name="j_captcha" style="border-left:1px solid #ccc; width:55%; float:left;">
+	                            <input type="text" autocomplete="off" class="alterInput" id="acreditcode" placeholder="请输入验证码" value="" name="j_captcha" style="border-left:1px solid #ccc; width:55%; float:left;">
 	                            <a href="javascript:void(0);" class="acreditImg"><img src="<%=basePath%>/security/web/captcha"></a>
 	                        </p>
-<!--                         <div class="error">验证码错误</div> -->
-                        <p style="padding-left:0px;"><input type="submit" value="登录" class="btn btn1"><input type="reset" value="重置" class="btn btn2"></p>
+                        <p style="padding-left:0px;margin-bottom: 20px;"><input type="submit" value="登录" class="btn btn1"><input type="reset" value="重置" class="btn btn2"></p>
                     </form>	
                 </div>
             </div>
@@ -49,14 +47,6 @@
     </div>
 </body>
 <script type="text/javascript">
-	var screenHeight =  $(window).height();
-	if(screenHeight<600){
-		screenHeight = 600;
-	}
-	var loginTopHeight = $(".login-top").height();
-	var footerHeight = $(".login-footer").innerHeight();
-	var loginConHeight = screenHeight-loginTopHeight-footerHeight;
-	$(".loginDiv").css("height",loginConHeight+'px');
 	
 	$(function(){
 		$("a[class='acreditImg']").bind("click",function(){

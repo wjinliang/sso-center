@@ -1,7 +1,13 @@
 package com.topie.ssocenter.freamwork.authorization.security;
 
-import com.topie.ssocenter.common.utils.RequestUtil;
-import com.topie.ssocenter.common.utils.ResponseUtil;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +19,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.util.Assert;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.topie.ssocenter.common.utils.RequestUtil;
+import com.topie.ssocenter.common.utils.ResponseUtil;
 
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/9 说明：
@@ -34,6 +34,7 @@ public class OrangeSideSimpleUrlAuthenticationFailureHandler
     private boolean allowSessionCreation = true;
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private static final String LOGIN = "登录";
+    private Integer maxPasswordErrorCount=5;
 
     public OrangeSideSimpleUrlAuthenticationFailureHandler() {
     }
@@ -41,8 +42,17 @@ public class OrangeSideSimpleUrlAuthenticationFailureHandler
     public OrangeSideSimpleUrlAuthenticationFailureHandler(String defaultFailureUrl) {
         setDefaultFailureUrl(defaultFailureUrl);
     }
+    
 
-    /**
+    public Integer getMaxPasswordErrorCount() {
+		return maxPasswordErrorCount;
+	}
+
+	public void setMaxPasswordErrorCount(Integer maxPasswordErrorCount) {
+		this.maxPasswordErrorCount = maxPasswordErrorCount;
+	}
+
+	/**
      * Performs the redirect or forward to the {@code defaultFailureUrl} if set, otherwise returns a
      * 401 error code.
      * <p/>

@@ -61,6 +61,9 @@ public class SynServiceImpl implements SynService {
 
 	public String synStart(String appId, String infoCode, String opType) {
 		ApplicationInfo applicationInfo =appMapper.selectByPrimaryKey(appId);
+		if(1==1){
+			return "000";
+		}
 		ServletRequestAttributes srAttrs = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest request = srAttrs.getRequest();
 		if (applicationInfo != null) {

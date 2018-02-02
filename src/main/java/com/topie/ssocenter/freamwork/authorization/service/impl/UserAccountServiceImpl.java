@@ -234,8 +234,10 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 			u.put("status", false);
 			return u;
 		}
+		logger.info("开始同步【"+app.getAppName()+"】->["+user.getLoginname()+"]"+typeName);
 		if(app.getStatus().equals("2")){
-			u.put("result", "系统维护中，暂无操作");
+			u.put("result", app.getAppName()+"-系统维护中，暂无操作");
+			logger.info(app.getAppName()+"=系统维护中，暂无操作");
 			u.put("isAuthorize",false);
 			return u;
 		}
@@ -269,12 +271,15 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		synLog.setAppId(appId);
 		synLog.setAppName(app.getAppName());
 		synLog.setSynTime(today);
-		synLog.setSynResult("用户(" + user.getName()+"["+user.getLoginname()+"]" + ")"+typeName+"操作："
-				+ result);
+		String msg = "用户(" + user.getName()+"["+user.getLoginname()+"]" + ")"+typeName+"操作："
+				+ result;
+		logger.info(msg);
+		synLog.setSynResult(msg);
 		OrangeSideSecurityUser currentUser = SecurityUtils.getCurrentSecurityUser();
 		synLog.setSynUserid(currentUser.getId());
 		synLog.setSynUsername(currentUser.getDisplayName());
 		this.synService.save(synLog);
+		logger.info("====结束同步【"+app.getAppName()+"】->["+user.getLoginname()+"]"+typeName);
 		return u;
 		
 	}

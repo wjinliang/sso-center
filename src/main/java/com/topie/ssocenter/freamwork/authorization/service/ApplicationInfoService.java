@@ -12,5 +12,6 @@ public interface ApplicationInfoService extends IService<ApplicationInfo,String>
 			int pageSize, ApplicationInfo app);
 
 	PageInfo<ApplicationInfo> selectCurrentUserSynApps();
+	PageInfo<ApplicationInfo> selectUserSynApps(String userId);
 
 }

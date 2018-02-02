@@ -109,9 +109,18 @@
                   <td class="td_right">状态<span class="red">*</span>：</td>
                   <td class="">
                   	<span>
-	                    <input type="radio" name="status" value="1"> 可用
+	                    <input type="radio" name="status" value="1"> 启用
 	                    <input type="radio" name="status" value="2"> 维护中
 	                    <input type="radio" name="status" value="0"> 禁用
+                    </span>
+                  </td>
+                  <td class="td_right">同步操作<span></span>：</td>
+                  <td class="">
+                  	<span>
+	                    <input type="checkbox" name="isOrgSyn" value="true"> 同步机构
+	                    <input type="checkbox" name="isOrgAuthorize" value="true"> 机构授权
+	                    <input type="checkbox" name="isUserSyn" value="true"> 同步用户
+	                    <input type="checkbox" name="isUserAuthorize" value="true"> 用户授权
                     </span>
                   </td>
                  </tr>

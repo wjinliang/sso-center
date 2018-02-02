@@ -39,14 +39,14 @@
 								value="${userAccount.systemId}" />
 					  <input type="hidden"
 								id="appCheckList" name="appCheckList" value="" />
-                    <input type="text" name="name" class="input-text lh30" value="${userAccount.name }" size="40">
+                    <input type="text" name="name" autocomplete="off" class="input-text lh30" value="${userAccount.name }" size="40">
                   </td>
-                  <td class="td_right">用户登录名：</td><td><input type="text" name="loginname" readonly="true" value="${userAccount.loginname }" class="input-text lh30" size="40"></td>
+                  <td class="td_right">用户登录名：</td><td><input type="text" name="loginname" autocomplete="off" readonly="true" value="${userAccount.loginname }" class="input-text lh30" size="40"></td>
                 </tr>
                 <c:if test="${mode=='new' }">
                 	<tr>
-	                  <td class="td_right">密码<span class="red">*</span>：</td><td><input type="password" name="password" class="input-text lh30" size="40"></td>
-	                  <td class="td_right">确认密码<span class="red">*</span>：</td><td><input type="password" name="checkpassword" class="input-text lh30" size="40"></td>
+	                  <td class="td_right">密码<span class="red">*</span>：</td><td><input type="password" name="password" autocomplete="off" class="input-text lh30" size="40"></td>
+	                  <td class="td_right">确认密码<span class="red">*</span>：</td><td><input type="password" name="checkpassword" autocomplete="off" class="input-text lh30" size="40"></td>
                   </tr>
                   </c:if>
                   <c:if test="${mode=='edit'}">

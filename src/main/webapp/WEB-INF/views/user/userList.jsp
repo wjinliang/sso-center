@@ -45,7 +45,7 @@
 						<div class="box_top">
 							<b class="pl15">区划树</b>
 						</div>
-						<div class="box_center" style="height: 500px; overflow-y: auto;">
+						<div class="box_center" style="height: 800px; overflow-y: auto;">
 							<div class="ztree" id="divisionTree"></div>
 						</div>
 
@@ -154,11 +154,10 @@
 														编辑 </a></li>
 <%-- 													<li><a href="javascript:dialogPage('设置角色','user/setRole?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }')">设置角色</a></li> --%>
 													<li><a href="javascript:repassword('${user.code }')">重置密码</a></li>
-													<li><a href="javascript:repassword('${user.code }')">重置密码</a></li>
 													<li class="divider"></li>
 													<li><a href="javascript:openPage('./listMergeUsers?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
 													关联用户</a></li>
-													<li><a href="javascript:openPage('./listMergeUsers?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+													<li><a href="javascript:openPage('./user/auth?code=${user.code }&orgId=${user.orgId }');">
 													用户授权</a></li>
 												</ul>
 												</div>

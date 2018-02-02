@@ -13,7 +13,9 @@ import tk.mybatis.mapper.entity.Example.Criteria;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.freamwork.authorization.dao.ApplicationInfoMapper;
+import com.topie.ssocenter.freamwork.authorization.dao.UserAccountMapper;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
+import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
@@ -28,6 +30,8 @@ public class ApplicationInfoServiceImpl extends
 
 	@Autowired
 	private ApplicationInfoMapper appMapper;
+	@Autowired
+	private UserAccountMapper userMapper;
 
 	@Override
 	public PageInfo<ApplicationInfo> findApplicationInfoList(int pageNum,
@@ -55,6 +59,19 @@ public class ApplicationInfoServiceImpl extends
 		List<ApplicationInfo> list;
 		if (StringUtils.isEmpty(mergeUuid)) {
 			list = appMapper.selectSynAppsByUserId(currentUserAccount.getId());
+		} else {
+			list = appMapper.selectSynAppsByMergeUuid(mergeUuid);
+		}
+		return new PageInfo<ApplicationInfo>(list);
+	}
+	@Override
+	public PageInfo<ApplicationInfo> selectUserSynApps(String userId) {
+		UserAccount userAccount = userMapper.selectByPrimaryKey(userId);
+		String mergeUuid = userAccount.getMergeUuid();
+		PageHelper.startPage(1, 100);
+		List<ApplicationInfo> list;
+		if (StringUtils.isEmpty(mergeUuid)) {
+			list = appMapper.selectSynAppsByUserId(userId);
 		} else {
 			list = appMapper.selectSynAppsByMergeUuid(mergeUuid);
 		}

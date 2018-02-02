@@ -24,6 +24,7 @@
 </head>
 <body>
 	<div class="container">
+	<p style="font-size:20px;color:#ccc;margin-left:20px;">机构用户同步统计</p>
 		<!-- <div id="search_bar" class="mt10">
 			<div class="box">
 				<div id="button" class="mt10">

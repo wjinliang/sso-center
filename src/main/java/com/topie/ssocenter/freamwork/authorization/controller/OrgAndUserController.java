@@ -449,6 +449,36 @@ public class OrgAndUserController {
 		model.addObject("id", user.getCode());
 		return model;
 	}
+	@RequestMapping("user/auth")
+	public ModelAndView user_auth(UserAccount user,
+			ModelAndView model) throws Exception{
+		model.addObject("backUrl", "../listUsers?orgId="+user.getOrgId());
+		setAuthList( user, model);
+		model.addObject("id", user.getCode());
+		model.setViewName("/user/synAuth");
+		return model;
+	}
+	private void setAuthList(UserAccount user, ModelAndView model) {
+		PageInfo<ApplicationInfo> upage = this.appService.selectUserSynApps(user.getCode());
+		if(upage.getTotal()==0){
+			model.addObject("page",upage);
+			return ;
+		}
+		PageInfo<ApplicationInfo> cupage = this.appService.selectCurrentUserSynApps();
+		Map map = new HashMap();
+		List list = new ArrayList();
+		for(ApplicationInfo app:upage.getList()){
+			for(ApplicationInfo capp:cupage.getList()){
+				if(app.getId().equals(capp.getId())){
+					list.add(app);
+				}
+			}
+		}
+		map.put("list", list);
+		map.put("total", list.size());
+		model.addObject("page",map);
+	}
+
 	/**
 	 * 更新用户所属系统
 	 * @param user
@@ -553,11 +583,13 @@ public class OrgAndUserController {
 			model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
 		}
 		if(redirect==1){
-			model.setViewName("redirect:"
+			model.setViewName("/user/synResult");
+			/*model.setViewName("redirect:"
 					+ "/syn/ssoServiceBySession?xtbs="+appCode
 					+"&TYPE="+
-					R.ORG_AUTHORIZE+"&ID="+user.getCode());
+					R.ORG_AUTHORIZE+"&ID="+user.getCode());*/
 		}
+		
 		if(redirect > 1){
 			model.setViewName("/user/synResult");
 		}

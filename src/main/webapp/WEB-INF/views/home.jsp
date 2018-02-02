@@ -32,10 +32,10 @@
 <body>
 <div class="top">
     <div id="top_t">
-        <div id="logo" class="fl"></div>
+        <a href="./index"><div id="logo" class="fl"></div></a>
         <div id="photo_info" class="fr">
             <div id="photo" class="fl">
-                <a href="#"><img src="<%=basePath%>/assets/images/a.png" alt="" width="60" height="60"></a>
+<%--                 <a href="#"><img src="<%=basePath%>/assets/images/a.png" alt="" width="60" height="60"></a> --%>
             </div>
             <div id="base_info" class="fr">
                 <div class="help_info">

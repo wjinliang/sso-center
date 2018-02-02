@@ -114,6 +114,15 @@
 	                    <input type="radio" <c:if test="${appInfo.status=='0' }"> checked="checked"</c:if> name="status" value="0"> 禁用
                     </span>
                   </td>
+                  <td class="td_right">同步操作：</td>
+                  <td class="">
+                  	<span>
+                  		<input type="checkbox" name="isOrgSyn"<c:if test="${appInfo.isOrgSyn }"> checked="checked"</c:if> value="true"> 同步机构
+	                    <input type="checkbox" name="isOrgAuthorize"<c:if test="${appInfo.isOrgAuthorize }"> checked="checked"</c:if> value="true"> 机构授权
+	                    <input type="checkbox" name="isUserSyn"<c:if test="${appInfo.isUserSyn }"> checked="checked"</c:if> value="true"> 同步用户
+	                    <input type="checkbox" name="isUserAuthorize"<c:if test="${appInfo.isUserAuthorize }"> checked="checked"</c:if> value="true"> 用户授权
+	                 </span>
+                  </td>
                  </tr>
                 
                  <tr>

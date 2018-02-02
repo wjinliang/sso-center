@@ -62,7 +62,7 @@
 										<td>${app.result }</td>
 										<td>
 											<c:if test="${app.isAuthorize}">
-												<a class="ext_btn" href="javascript:dialogPage('用户授权','../../syn/ssoServiceBySession?xtbs=${app.appCode}&TYPE=1&ID=${id}');">授权</a>
+												<a class="ext_btn" href="javascript:dialogPage('用户授权-${app.appName}','../../syn/ssoServiceBySession?xtbs=${app.appCode}&TYPE=1&ID=${id}');">授权</a>
 											</c:if>
 										</td>
 

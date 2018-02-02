@@ -87,7 +87,7 @@
         	 <c:set var="synAppList" value="${d:gCAS()}"></c:set>
         	<ul class="systemList systemList${ fn:length(synAppList)} clearfix">
         	<c:forEach items="${synAppList}" var="app" varStatus="status">
-            	<li><a href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
+            	<li><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
             	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span>
             	<p>${app.appName}</p></a></li>
             </c:forEach>

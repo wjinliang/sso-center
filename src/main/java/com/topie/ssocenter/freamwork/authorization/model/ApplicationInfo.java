@@ -46,16 +46,16 @@ public class ApplicationInfo {
     private String paramName;
     
     @Column(name = "is_org_syn")
-    private Boolean isOrgSyn;
+    private Boolean isOrgSyn = false;
 
     @Column(name = "is_org_authorize")
-    private Boolean isOrgAuthorize;
+    private Boolean isOrgAuthorize = false;
 
     @Column(name = "is_user_syn")
-    private Boolean isUserSyn;
+    private Boolean isUserSyn = false;
 
     @Column(name = "is_user_authorize")
-    private Boolean isUserAuthorize;
+    private Boolean isUserAuthorize = false;
 
     private Integer seq;
 
