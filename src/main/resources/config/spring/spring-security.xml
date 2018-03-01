@@ -57,7 +57,7 @@
         <beans:property name="userDetailsService" ref="orangeSideUserService"/>
         <beans:property name="hideUserNotFoundExceptions" value="true"/>
         <beans:property name="passwordEncoder" ref="encoder"/>
-        <!--<beans:property name="userCache" ref="orangeUserCache"/>-->
+        <beans:property name="userCache" ref="orangeUserCache"/>
     </beans:bean>
 
     <beans:bean id="encoder"

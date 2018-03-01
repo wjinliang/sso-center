@@ -9,11 +9,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
-<title>登录</title>
+<title>全国动物疫病防控与动物卫生监督工作云平台单点登录</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/login/css/load.css">
 <script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-1.12.1.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/login/js/login.js"></script>
 </head>
 <script type="text/javascript">
         if (self!=top){
@@ -29,9 +30,11 @@
                 <div class="login-tit">登录</div>
                 <div class="login-form">
                     <form id="loginForm" action="<%=basePath%>/j_spring_security_check" method="post">
-                        <c:if test="${param.error==true}">
-                        	<div class="error">${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}</div>
-                        </c:if>
+                       	<div class="error">
+	                        <c:if test="${param.error==true}">
+                        	${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}
+                        	</c:if>
+                       	</div>
                         <p class="p1"><input type="text" autocomplete="off" class="alterInput" name="j_username" id="username" placeholder="请输入登录名" value=""></p>
                         <p class="p2"><input type="password" autocomplete="off" class="alterInput" name="j_password" id="passwords" placeholder="请输入密码" value=""></p>
 	                        <p class="p3 clearfix">
@@ -43,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="login-footer">copy Right© 2017-2022</div>
+        <div class="login-footer">版权&copy;-中国动物疫病预防控制中心</div>
     </div>
 </body>
 <script type="text/javascript">

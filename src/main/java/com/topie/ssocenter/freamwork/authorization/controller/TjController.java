@@ -153,4 +153,34 @@ public class TjController {
 		}
 	}
 	
+	/**
+	 * 按月份统计各个系统同步用户数量
+	 * @param model
+	 * @param app
+	 * @return
+	 */
+	@RequestMapping("/tjyh/monthUser")
+	public ModelAndView monthUser(ModelAndView model,ApplicationInfo
+			app){
+		//TODO 按月份统计各个系统同步用户数量 select SUBSTR(syn_time,1,7),COUNT(id)  from syn_user t1 GROUP BY SUBSTR(syn_time,1,7) ;
+		return model;
+	}
+	
+	/**
+	 * 同步日志统计
+	 * @param model
+	 * @param app
+	 * @return
+	 */
+	@RequestMapping("/tjyh/synLog")
+	public ModelAndView synLog(ModelAndView model,ApplicationInfo
+			app){
+		//TODO select SUBSTR(t.syn_result,LOCATE("：" ,syn_result)),count(id) from syn_log t GROUP BY SUBSTR(t.syn_result,LOCATE("：" ,syn_result))
+		return model;
+	}
+	/**
+	 * 不同时间段 用户登录统计
+	 */
+	//TODO select SUBSTR(date, 12,2 ),COUNT(id) from t_log t where  t.TYPE='0' group by SUBSTR(date, 12,2)
+	
 }

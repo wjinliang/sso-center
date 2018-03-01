@@ -12,7 +12,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
-<title>系统</title>
+<title>全国动物疫病防控与动物卫生监督工作云平台单点登录</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/index/css/systemstyle.css">
 <script type="text/javascript" src="<%=basePath%>/assets/index/js/jquery-1.12.1.min.js"></script>
 <script type="text/javascript">  
@@ -96,7 +96,7 @@
             </ul>
         </div>
     </div>
-    <div class="systemFooter">© Copyright 2017 ### | Powered by ### | Top</div>
+    <div class="systemFooter">版权&copy;-中国动物疫病预防控制中心</div>
     <script type="text/javascript">
     	<!--截取字段--> 
 			function wordlimit(cname,wordlength){

@@ -12,7 +12,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
-<title>系统</title>
+<title><c:if test="${type eq 'notice'}">通知公告</c:if><c:if test="${type eq 'download'}">资料下载</c:if>-${notice.title }</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/index/css/systemstyle.css">
 <script type="text/javascript" src="<%=basePath%>/assets/index/js/jquery-1.12.1.min.js"></script>
 <script type="text/javascript">  
@@ -90,7 +90,7 @@
             </div>
         </div>
     </div>
-    <div class="systemFooter">© Copyright 2017 ### | Powered by ### | Top</div>
+    <div class="systemFooter">版权&copy;-中国动物疫病预防控制中心</div>
     <script type="text/javascript" src="<%=basePath%>/assets/js/commonAction.js"></script>
     <script type="text/javascript">
 		var screenHeight =  $(document).height();

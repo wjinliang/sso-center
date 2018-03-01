@@ -5,7 +5,7 @@
          version="3.0">
 
     <display-name>sso-center</display-name>
-
+	<distributable/>
     <!-- 读取spring配置文件 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
