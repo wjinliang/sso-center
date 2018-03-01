@@ -146,7 +146,7 @@
 				selectedMulti: true
 			},
 			check : {
-				chkboxType: { "Y": "s", "N": "ps" },
+				chkboxType: { "Y": "ps", "N": "ps" },
 				enable : true,
 			},
 			data : {
