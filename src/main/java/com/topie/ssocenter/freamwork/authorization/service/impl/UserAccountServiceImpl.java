@@ -126,7 +126,6 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 
 	@Override
 	public List<UserAccount> selectByExample(Example example) {
-		
 		return super.selectByExample(example);
 	}
 
@@ -166,6 +165,7 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		Example example = new Example(UserAccount.class);
 		Criteria c = example.createCriteria();
 		c.andNotEqualTo("code", user.getCode());
+		c.andEqualTo("isDelete",false);
 		c.andIsNull("mergeUuid");
 		if(!StringUtils.isEmpty(user.getName())){
 			c.andEqualTo("name", user.getName());
@@ -185,6 +185,7 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		Example example = new Example(UserAccount.class);
 		Criteria c = example.createCriteria();
 		c.andNotEqualTo("code", user.getCode());
+		c.andEqualTo("isDelete",false);
 		if(!StringUtils.isEmpty(u.getMergeUuid())){
 			c.andEqualTo("mergeUuid", u.getMergeUuid());
 		}else{//如果当前用户没有mergeId
@@ -223,10 +224,6 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		Map u = new HashMap();
 		u.put("opType", typeName);
 		u.put("opTypeCode", type);
-		u.put("appName", app.getAppName());
-		u.put("appCode", app.getAppCode());
-		u.put("appId", app.getId());
-		u.put("status", true);
 		if(app==null){
 			String s = "同步"+typeName+"User时 {appId="+appId+"}未找到对应的应用";
 			logger.info(s);
@@ -234,6 +231,10 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 			u.put("status", false);
 			return u;
 		}
+		u.put("appName", app.getAppName());
+		u.put("appCode", app.getAppCode());
+		u.put("appId", app.getId());
+		u.put("status", true);
 		logger.info("开始同步【"+app.getAppName()+"】->["+user.getLoginname()+"]"+typeName);
 		if(app.getStatus().equals("2")){
 			u.put("result", app.getAppName()+"-系统维护中，暂无操作");
@@ -248,14 +249,22 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 					, type);
 			if (result != null && result.equals("000")) {
 				result = "同步成功";
-				SynUser synUser = new SynUser();
-				String uuid = UUIDUtil.getUUID();
-				synUser.setAppId(appId);
-				synUser.setId(uuid);
-				synUser.setUserId(user.getCode());
-				synUser.setSynTime(today);
-				this.synService.save(synUser);
-				u.put("isAuthorize",app.getIsUserAuthorize());
+				if(type.equals("11")){//新增
+					SynUser synUser = new SynUser();
+					String uuid = UUIDUtil.getUUID();
+					synUser.setAppId(appId);
+					synUser.setId(uuid);
+					synUser.setUserId(user.getCode());
+					synUser.setSynTime(today);
+					this.synService.save(synUser);
+					u.put("isAuthorize",app.getIsUserAuthorize());
+				}
+				if(type.equals("12")){//更新
+					//nothing todo
+				}
+				if(type.equals("13")){//删除
+					this.synService.deleteSynUser(user.getCode(),appId);
+				}
 			}else{
 				u.put("status", false);
 			}

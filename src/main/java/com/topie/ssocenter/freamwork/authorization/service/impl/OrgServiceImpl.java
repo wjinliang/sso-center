@@ -192,6 +192,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		}
 		Example ex = new Example(UserAccount.class);
 		Criteria ca = ex.createCriteria();
+		ca.andEqualTo("isDelete",false);
 		if(user.getName()!=null){
 			ca.andLike("name", "%"+user.getName() +"%");
 			Division d = divisionService.selectByKey(org.getDivisionId());
@@ -223,6 +224,9 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 					break;
 				default:
 					break;
+			}
+			if(user.getLoginname()!=null){
+				ca.andEqualTo("loginname", user.getLoginname());
 			}
 		}else{		
 			ca.andEqualTo("orgId", user.getOrgId());
@@ -292,10 +296,6 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		Map u = new HashMap();
 		u.put("opType", typeName);
 		u.put("opTypeCode", type);
-		u.put("appName", app.getAppName());
-		u.put("appId", app.getId());
-		u.put("appCode", app.getAppCode());
-		u.put("status", true);
 		if(app==null){
 			String s = "同步"+typeName+"Org时 {appId="+appId+"}未找到对应的应用";
 			logger.info(s);
@@ -303,6 +303,10 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 			u.put("status", false);
 			return u;
 		}
+		u.put("appName", app.getAppName());
+		u.put("appId", app.getId());
+		u.put("appCode", app.getAppCode());
+		u.put("status", true);
 		if(app.getStatus().equals("2")){
 			u.put("result", "系统维护中，暂无操作");
 			u.put("isAuthorize",false);
@@ -312,11 +316,12 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		String result = "000";
 		String today = DmDateUtil.Current();
 		if(app.getIsOrgSyn()){//如果该系统要同步机构
-			logger.info("["+today+"]开始同步Org："+app.getAppName()+"-"+org.getName());
+			logger.info("["+today+"]开始同步Org："+app.getAppName()+"-"+org.getName()+"-"+typeName);
 			result = this.synService.synStart(appId, org.getId()
 					.toString(), type);
 			if (result != null && result.equals("000")) {
 				result = "同步成功";
+				if(type.equals("41")){//新增
 				SynOrg synOrg = new SynOrg();
 				String uuid = UUIDUtil.getUUID();
 				synOrg.setAppId(appId);
@@ -324,6 +329,13 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 				synOrg.setOrgId(org.getId().toString());
 				synOrg.setSynTime(today);
 				this.synService.save(synOrg);
+				}
+				if(type.equals("42")){//更新
+					//nothing todo
+				}
+				if(type.equals("43")){//删除
+					synService.deleteSynOrg(org.getId().toString(),appId);
+				}
 				u.put("isAuthorize",app.getIsOrgAuthorize());
 			}else{
 				u.put("status", false);
@@ -331,6 +343,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		}else{//不同不到该系统
 			result = "该系统设置为不同步机构";
 		}
+		logger.info("["+today+"]同步Org结果："+app.getAppName()+"-"+org.getName()+"-"+typeName+"-"+result);
 		/*
 		 * 添加记录日志的操作
 		 */

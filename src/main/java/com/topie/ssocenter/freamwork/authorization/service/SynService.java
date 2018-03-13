@@ -23,4 +23,8 @@ public interface SynService {
 
 	public abstract List<SynUser> selectUserSynInfo(String code);
 
+	public abstract int deleteSynOrg(String orgId, String appId);
+
+	public abstract int deleteSynUser(String userId, String appId);
+
 }

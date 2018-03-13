@@ -241,10 +241,11 @@ public class OrgAndUserController {
 					continue;
 				}
 				boolean isSyn = true;//是否已经同步过了
-				String app="";
-				if(!StringUtils.isEmpty(synAppIds)){
+				if(StringUtils.isEmpty(synAppIds)){
+					Map u = orgService.synOneOrg(org,synOrg.getAppId(),"43","删除");
+					list.add(u);
+				}else{
 					for(String appId:synAppIds.split(",")){
-						app = appId;
 						if(synOrg.getAppId().equals(appId)){
 							isSyn = false;
 							break;
@@ -252,7 +253,7 @@ public class OrgAndUserController {
 					}
 				}
 				if(isSyn){//以前同步过现在去掉同步 -》删除
-					Map u = orgService.synOneOrg(org,app,"43","删除");
+					Map u = orgService.synOneOrg(org,synOrg.getAppId(),"43","删除");
 					list.add(u);
 				}
 			}
@@ -264,6 +265,9 @@ public class OrgAndUserController {
 					list.add(u);
 				}
 			}
+		}
+		if(model==null){//ajax请求
+			return list;
 		}
 		model.addObject("resultList", list);//同步结果
 		if(list.size()==0){
@@ -401,13 +405,46 @@ public class OrgAndUserController {
 		model.setViewName("/user/edit");
 		return model;
 	}
+	@RequestMapping({ "/user/delete" })
+	@ResponseBody
+	public Object deleteUser(String code){
+			UserAccount user = userAccountService.selectByKey(code);
+			List<SynUser> listInfo = synService.selectUserSynInfo(code);//已经同步过的APP
+			String synAppIds = "";
+			for(SynUser synUser:listInfo){
+				synAppIds +=","+synUser.getAppId();
+			}
+			if(synAppIds.equals("")){
+				user.setIsDelete(true);
+				int count = this.userAccountService.updateNotNull(user);
+				return  ResponseUtil.success();
+			}else{
+				boolean result=true;
+				synAppIds = synAppIds.substring(1);
+				List<Map> resultList = doTongBu("13", user, synAppIds, null);
+				for(Map map:resultList){
+					if(!(boolean)map.get("status")){//同步有失败
+						result = false;
+						break;
+					}
+				}
+				if(result){
+					user.setIsDelete(true);
+					int count = this.userAccountService.updateNotNull(user);
+					return ResponseUtil.success(resultList);
+				}else{//同步有失败
+					return ResponseUtil.error(resultList);
+				}
+			}
+	}
 	
 	@RequestMapping("user/save")
 	public ModelAndView user_save(UserAccount user,
+			Org org,
 			@RequestParam(value="synApps",required=false) String synAppIds,
 			ModelAndView model,String isAdmin) throws Exception{
-		model.addObject("backUrl", "../listUsers?orgId="+user.getOrgId());
-		model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
+		model.addObject("backUrl", "../listUsers?orgId="+user.getOrgId()+"&divisionId="+org.getDivisionId());
+		model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId()+"&divisionId="+org.getDivisionId());
 		if(StringUtil.isNotEmpty(user.getCode())){//更新
 			this.userAccountService.updateNotNull(user);
 			if(isAdmin!=null && isAdmin.equals("true")){
@@ -433,6 +470,7 @@ public class OrgAndUserController {
 		String encryptPassword = SimpleCrypto.encrypt(seed,
 				password);
 		user.setSynpassword(encryptPassword);
+		user.setIsDelete(false);
 		user.setLocked(false);
 		user.setAccountExpired(true);
 		user.setPasswordExpired(true);
@@ -540,10 +578,11 @@ public class OrgAndUserController {
 					continue;
 				}
 				boolean isSyn = true;//是否已经同步过了
-				String app="";
-				if(!StringUtils.isEmpty(synAppIds)){
+				if(StringUtils.isEmpty(synAppIds)){
+					Map u = userAccountService.synOneUser(user,synUser.getAppId(),"13","删除");
+					list.add(u);
+				}else{
 					for(String appId:synAppIds.split(",")){
-						app = appId;
 						if(synUser.getAppId().equals(appId)){
 							isSyn = false;
 							break;
@@ -551,7 +590,7 @@ public class OrgAndUserController {
 					}
 				}
 				if(isSyn){//以前同步过现在去掉同步 -》删除
-					Map u = userAccountService.synOneUser(user,app,"13","删除");
+					Map u = userAccountService.synOneUser(user,synUser.getAppId(),"13","删除");
 					list.add(u);
 				}
 			}
@@ -563,6 +602,9 @@ public class OrgAndUserController {
 					list.add(u);
 				}
 			}
+		}
+		if(model==null){
+			return list;
 		}
 		model.addObject("resultList", list);//同步结果
 		if(list.size()==0){//不需要同步

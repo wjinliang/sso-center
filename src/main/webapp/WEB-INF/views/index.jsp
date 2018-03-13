@@ -61,7 +61,7 @@
                         <ul>
                         <c:set var="page" value="${d:gNEWS(1,5,'notice')}"></c:set>
                         <c:forEach items="${page.list}" var="cont" varStatus="status">
-                    		<li><a href="./notice/notice_${cont.id }" target="_blank" class="pText1">${cont.title}</a>
+                    		<li title="${cont.title}"><a href="./notice/notice_${cont.id }" target="_blank" class="pText1">${cont.title}</a>
                     			<span><fmt:formatDate value="${cont.publishTime}" pattern="MM-dd" /></span>
                     		</li>
                     	</c:forEach>
@@ -74,7 +74,7 @@
                         <ul>
                             <c:set var="page" value="${d:gNEWS(1,5,'download')}"></c:set>
 	                        <c:forEach items="${page.list}" var="cont" varStatus="status">
-	                    		<li><a href="./notice/download_${cont.id }" target="_blank" class="pText1">${cont.title}</a>
+	                    		<li title="${cont.title}"><a href="./notice/download_${cont.id }" target="_blank" class="pText1">${cont.title}</a>
 	                    			<span><fmt:formatDate value="${cont.publishTime}" pattern="MM-dd" /></span>
 	                    		</li>
 	                    	</c:forEach>
@@ -89,7 +89,9 @@
         	<c:forEach items="${synAppList}" var="app" varStatus="status">
             	<li><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
             	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span>
-            	<p>${app.appName}</p></a></li>
+            	<p>${app.appName}</p>
+            	<c:set var="file" value="${d:gAF(app.id)}"></c:set>
+            	</a><p><c:if test="${file!=null}"><a href="javascript:download('<%=basePath%>/KE/download/${file.id }')">用户操作手册</a></c:if></p></li>
             </c:forEach>
                 <li><a href="./home"><span><img src="<%=basePath%>/assets/index/img/icon13.png"></span><p>单点登录</p></a></li>
                 
@@ -97,6 +99,7 @@
         </div>
     </div>
     <div class="systemFooter">版权&copy;-中国动物疫病预防控制中心</div>
+    <script type="text/javascript" src="<%=basePath%>/assets/js/commonAction.js"></script>
     <script type="text/javascript">
     	<!--截取字段--> 
 			function wordlimit(cname,wordlength){
@@ -108,7 +111,7 @@
 			　　}　
 			}
 			var pText1 = $(".pText1");
-			wordlimit(pText1,26);
+			wordlimit(pText1,13);
 		<!--截取字段结束-->
 		var screenHeight =  $(document).height();
 		if(screenHeight<600){

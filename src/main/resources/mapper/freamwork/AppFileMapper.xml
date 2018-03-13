@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topie.ssocenter.freamwork.authorization.dao.AppFileMapper" >
+  <resultMap id="BaseResultMap" type="com.topie.ssocenter.freamwork.authorization.model.AppFile" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="file_id" property="fileId" jdbcType="VARCHAR" />
+    <result column="app_id" property="appId" jdbcType="VARCHAR" />
+    <result column="filestatus" property="filestatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="FileResultMap" type="com.topie.ssocenter.freamwork.authorization.model.FileEntity" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+    <result column="FILESIZE" property="filesize" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="CREATEUSER" property="createuser" jdbcType="VARCHAR" />
+    <result column="REALPATH" property="realpath" jdbcType="VARCHAR" />
+    <result column="SAVEFLAG" property="saveflag" jdbcType="VARCHAR" />
+    <result column="userObject" property="userobject" jdbcType="VARCHAR" />
+    <result column="OBJFIELD" property="objfield" jdbcType="VARCHAR" />
+    <result column="URLFIELD" property="urlfield" jdbcType="VARCHAR" />
+    <result column="OBJ_ID" property="objId" jdbcType="VARCHAR" />
+    <result column="OBJ_TYPE" property="objType" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectFileByAppId" resultMap="FileResultMap">
+  	SELECT f.* FROM `app_file` af 
+  	LEFT JOIN t_filetable f 
+  	ON af.file_id = f.id 
+  	WHERE 
+  	af.filestatus='1' 
+  	AND af.app_id=#{appId};
+  </select>
+</mapper>

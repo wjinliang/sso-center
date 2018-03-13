@@ -77,7 +77,7 @@
 						<th>日志类型</th>
 						<th>操作用户</th>
 						<th>时间</th>
-						<th>操作</th>
+						<!-- <th>操作</th> -->
 					</tr>
 					<c:forEach items="${page.list}" var="log" varStatus="status">
 						<tr class="tr">
@@ -87,13 +87,19 @@
 							<td class="td_center">
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${log.title}</td>
-							<td>${log.content}</td>
+							<td title="${log.content}">
+							<c:if test="${log.type=='0'}">
+								${log.content}
+							</c:if> 
+							<c:if test="${log.type=='1'}">
+								<a href="javascript:showLog('${log.content }')";>查看内容</a>
+							</c:if> 
 							<td>${log.type=='0'?'登录':'操作'}</td>
 							<td>${log.user}</td>
 							<td>${log.date}</td>
-							<td><a class="ext_btn ext_btn_error" href="javascript:deleteAction('./delete?id=${log.id}')">删除
+							<!-- <td><a class="ext_btn ext_btn_error" href="javascript:deleteAction('./delete?id=${log.id}')">删除
 							</a> 
-							</td>
+							</td> -->
 						</tr>
 					</c:forEach>
 				</table>
@@ -102,5 +108,14 @@
 			</div>
 		</div>
 </body>
-
+<script>
+	function showLog(content){
+		layer.open({
+			  type: 1,
+			  skin: 'layui-layer-rim', //加上边框
+			  area: ['600px', '240px'], //宽高
+			  content: content
+			});
+	}
+</script>
 </html>

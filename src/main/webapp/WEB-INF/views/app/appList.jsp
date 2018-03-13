@@ -37,7 +37,7 @@
 								<td>系统名称</td>
 								<td><input type="text" name="appName" value="${searchModel.appName }" class="input-text lh25"
 									size="20"></td>
-								<td>系统编号</td>
+								<td>系统编码</td>
 								<td><input type="text" name="appCode" value="${searchModel.appCode }" class="input-text lh25"
 									size="10"></td>
 								<td>系统状态</td>

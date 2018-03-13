@@ -31,7 +31,7 @@
               <form id="form1" action="../save" method="post" class="jqtransform">
                <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
                  <tr>
-                  <td class="td_right">机构名称<span class="red">*</span>：<span class="red">*</span>：</td>
+                  <td class="td_right">机构名称<span class="red">*</span>：</td>
                   <td class=""> 
 	                  <input type="hidden" name="id" value="${org.id }"/>
 					  <input type="hidden" name="parentId" value="${org.parentId}"/>
@@ -47,7 +47,7 @@
 	                  <input type="hidden" name="seq" class="input-text lh30" value="${org.seq }" size="40">
 					<input type="text" readonly="true" name="divisionName" class="input-text lh30" value="${division.name }" size="40">
                   </td>
-                  <td class="td_right">机构类型<span class="red">*</span>：<span class="red">*</span>：</td>
+                  <td class="td_right">机构类型<span class="red">*</span>：</td>
                   <td>
                   
                     <span class="fl">

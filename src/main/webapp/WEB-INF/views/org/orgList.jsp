@@ -57,7 +57,7 @@
 									<div class="box_center pt10 pb10">
 										<table class="form_table" border="0" cellpadding="0"
 											cellspacing="0">
-											<input type="hidden" name="divisionid" id="divisionId"
+											<input type="hidden" name="divisionId" id="divisionId"
 												value="${searchModel.divisionId}">
 											<input type="hidden" name="parentId" id="parentId"
 												value="${searchModel.parentId}">

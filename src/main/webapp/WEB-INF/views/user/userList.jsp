@@ -72,6 +72,10 @@
 												<td><input type="text" name="name"
 													value="${searchModel.name }" class="input-text lh25"
 													size="20"></td>
+													<td>登录名</td>
+												<td><input type="text" name="loginname"
+													value="${searchModel.loginname }" class="input-text lh25"
+													size="20"></td>
 												<%-- <td>机构代码</td>
 								<td><input type="text" name="appCode" value="${seachModel.code }" class="input-text lh25"
 									size="10"></td> --%>
@@ -152,6 +156,9 @@
 													<li><a
 													href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
 														编辑 </a></li>
+													<li><a
+													href="javascript:deleteAction('user/delete?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+														删除 </a></li>
 <%-- 													<li><a href="javascript:dialogPage('设置角色','user/setRole?code=${user.code }&id=${user.orgId }&divisionId=${searchModelOrg.divisionId }')">设置角色</a></li> --%>
 													<li><a href="javascript:repassword('${user.code }')">重置密码</a></li>
 													<li class="divider"></li>

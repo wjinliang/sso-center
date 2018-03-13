@@ -1,5 +1,5 @@
 /**
- * Created by chenguojun on 8/10/16.
+ * Created by wangjl on 8/10/17.
  */
 ;
 (function ($, window, document, undefined) {
@@ -75,7 +75,7 @@
                         	if(i==0){
                         		class_ = "on";
                         	}
-                            var ele = '<h3 class="'+class_+'">' + m.name
+                            var ele = '<h3 class="'+class_+'" data-title="' + m.name +'">' + m.name
                                 + '</h3>';
                             var subMenus = getSubMenu(menus, m.id);
                             if (subMenus.length > 0) {
@@ -84,6 +84,7 @@
                             var h3 = $(ele);
                             
                             $(div).append(h3);
+                            
                         });
                         var lis = $(div).find("li");
                         lis.on("mousedown",function(e){

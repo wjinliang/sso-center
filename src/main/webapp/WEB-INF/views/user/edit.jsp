@@ -35,6 +35,7 @@
                   <td class=""> 
 	                  <input type="hidden" name="code" value="${userAccount.code }"/>
 					  <input type="hidden" name="orgId" value="${userAccount.orgId}"/>
+					  <input type="hidden" name="divisionId" value="${org.divisionId}"/>
 					  <input type="hidden" id="systemId" name="systemId"
 								value="${userAccount.systemId}" />
 					  <input type="hidden"

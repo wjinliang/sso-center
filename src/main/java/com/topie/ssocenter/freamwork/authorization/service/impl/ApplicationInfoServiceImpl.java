@@ -12,9 +12,12 @@ import tk.mybatis.mapper.entity.Example.Criteria;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.topie.ssocenter.freamwork.authorization.dao.AppFileMapper;
 import com.topie.ssocenter.freamwork.authorization.dao.ApplicationInfoMapper;
 import com.topie.ssocenter.freamwork.authorization.dao.UserAccountMapper;
+import com.topie.ssocenter.freamwork.authorization.model.AppFile;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
+import com.topie.ssocenter.freamwork.authorization.model.FileEntity;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
@@ -32,6 +35,8 @@ public class ApplicationInfoServiceImpl extends
 	private ApplicationInfoMapper appMapper;
 	@Autowired
 	private UserAccountMapper userMapper;
+	@Autowired
+	private AppFileMapper appFileMapper;
 
 	@Override
 	public PageInfo<ApplicationInfo> findApplicationInfoList(int pageNum,
@@ -119,6 +124,31 @@ public class ApplicationInfoServiceImpl extends
 	@Override
 	public List<ApplicationInfo> selectAll() {
 		return super.selectAll();
+	}
+
+	@Override
+	public void insertAppFile(String appId, String fileId) {
+		AppFile apf = new AppFile();
+		Example ex = new Example(AppFile.class);
+		ex.createCriteria().andEqualTo("appId",appId).andEqualTo("filestatus","1");
+		List<AppFile> list = this.appFileMapper.selectByExample(ex);
+		for(AppFile f:list){
+			f.setFilestatus("0");
+			appFileMapper.updateByPrimaryKeySelective(f);
+		}
+		apf.setAppId(appId);
+		apf.setFileId(fileId);
+		apf.setFilestatus("1");
+		appFileMapper.insert(apf);
+	}
+
+	@Override
+	public FileEntity getAppFile(String appId) {
+		List<FileEntity> f = appFileMapper.selectFileByAppId(appId);
+		if(f.size()==0){
+			return null;
+		}
+		return f.get(0);
 	}
 
 }

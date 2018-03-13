@@ -56,7 +56,7 @@
 		<description>获取当前用户可以同步得权限Apps,权限限制（操作等级，用户等级，当前操作的用户权限，当前被操作的用户权限）</description>
 		<name>gAS</name>
 		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
-		<function-signature>String getCurrentUserApps(java.lang.String,java.lang.Long,java.lang.String)
+		<function-signature>com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo getCurrentUserApps(java.lang.String,java.lang.Long,java.lang.String)
 		</function-signature>
 		<example>${d:gAS('org',orgId,userId)}</example>
 	</function>
@@ -64,7 +64,7 @@
 		<description>获取当前用户可以同步得权限Apps, 没有 权限限制（操作等级，用户等级，当前操作的用户权限，当前被操作的用户权限）</description>
 		<name>gCAS</name>
 		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
-		<function-signature>String getCurrentUserApps()
+		<function-signature>com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo getCurrentUserApps()
 		</function-signature>
 		<example>${d:gCAS()}</example>
 	</function>
@@ -72,8 +72,16 @@
 		<description>获取当前用户通知</description>
 		<name>gNEWS</name>
 		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
-		<function-signature>String getNews(java.lang.Integer,java.lang.Integer,java.lang.String)
+		<function-signature>com.topie.ssocenter.freamwork.authorization.model.Notice getNews(java.lang.Integer,java.lang.Integer,java.lang.String)
 		</function-signature>
 		<example>${d:gNEWS(1,5,'notice')}</example>
+	</function>
+	<function>
+		<description>获取当前appI对应的用户手册</description>
+		<name>gAF</name>
+		<function-class>com.topie.ssocenter.freamwork.authorization.tld.userTDL</function-class>
+		<function-signature>com.topie.ssocenter.freamwork.authorization.model.FileEntity getAppFile(java.lang.String)
+		</function-signature>
+		<example>${d:gAF(appId)}</example>
 	</function>
 </taglib>

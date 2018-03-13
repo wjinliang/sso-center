@@ -52,7 +52,7 @@ public class ApplicationInfoController {
 				return model;
 		}
 
-		@RequestMapping({ "/listSynsApp" })
+		/*@RequestMapping({ "/listSynsApp" })
 		public void listSynsApp(
 				ModelAndView model,
 				@RequestParam(value = "thispage", required = false) Integer thispage,
@@ -68,7 +68,7 @@ public class ApplicationInfoController {
 				PageInfo<ApplicationInfo> page = appService.findApplicationInfoList(thispage, pagesize, app);
 				model.addObject(R.PAGE, page);
 				model.setViewName("/app/userAppList");
-		}
+		}*/
 
 		@RequestMapping({ "/form/{mode}" })
 		public ModelAndView gotoCreateAppPage(ModelAndView model,
@@ -173,7 +173,23 @@ public class ApplicationInfoController {
 				return ResponseUtil.success();
 		}
 
-
+		@RequestMapping({ "/appFile" })
+		public ModelAndView appFile(
+				ModelAndView model,
+				@RequestParam(value = "thispage", required = false) Integer thispage,
+				@RequestParam(value = "pagesize", required = false) Integer pagesize,
+				ApplicationInfo app) {
+				model.setViewName("/app/uploadfile");
+				PageInfo<ApplicationInfo> list = this.appService.selectCurrentUserSynApps();
+				model.addObject(R.PAGE, list);
+				return model;
+		}
+		@RequestMapping({ "/bindFile" })
+		@ResponseBody
+		public Object bindFile(String appId,String fileId) {
+			appService.insertAppFile(appId,fileId);
+			return ResponseUtil.success();
+		}
 		
 		/**
 		 * 单点页面

@@ -449,4 +449,17 @@ public class SynServiceImpl implements SynService {
 		example.createCriteria().andEqualTo("userId",code);
 		return this.synUserMapper.selectByExample(example);
 	}
+
+	@Override
+	public int deleteSynOrg(String orgId, String appId) {
+		Example ex = new Example(SynOrg.class);
+		ex.createCriteria().andEqualTo("orgId",orgId).andEqualTo("appId", appId);
+		return synOrgMapper.deleteByExample(ex);
+	}
+	@Override
+	public int deleteSynUser(String userId, String appId) {
+		Example ex = new Example(SynUser.class);
+		ex.createCriteria().andEqualTo("userId",userId).andEqualTo("appId", appId);
+		return synUserMapper.deleteByExample(ex);
+	}
 }

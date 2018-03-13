@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import com.topie.ssocenter.common.utils.AppUtil;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
+import com.topie.ssocenter.freamwork.authorization.model.FileEntity;
 import com.topie.ssocenter.freamwork.authorization.model.Notice;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.SynOrg;
@@ -212,6 +213,13 @@ public class userTDL {
 				.getBean("noticeServiceImpl");
 		PageInfo<Notice> page = noticeService.findCurrentUserNotice(pageNum, pageSize,type);
 		return page;
+	}
+	
+	public static FileEntity getAppFile(String appId) {
+		ApplicationInfoService appService = (ApplicationInfoService) AppUtil
+				.getBean("applicationInfoServiceImpl");
+		FileEntity f = appService.getAppFile(appId);
+		return f;
 	}
 
 }
