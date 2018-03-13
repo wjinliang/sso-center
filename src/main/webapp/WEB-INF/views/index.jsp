@@ -88,12 +88,12 @@
         	<ul class="systemList systemList${ fn:length(synAppList)} clearfix">
         	<c:forEach items="${synAppList}" var="app" varStatus="status">
             	<li><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
-            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span>
-            	<p>${app.appName}</p>
+            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span></a>
+            	<p><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}">${app.appName}<span class="protect">[维护中]</span></a>
             	<c:set var="file" value="${d:gAF(app.id)}"></c:set>
-            	</a><p><c:if test="${file!=null}"><a href="javascript:download('<%=basePath%>/KE/download/${file.id }')">用户操作手册</a></c:if></p></li>
+            	<c:if test="${file!=null}"><a href="javascript:download('<%=basePath%>/KE/download/${file.id }')">用户操作手册</a></c:if></p></li>
             </c:forEach>
-                <li><a href="./home"><span><img src="<%=basePath%>/assets/index/img/icon13.png"></span><p>单点登录</p></a></li>
+                <li><a href="./home"><span><img src="<%=basePath%>/assets/index/img/icon13.png"></span><p><a href="./home">单点登录</a></p></a></li>
                 
             </ul>
         </div>
