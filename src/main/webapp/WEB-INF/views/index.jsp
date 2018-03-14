@@ -87,11 +87,21 @@
         	 <c:set var="synAppList" value="${d:gCAS()}"></c:set>
         	<ul class="systemList systemList${ fn:length(synAppList)} clearfix">
         	<c:forEach items="${synAppList}" var="app" varStatus="status">
-            	<li><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
-            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span></a>
-            	<p><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}">${app.appName}<span class="protect">[维护中]</span></a>
+            	<li>
+            	<!-- 维护中 -->
+            	<c:if test="${app.status=='2'}">
+	            	<a target="_blank" href="javascript:return false;"><span>
+	            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span></a>
+	            	<p><a target="_blank" href="javascript:return false;">${app.appName}<span class="protect">[维护中]</span></a></p>
+            	</c:if>
+            	<c:if test="${app.status=='1'}">
+	            	<a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
+	            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span></a>
+	            	<p><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}">${app.appName}</a></p>
+            	</c:if>
             	<c:set var="file" value="${d:gAF(app.id)}"></c:set>
-            	<c:if test="${file!=null}"><a href="javascript:download('<%=basePath%>/KE/download/${file.id }')">用户操作手册</a></c:if></p></li>
+            	<c:if test="${file!=null}"><a href="javascript:download('<%=basePath%>/KE/download/${file.id }')">用户操作手册</a></c:if>
+            	</li>
             </c:forEach>
                 <li><a href="./home"><span><img src="<%=basePath%>/assets/index/img/icon13.png"></span><p><a href="./home">单点登录</a></p></a></li>
                 

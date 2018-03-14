@@ -55,20 +55,20 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 	@Override
 	public PageInfo<Org> selectCurrentDivisionOrgPage(Integer pageNum, Integer pageSize,
 			Org org) {
-		Example ex = new Example(Org.class);
+		Example ex = new Example(Org.class,false);
 		Criteria c = ex.createCriteria();
 		String did = org.getDivisionId();
+		Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
+		Org o = this.getMapper().selectByPrimaryKey(orgId);
+		if(o==null){//如果当前用户的机构不存在   返回空
+			return ResponseUtil.emptyPage();
+		}
 		if(StringUtils.isEmpty(did)){
-			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
-			Org o = this.getMapper().selectByPrimaryKey(orgId);
-			if(o==null){//如果当前用户的机构不存在   返回空
-				return ResponseUtil.emptyPage();
-			}
 			org.setDivisionId(o.getDivisionId());//设置
 		}
+		Division d = divisionService.selectByKey(org.getDivisionId());
 		if(StringUtils.isNotEmpty(org.getName())){//要查询当前用户所能看到的所有机构匹配的
 			c.andLike("name", "%"+org.getName()+"%");
-			Division d = divisionService.selectByKey(org.getDivisionId());
 			String dCode = d.getCode()+"";
 			//d.getLevel();
 			String type = d.getType();
@@ -105,10 +105,10 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 				return ResponseUtil.emptyPage();
 			}
 			List<String> ids = new ArrayList<String>();
-			for(Division d: list){
-				ids.add(d.getId());
+			for(Division ds: list){
+				ids.add(ds.getId());
 			}
-			c.andIn("divisionId",ids );
+			c.andIn("divisionId",ids);
 		}else{
 			c.andEqualTo("divisionId", org.getDivisionId());
 		}
@@ -136,12 +136,26 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 				c.andEqualTo("divisionId", org.getDivisionId());
 			}
 		}*/
+		List<String> listSYSIDS = new ArrayList<String>();
 		if(org.getSystemId()!=null){
 			c.andEqualTo("systemId", org.getSystemId());
+		}else{//获取当前用户可以看到的系统
+			Division division  = divisionService.selectByKey(o.getDivisionId());
+			String type = division.getType();
+			if(type.equals("0")){
+				
+			}else{
+				PageInfo<ApplicationInfo> apps = appService.selectCurrentUserSynApps();
+				for(ApplicationInfo a:apps.getList()){
+					listSYSIDS.add(a.getId());
+				}
+				if(listSYSIDS.size()<=0)return ResponseUtil.emptyPage();
+				c.andIn("synSystemId", listSYSIDS);//无效
+			}
 		}
 		ex.setOrderByClause("seq asc");
 		PageHelper.startPage(pageNum, pageSize);
-		List<Org> list = getMapper().selectByExample(ex);
+		List<Org> list = orgMapper.selectByExampleEx(ex,listSYSIDS);
 		return new PageInfo<Org>(list);
 	}
 	/**

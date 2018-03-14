@@ -36,10 +36,9 @@ public class SynInfoServiceImpl implements SynInfoService{
 	}
 
 	@Override
-	public String getOrgInfo(String orgId) {
+	public String getOrgInfo(Long orgId) {
 		try{
-			Long oid = Long.valueOf(orgId);
-			Org org  = this.orgService.selectByKey(oid);
+			Org org  = this.orgService.selectByKey(orgId);
 			return JSON.toJSONString(org);
 		}catch(Exception e){
 			return null;

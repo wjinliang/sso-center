@@ -5,7 +5,7 @@ public interface SynInfoService {
 	
 	public abstract String getUserInfo(String userId);
 	
-	public abstract String getOrgInfo(String orgId);
+	public abstract String getOrgInfo(Long orgId);
 	
 	public abstract String getRoleInfo(String roleId);
 	

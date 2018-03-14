@@ -55,4 +55,32 @@
 		AND t.`NAME` LIKE CONCAT('%',#{org.name},'%')
   	</if>
   </select>
+  <select id="selectByExampleEx" resultMap="BaseResultMap">
+  	SELECT distinct t.* 
+	FROM t_org t 
+	LEFT JOIN syn_org t1
+	ON t.id = t1.org_id
+	<where>
+	<foreach collection="example.oredCriteria" item="ite" index="ind">
+		<foreach collection="ite.criteria" item="item" index="index">
+			<if test="item.listValue">
+				${item.conditionValue} 
+				<foreach collection="item.value" item="citem" open="(" close=")" separator=",">
+					#{citem}
+				</foreach>
+			</if>
+			<if test="item.singleValue">
+				${item.condition} #{item.value}
+			</if>
+		</foreach>
+	</foreach>
+	<if test="systemIds!=null and systemIds.size() &gt; 0">
+		AND t1.app_id IN 
+		<foreach collection="systemIds" item="citem" open="(" close=")" separator=",">
+			#{citem}
+		</foreach>
+	</if>
+	</where>
+	ORDER BY ${example.orderByClause}
+  </select>
 </mapper>
