@@ -44,7 +44,6 @@
 								class="list_table">
 								<tr>
 									<th width="30">#</th>
-									<th width="30">#</th>
 									<th>同步系统</th>
 									<th>同步类型</th>
 									<th>同步结果</th>
@@ -53,8 +52,6 @@
 								<c:forEach items="${resultList}" var="app" varStatus="status">
 									<tr class="tr">
 
-										<td class="td_center"><input type="checkbox"
-											value='${app.appCode }'></td>
 										<td class="td_center">
 											${status.count}</td>
 										<td>${app.appName}</td>
@@ -77,9 +74,12 @@
 	</div>
 	</div>
 	<script type="text/javascript">
-		jQuery(document).ready(function() {
-			
-		});
+	var redirect="${redirect}";
+	jQuery(document).ready(function() {
+		if(redirect!='' && redirect!="null"){
+			dialogPage("用户授权",redirect);
+		}
+	});
 		
 	</script>
 </body>

@@ -92,18 +92,22 @@
             	<c:if test="${app.status=='2'}">
 	            	<a target="_blank" href="javascript:return false;"><span>
 	            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span></a>
-	            	<p><a target="_blank" href="javascript:return false;">${app.appName}<span class="protect">[维护中]</span></a></p>
+	            	<p><a target="_blank" href="javascript:return false;">${app.appName}<span class="protect">[维护中]</span></a>
             	</c:if>
             	<c:if test="${app.status=='1'}">
 	            	<a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}"><span>
 	            	<img src="<%=basePath%>/assets/index/img/${app.appCode}.png"></span></a>
-	            	<p><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}">${app.appName}</a></p>
+	            	<p><a target="_blank" href="<%=basePath%>/syn/ssoServiceBySession?xtbs=${app.appCode}">${app.appName}</a>
             	</c:if>
             	<c:set var="file" value="${d:gAF(app.id)}"></c:set>
-            	<c:if test="${file!=null}"><a href="javascript:download('<%=basePath%>/KE/download/${file.id }')">用户操作手册</a></c:if>
+            	<c:if test="${file!=null}"><a style="font-size: 12px;color: #cee;" href="javascript:download('<%=basePath%>/KE/download/${file.id }')">用户操作手册</a></c:if>
+            	</p>
             	</li>
             </c:forEach>
-                <li><a href="./home"><span><img src="<%=basePath%>/assets/index/img/icon13.png"></span><p><a href="./home">单点登录</a></p></a></li>
+                <li><a href="./home"><span><img src="<%=basePath%>/assets/index/img/icon13.png"></span></a>
+                <p><a href="./home">单点登录</a>
+                <a style="font-size: 12px;color: #cee;" href="javascript:download('<%=basePath%>/KE/download/1')">用户操作手册</a>
+            	</p></li>
                 
             </ul>
         </div>

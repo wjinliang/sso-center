@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.common.Mapper;
@@ -51,6 +52,8 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 	private SynService synService;
 	@Autowired
 	private ApplicationInfoService appService;
+	@Value("${allOrgAuthoriry.id}")
+	private String ALLORGAUTHORITYID;
 
 	@Override
 	public PageInfo<Org> selectCurrentDivisionOrgPage(Integer pageNum, Integer pageSize,
@@ -142,16 +145,30 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		}else{//获取当前用户可以看到的系统
 			Division division  = divisionService.selectByKey(o.getDivisionId());
 			String type = division.getType();
-			if(type.equals("0")){
-				
+			boolean f = true;
+			List<String> list = SecurityUtils.getCurrentSecurityUserAuthorities();
+			for(String au:list){
+				if(au.equals(ALLORGAUTHORITYID)){
+					f = false;
+					break;
+				}
+			}
+			if(f){//如果没有权限查看全部 则查询部分
+				PageInfo<ApplicationInfo> apps = appService.selectCurrentUserSynApps();
+				for(ApplicationInfo a:apps.getList()){
+					listSYSIDS.add(a.getId());
+				}
+				if(listSYSIDS.size()<=0)return ResponseUtil.emptyPage();
+			}
+			/*if(type.equals("0")){
 			}else{
 				PageInfo<ApplicationInfo> apps = appService.selectCurrentUserSynApps();
 				for(ApplicationInfo a:apps.getList()){
 					listSYSIDS.add(a.getId());
 				}
 				if(listSYSIDS.size()<=0)return ResponseUtil.emptyPage();
-				c.andIn("synSystemId", listSYSIDS);//无效
-			}
+				//c.andIn("synSystemId", listSYSIDS);//无效
+			}*/
 		}
 		ex.setOrderByClause("seq asc");
 		PageHelper.startPage(pageNum, pageSize);

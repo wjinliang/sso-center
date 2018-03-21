@@ -64,7 +64,7 @@
 	<foreach collection="example.oredCriteria" item="ite" index="ind">
 		<foreach collection="ite.criteria" item="item" index="index">
 			<if test="item.listValue">
-				${item.conditionValue} 
+				${item.condition} 
 				<foreach collection="item.value" item="citem" open="(" close=")" separator=",">
 					#{citem}
 				</foreach>

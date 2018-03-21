@@ -15,6 +15,7 @@
 
 	<context:property-placeholder
 		location="classpath:config/properties/security.properties,
+            classpath:config/properties/app.properties,
 		classpath:config/properties/app.properties" />
 
 	<!-- 开启注解 -->

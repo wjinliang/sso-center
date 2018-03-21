@@ -1,6 +1,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="/WEB-INF/tlds/c.tld" prefix="c"%>
+<%@ taglib uri="/WEB-INF/tlds/user.tld" prefix="d"%>
 <%@page import="java.util.List"%>
 <%@page import="com.topie.ssocenter.freamwork.authorization.model.JKApplicationInfo,com.github.pagehelper.PageInfo"%>
 <%
@@ -93,7 +94,9 @@
 										<td class="td_center">
 											${(page.pageNum-1)*page.pageSize+status.count}</td>
 										<td>${user.name}(${user.loginname })</td>
-										<td>${user.orgId}</td>
+										<td><c:set var="uorg" value="${d:gOBID(user.orgId)}">
+										</c:set>
+										${uorg.name}</td>
 										<td>${user.lastlogintime }</td>
 										<td><a class="ext_btn"
 											href="javascript:confirmAction('deleteMerge?userid=${user.code }');">

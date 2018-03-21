@@ -291,7 +291,7 @@
 					oldpassword : {
 						required : true
 					},
-					newpassword : {
+					newPassword : {
 						required : true,
 						isPassword : true
 					},

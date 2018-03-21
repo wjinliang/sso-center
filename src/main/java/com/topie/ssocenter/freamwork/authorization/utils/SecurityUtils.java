@@ -1,6 +1,7 @@
 package com.topie.ssocenter.freamwork.authorization.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -34,9 +36,19 @@ public class SecurityUtils {
     public static OrangeSideSecurityUser getCurrentSecurityUser() {
     	try{
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userName = null;
         if (principal instanceof OrangeSideSecurityUser)
             return (OrangeSideSecurityUser) principal;
+    	}catch(Exception ex){
+    		//ex.printStackTrace();
+    	}
+        return null;
+    }
+    public static List<String> getCurrentSecurityUserAuthorities() {
+    	try{
+    		List<String> aus = new ArrayList<String>();
+    		Collection<GrantedAuthority> authorities = getCurrentSecurityUser().getAuthorities();
+    		authorities.forEach(au->{aus.add(au.getAuthority());} );
+    		return aus;
     	}catch(Exception ex){
     		//ex.printStackTrace();
     	}

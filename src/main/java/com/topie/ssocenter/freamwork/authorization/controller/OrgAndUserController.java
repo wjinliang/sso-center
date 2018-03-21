@@ -289,10 +289,14 @@ public class OrgAndUserController {
 			model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
 		}
 		if(redirect==1){
-			model.setViewName("redirect:"
-					+ "../syn/ssoServiceBySession?xtbs="+appCode
+			model.addObject("redirect", "../syn/ssoServiceBySession?xtbs="+appCode
 					+"&TYPE="+
 					R.ORG_AUTHORIZE+"&ID="+org.getId());
+			/*model.setViewName("redirect:"
+					+ "../syn/ssoServiceBySession?xtbs="+appCode
+					+"&TYPE="+
+					R.ORG_AUTHORIZE+"&ID="+org.getId());*/
+			model.setViewName("/org/synResult");
 		}
 		if(redirect > 1){
 			model.setViewName("/org/synResult");
@@ -625,11 +629,14 @@ public class OrgAndUserController {
 			model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
 		}
 		if(redirect==1){
-			model.setViewName("/user/synResult");
+			model.addObject("redirect","/syn/ssoServiceBySession?xtbs="+appCode
+					+"&TYPE="+
+					R.USER_AUTHORIZE+"&ID="+user.getCode());
 			/*model.setViewName("redirect:"
 					+ "/syn/ssoServiceBySession?xtbs="+appCode
 					+"&TYPE="+
 					R.ORG_AUTHORIZE+"&ID="+user.getCode());*/
+					model.setViewName("/user/synResult");
 		}
 		
 		if(redirect > 1){

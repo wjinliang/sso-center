@@ -70,11 +70,11 @@
 
     <beans:bean id="orangeUserCache"
                 class="com.topie.ssocenter.freamwork.authorization.security.OrangeSideUserCache">
-        <beans:property name="cache" ref="redisCache"/>
+        <!-- <beans:property name="cache" ref="redisCache"/> -->
     </beans:bean>
 
-    <beans:bean id="redisCache" class="com.topie.ssocenter.common.cache.redis.cache.RedisCache"/>
-
+    <!-- <beans:bean id="redisCache" class="com.topie.ssocenter.common.cache.redis.cache.RedisCache"/>
+ -->
     <!-- 资源国际化 -->
     <beans:bean id="messageSource"
                 class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

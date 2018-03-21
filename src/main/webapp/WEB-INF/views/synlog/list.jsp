@@ -51,7 +51,7 @@
 				
 			</div>
 		</div>
-		<c:set value="${d:gDID()=='1' }" var="isTopLevel" />
+		<c:set value="false" var="isTopLevel" />
 		<div id="table" class="mt10">
 			<div class="box span10 oh">
 			<div><span id="timeCount"></span></div>
