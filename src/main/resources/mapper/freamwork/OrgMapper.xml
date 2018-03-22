@@ -58,8 +58,14 @@
   <select id="selectByExampleEx" resultMap="BaseResultMap">
   	SELECT distinct t.* 
 	FROM t_org t 
-	LEFT JOIN syn_org t1
-	ON t.id = t1.org_id
+	<if test="systemIds!=null and systemIds.size() &gt; 0">
+		LEFT JOIN syn_org t1
+		ON t.id = t1.org_id
+	</if>
+	<if test="parentDivisionId!=null and parentDivisionId!=''">
+		LEFT JOIN t_division t2
+		ON t.division_id = t2.ID
+	</if>
 	<where>
 	<foreach collection="example.oredCriteria" item="ite" index="ind">
 		<foreach collection="ite.criteria" item="item" index="index">
@@ -79,6 +85,9 @@
 		<foreach collection="systemIds" item="citem" open="(" close=")" separator=",">
 			#{citem}
 		</foreach>
+	</if>
+	<if test="parentDivisionId!=null and parentDivisionId!=''">
+		t2.PARENT_ID = #{parentDivisionId}
 	</if>
 	</where>
 	ORDER BY ${example.orderByClause}

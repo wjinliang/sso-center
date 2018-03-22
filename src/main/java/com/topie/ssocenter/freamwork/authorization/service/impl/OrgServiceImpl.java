@@ -69,6 +69,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		if(StringUtils.isEmpty(did)){
 			org.setDivisionId(o.getDivisionId());//设置
 		}
+		String parentDivisionId = null;
 		Division d = divisionService.selectByKey(org.getDivisionId());
 		if(StringUtils.isNotEmpty(org.getName())){//要查询当前用户所能看到的所有机构匹配的
 			c.andLike("name", "%"+org.getName()+"%");
@@ -103,7 +104,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 			}
 		}else if(org.getParentId()!=null){//查看子机构   子区划下的机构
 			//c.andEqualTo("parentId", org.getId());
-			List<Division> list = this.divisionService.findByPid(org.getDivisionId());
+			/*List<Division> list = this.divisionService.findByPid(org.getDivisionId());
 			if(list.size()==0){
 				return ResponseUtil.emptyPage();
 			}
@@ -111,7 +112,8 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 			for(Division ds: list){
 				ids.add(ds.getId());
 			}
-			c.andIn("divisionId",ids);
+			c.andIn("divisionId",ids);*/
+			parentDivisionId = org.getDivisionId();
 		}else{
 			c.andEqualTo("divisionId", org.getDivisionId());
 		}
@@ -172,7 +174,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		}
 		ex.setOrderByClause("seq asc");
 		PageHelper.startPage(pageNum, pageSize);
-		List<Org> list = orgMapper.selectByExampleEx(ex,listSYSIDS);
+		List<Org> list = orgMapper.selectByExampleEx(ex,listSYSIDS,parentDivisionId);
 		return new PageInfo<Org>(list);
 	}
 	/**

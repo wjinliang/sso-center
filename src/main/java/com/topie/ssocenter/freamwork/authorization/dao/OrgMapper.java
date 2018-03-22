@@ -21,5 +21,7 @@ public interface OrgMapper extends Mapper<Org> {
 
 	List<Org> selectToSynOrgByAppId(@Param("appId")String appId,@Param("org") Org org);
 
-	List<Org> selectByExampleEx(@Param("example")Example ex, @Param("systemIds")List<String> listSYSIDS);
+	List<Org> selectByExampleEx(@Param("example")Example ex,
+			@Param("systemIds")List<String> listSYSIDS,
+			@Param("parentDivisionId")String parentDivisionId);
 }
