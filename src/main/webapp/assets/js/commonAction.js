@@ -300,6 +300,7 @@ function getAction(url,success){
                     var matches = filenameRegex.exec(disposition);
                     if (matches != null && matches[1]) {
                         filename = matches[1].replace(/['"]/g, '');
+						filename = decodeURI(filename);
                     }
                 }
                 var type = xhr.getResponseHeader('Content-Type');

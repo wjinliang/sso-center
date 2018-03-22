@@ -3,6 +3,7 @@ package com.topie.ssocenter.freamwork.authorization.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -806,13 +807,16 @@ public class OrgAndUserController {
 		String fileName = "";
 		Org o = this.orgService.selectByKey(org.getId());
 		try {
-			//fileName = java.net.URLEncoder.encode("报名统计表", "ISO8859_1");
-			fileName=new String((o.getName()+"导出用户").getBytes(), "ISO8859_1");
+			String name = o.getName()+"导出用户.xls";
+			request.setCharacterEncoding("UTF-8");
+		    //第一步：设置响应类型
+		    response.setContentType("application/force-download");//应用程序强制下载
+		    //设置响应头，对文件进行url编码
+		    name = URLEncoder.encode(name, "UTF-8");
+		    response.setHeader("Content-Disposition", "attachment;filename="+name); 
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}  
-		response.setContentType("application/vnd.ms-excel;charset=ISO8859_1"); 
-		response.setHeader("content-disposition", "attachment;filename="+fileName+".xls");  
 		OutputStream fOut = null;
 		try {
 			fOut = response.getOutputStream();

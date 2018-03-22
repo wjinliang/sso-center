@@ -93,6 +93,8 @@
 								<input type="button"
 									onclick="javascript:openPage('./user/new?divisionId=${searchModelOrg.divisionId}&orgId=${searchModel.orgId }');"
 									name="button" class="btn btn82 btn_add" value="新增">
+									
+      							 <input onclick="javascript:download('./excelExport?divisionId=${searchModelOrg.divisionId}&id=${searchModel.orgId }&orgId=${searchModel.orgId }');" type="button" name="button" class="btn btn82 btn_export" value="导出">
 								<!-- <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
 			 <input type="button" name="button" class="btn btn82 btn_del" value="删除"> 

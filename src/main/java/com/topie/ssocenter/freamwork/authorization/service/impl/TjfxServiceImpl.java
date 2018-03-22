@@ -74,4 +74,19 @@ public class TjfxServiceImpl implements TjfxService {
 		return this.tjfxMapper.selectBase(type,isDelete,systemId);
 	}
 
+	@Override
+	public List<Map> getSynUserCountByMonth(ApplicationInfo app) {
+		return this.tjfxMapper.getSynUserCountByMonth(app);
+	}
+
+	@Override
+	public List<Map> getSynErrorCount(ApplicationInfo app) {
+		return this.tjfxMapper.getSynErrorCount(app);
+	}
+
+	@Override
+	public List<Map> getLoginTime(ApplicationInfo app) {
+		return this.tjfxMapper.getLoginTime(app);
+	}
+
 }

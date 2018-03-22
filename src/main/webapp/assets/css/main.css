@@ -118,24 +118,25 @@
 height: 37px;
 background: url('../images/box_top.png') 0px 0px repeat-x;
 line-height: 37px;
+text-align: left;
 /* border-left: 1px solid #d3dbde; */
 }
 .list_table td{
 	border-bottom: 1px solid #d3dbde;
 /*     border-left: 1px solid #d3dbde; */
     padding: 5px;
-    text-align: center;
+    text-align: left;
 }
 .form_table td{
 	padding: 5px 5px;
 }
-.td_center{text-align: center;}
-.td_left{text-align: left;}
-.td_right{text-align: right;}
 .td_right, .td_center, .td_left{
 	width: 120px;
     line-height: 21px;
 }
+td.td_center{text-align: center;}
+td.td_left{text-align: left;}
+td.td_right{text-align: right;}
 /*for IE7,8表格拖动失效*/
 .grip {
 	width: 20px;

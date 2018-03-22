@@ -15,4 +15,10 @@ public interface TjfxService {
 
 	List<Map> getUserDelCountForDivision(ApplicationInfo app);
 
+	List<Map> getSynUserCountByMonth(ApplicationInfo app);
+
+	List<Map> getSynErrorCount(ApplicationInfo app);
+
+	List<Map> getLoginTime(ApplicationInfo app);
+
 }

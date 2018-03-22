@@ -56,7 +56,10 @@
     	<div class="left">
         	<div class="newsWrapper">
                 <div class="news-con">
-                    <h1 class="tith1 titbg1"><a href="./notice/notices" target="_blank">通知公告</a></h1>
+                    <h1 class="tith1 titbg1">
+                    <a href="./notice/notices" target="_blank">通知公告</a>
+                    <a href="./notice/notices" target="_blank" style="float: right;padding-right: 15px;"> 更多&gt;&gt;</a>
+                    </h1>
                     <div class="newsList">
                         <ul>
                         <c:set var="page" value="${d:gNEWS(1,5,'notice')}"></c:set>
@@ -69,7 +72,10 @@
                     </div>
                 </div>	
                 <div class="news-con" style="margin-top:20px;">
-                    <h1 class="tith1 titbg2"><a href="./notice/downloads" target="_blank">资料下载</a></h1>
+                    <h1 class="tith1 titbg2">
+                    <a href="./notice/downloads" target="_blank">资料下载</a>
+                    <a href="./notice/downloads" target="_blank" style="float: right;padding-right: 15px;"> 更多&gt;&gt;</a></h1>
+                    </h1>
                     <div class="newsList">
                         <ul>
                             <c:set var="page" value="${d:gNEWS(1,5,'download')}"></c:set>

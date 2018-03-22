@@ -107,10 +107,10 @@
 								<tr>
 									<th width="30">#</th>
 									<th width="30">#</th>
-									<th>组织机构名称</th>
-									<th>组织机构编码</th>
-									<th>查看下级组织机构</th>
-									<th>查看用户</th>
+									<th width="270" style="text-align: left;">组织机构名称</th>
+									<th width="127">组织机构编码</th>
+									<th width="167">查看下级组织机构</th>
+									<th width="130">查看用户</th>
 								</tr>
 								<c:forEach items="${page.list}" var="org" varStatus="status">
 									<tr class="tr">
@@ -119,7 +119,7 @@
 											value='${org.id }'></td>
 										<td class="td_center">
 											${(page.pageNum-1)*page.pageSize+status.count}</td>
-										<td>
+										<td class="td_left">
 										<c:if test="${isAdm}">
 										<a
 											href="javascript:openPage('./form/edit?divisionId=${org.divisionId}&id=${org.id }');">

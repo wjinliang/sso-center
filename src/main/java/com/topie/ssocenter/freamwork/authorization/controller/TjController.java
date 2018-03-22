@@ -159,10 +159,13 @@ public class TjController {
 	 * @param app
 	 * @return
 	 */
-	@RequestMapping("/tjyh/monthUser")
+	@RequestMapping("/tjfx/monthUser")
 	public ModelAndView monthUser(ModelAndView model,ApplicationInfo
 			app){
-		//TODO 按月份统计各个系统同步用户数量 select SUBSTR(syn_time,1,7),COUNT(id)  from syn_user t1 GROUP BY SUBSTR(syn_time,1,7) ;
+		// 按月份统计各个系统同步用户数量 select SUBSTR(syn_time,1,7),COUNT(id)  from syn_user t1 GROUP BY SUBSTR(syn_time,1,7) ;
+		List<Map> list = this.tjfxService.getSynUserCountByMonth(app);
+		model.addObject("list", list);
+		model.setViewName("tjfx/synUserCountMonth");
 		return model;
 	}
 	
@@ -172,15 +175,26 @@ public class TjController {
 	 * @param app
 	 * @return
 	 */
-	@RequestMapping("/tjyh/synLog")
+	@RequestMapping("/tjfx/synLog")
 	public ModelAndView synLog(ModelAndView model,ApplicationInfo
 			app){
-		//TODO select SUBSTR(t.syn_result,LOCATE("：" ,syn_result)),count(id) from syn_log t GROUP BY SUBSTR(t.syn_result,LOCATE("：" ,syn_result))
+		// select SUBSTR(t.syn_result,LOCATE("：" ,syn_result)),count(id) from syn_log t GROUP BY SUBSTR(t.syn_result,LOCATE("：" ,syn_result))
+		List<Map> list = this.tjfxService.getSynErrorCount(app);
+		model.addObject("list", list);
+		model.setViewName("tjfx/synErrorCount");
 		return model;
 	}
 	/**
 	 * 不同时间段 用户登录统计
 	 */
-	//TODO select SUBSTR(date, 12,2 ),COUNT(id) from t_log t where  t.TYPE='0' group by SUBSTR(date, 12,2)
+	@RequestMapping("/tjfx/loginTime")
+	public ModelAndView loginTime(ModelAndView model,ApplicationInfo
+			app){
+		// select SUBSTR(date, 12,2 ),COUNT(id) from t_log t where  t.TYPE='0' group by SUBSTR(date, 12,2)
+		List<Map> list = this.tjfxService.getLoginTime(app);
+		model.addObject("list", list);
+		model.setViewName("tjfx/loginTime");
+		return model;
+	}
 	
 }

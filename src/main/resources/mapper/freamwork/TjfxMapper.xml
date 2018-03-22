@@ -255,4 +255,15 @@
 				a left join t_division d on d.ID = a.PARENT_ID GROUP BY d.`NAME`
 				order by d.`NAME`) as shi ON t.`NAME`=shi.`NAME` order by shengcount desc
   </seq> -->
+  
+  <select id="getSynUserCountByMonth" resultType="java.util.Map">
+  	 select SUBSTR(syn_time,1,7) as month,COUNT(id) as count  from syn_user t1 GROUP BY SUBSTR(syn_time,1,7)
+  </select>
+  
+  <select id="getSynErrorCount" resultType="java.util.Map">
+  	 select SUBSTR(t.syn_result,LOCATE("：" ,syn_result)+1) as msg,count(id) as count from syn_log t GROUP BY SUBSTR(t.syn_result,LOCATE("：" ,syn_result)+1)
+  </select>
+  <select id="getLoginTime" resultType="java.util.Map">
+  	 select SUBSTR(date, 12,2 ) as time,COUNT(id) as count from t_log t where  t.TYPE='0' group by SUBSTR(date, 12,2)
+  </select>
 </mapper>
