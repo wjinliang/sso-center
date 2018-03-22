@@ -32,7 +32,7 @@
 					<tr>
 						<th width="30">#</th>
 						<th>系统名称</th>
-						<th>系统编号</th>
+						<th>系统状态</th>
 						<th>操作</th>
 					</tr>
 					<c:forEach items="${page.list}" var="app" varStatus="status">
@@ -41,9 +41,21 @@
 							<td class="td_center">
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${app.appName}</td>
-							<td>${app.appCode}</td>
+							<td><c:choose>
+									<c:when test="${app.status=='1'}">
+										<font color="green">启用</font>
+									</c:when>
+									<c:when test="${app.status=='2'}">
+										<font color="red">维护中</font>
+									</c:when>
+									<c:otherwise>
+										<font color="red">禁用</font>
+									</c:otherwise>
+								</c:choose></td>
 							<td>
-							<a class="ext_btn" href="<%=path%>/syn/ssoServiceBySession?xtbs=${app.appCode}" target="_blank">登录</a>
+							<c:if test="${app.status=='1'}">
+								<a class="ext_btn" href="<%=path%>/syn/ssoServiceBySession?xtbs=${app.appCode}" target="_blank">登录</a>
+							</c:if>
 						</td>
 						</tr>
 					</c:forEach>

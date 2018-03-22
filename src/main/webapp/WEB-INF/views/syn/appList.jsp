@@ -47,6 +47,7 @@
 												<select name="status" class="select">
 													<option value="">请选择</option>
 													<option <c:if test="${'1' eq searchModel.status}">selected</c:if> value="1">启用</option>
+													<option <c:if test="${'2' eq searchModel.status}">selected</c:if> value="2">维护中</option>
 													<option <c:if test="${'0' eq searchModel.status}">selected</c:if> value="0">禁用</option>
 												</select>
 											</div>
@@ -100,6 +101,9 @@
 							<td><c:choose>
 									<c:when test="${app.status=='1'}">
 										<font color="green">启用</font>
+									</c:when>
+									<c:when test="${app.status=='2'}">
+										<font color="red">维护中</font>
 									</c:when>
 									<c:otherwise>
 										<font color="red">禁用</font>

@@ -35,7 +35,7 @@
                         	${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}
                         	</c:if>
                        	</div>
-                        <p class="p1"><input type="text" autocomplete="off" class="alterInput" name="j_username" id="username" placeholder="请输入登录名" value=""></p>
+                        <p class="p1"><input type="text" autocomplete="on" class="alterInput" name="j_username" id="username" placeholder="请输入登录名" value=""></p>
                         <p class="p2"><input type="password" autocomplete="off" class="alterInput" name="j_password" id="passwords" placeholder="请输入密码" value=""></p>
 	                        <p class="p3 clearfix">
 	                            <input type="text" autocomplete="off" class="alterInput" id="acreditcode" placeholder="请输入验证码" value="" name="j_captcha" style="border-left:1px solid #ccc; width:55%; float:left;">

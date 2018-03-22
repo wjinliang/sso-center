@@ -47,6 +47,7 @@
 												<select name="status" class="select">
 													<option value="">请选择</option>
 													<option <c:if test="${'1' eq searchModel.status}">selected</c:if> value="1">启用</option>
+													<option <c:if test="${'2' eq searchModel.status}">selected</c:if> value="2">维护中</option>
 													<option <c:if test="${'0' eq searchModel.status}">selected</c:if> value="0">禁用</option>
 												</select>
 											</div>

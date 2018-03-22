@@ -232,7 +232,7 @@
 			layer.prompt({title: "请输入要重置的密码！", formType: 1},function(val, index){  
 				    var tel = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={} :";'<>?,.\/]).{8,30}$/;
 				    if(!tel.test(val)){
-				    	layer.alert("必须字母数字符号汇合且大于8位");
+				    	layer.alert("必须字母数字符号混合且大于8位");
 				    	return false;
 				    }
 					commitRep(val,userId);

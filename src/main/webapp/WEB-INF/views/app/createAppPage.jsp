@@ -130,6 +130,7 @@
                    <td class="">
                      <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
                     <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
+                   <input type="button" name="button" onclick="javascript:window.location.href='../listApp'" class="btn btn82 btn_back" value="返回">
                    </td>
                  </tr>
                </table>
