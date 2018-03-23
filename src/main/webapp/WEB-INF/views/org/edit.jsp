@@ -104,6 +104,9 @@
                    <td class="">
                      <input type="submit" name="button" class="btn btn82 btn_save2" value="保存"> 
                     <input type="reset" name="button" class="btn btn82 btn_res" value="重置"> 
+                    <c:if test="${mode=='edit'}">
+                    	<input type="button" name="button" onclick="javascript:window.location.href='../auth?id=${org.id}'" class="btn btn82 btn_checked" value="授权"> 
+                    </c:if>
                     <input type="button" name="button" onclick="javascript:window.location.href='../listOrgs?divisionId=${org.divisionId}'" class="btn btn82 btn_back" value="返回"> 
                    
                    </td>

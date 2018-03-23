@@ -115,9 +115,9 @@
 								<c:forEach items="${page.list}" var="org" varStatus="status">
 									<tr class="tr">
 
-										<td class="td_center"><input type="checkbox"
+										<td class=""><input type="checkbox"
 											value='${org.id }'></td>
-										<td class="td_center">
+										<td class="">
 											${(page.pageNum-1)*page.pageSize+status.count}</td>
 										<td class="td_left">
 										<c:if test="${isAdm}">

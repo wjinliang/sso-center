@@ -55,7 +55,7 @@
 					<c:forEach items="${page}" var="app" varStatus="status">
 						<tr class="tr">
 
-							<td class="td_center">
+							<td class="">
 								${status.count}</td>
 							<td>${app.app.appName}</td>
 							<td>

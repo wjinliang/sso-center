@@ -98,9 +98,9 @@
 					<c:forEach items="${page.list}" var="cont" varStatus="status">
 						<tr class="tr">
 
-							<td class="td_center"><input type="checkbox"
+							<td class=""><input type="checkbox"
 								value='${cont.id }'></td>
-							<td class="td_center">
+							<td class="">
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${cont.title}</td>
 							<td><fmt:formatDate value="${cont.publishTime}" pattern="yyyy-MM-dd" /></td>

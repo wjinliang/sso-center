@@ -122,9 +122,9 @@
 								<c:forEach items="${page.list}" var="user" varStatus="status">
 									<tr class="tr">
 
-										<td class="td_center"><input type="checkbox"
+										<td class=""><input type="checkbox"
 											value='${user.code }'></td>
-										<td class="td_center">
+										<td class="">
 											${(page.pageNum-1)*page.pageSize+status.count}</td>
 										<td><a
 											href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">

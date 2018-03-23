@@ -27,7 +27,7 @@
 		<div id="search_bar" class="mt10">
 			<div class="box">
 				<div class="box_border">
-					<form action="./list" method="get" id="serchForm">
+					<form action="listSynLog" method="get" id="serchForm">
 					<div class="box_center pt10 pb10">
 						<table class="form_table" border="0" cellpadding="0"
 							cellspacing="0">
@@ -71,9 +71,9 @@
 					<c:forEach items="${page.list}" var="log" varStatus="status">
 						<tr class="tr">
 
-							<td class="td_center"><input type="checkbox"
+							<td class=""><input type="checkbox"
 								value='${log.id }'></td>
-							<td class="td_center">
+							<td class="">
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${log.appName}</td>
 							<td>${log.synResult}</td>

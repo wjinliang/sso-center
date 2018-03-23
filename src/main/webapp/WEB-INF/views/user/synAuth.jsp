@@ -50,13 +50,13 @@
 								</tr>
 								<c:if test="${page.total eq 0 }">
 									<tr class="tr">
-										<td class="td_center" colspan="4">您没有可操作的系统！</td>
+										<td class="" colspan="4">您没有可操作的系统！</td>
 									</tr>
 								</c:if>
 								<c:forEach items="${page.list}" var="app" varStatus="status">
 									<tr class="tr">
 
-										<td class="td_center">
+										<td class="">
 											${status.count}</td>
 										<td>${app.appName}</td>
 										<td>

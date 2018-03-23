@@ -151,4 +151,11 @@ public class ApplicationInfoServiceImpl extends
 		return f.get(0);
 	}
 
+	@Override
+	public PageInfo<ApplicationInfo> selectOrgSynApps(Long id) {
+		PageHelper.startPage(1, 100);
+		List<ApplicationInfo> list = this.appMapper.selectOrgSynApps(id);
+		return new PageInfo<ApplicationInfo>(list);
+	}
+
 }

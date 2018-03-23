@@ -40,7 +40,7 @@
 					<c:forEach items="${page.list}" var="app" varStatus="status">
 						<tr class="tr">
 
-							<td class="td_center">
+							<td>
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${app.appName}</td>
 							<td><c:set var="file" value="${d:gAF(app.id)}"></c:set>
@@ -106,6 +106,7 @@
 		$.ajax({url:url,type:"post",data:{fileId:fileId,appId:appId},success:function(data){
 			if(data.code=='200'){
 				layer.alert("上传成功！");
+				window.location.reload();
 			}else{
 				layer.alert(data.message);
 			}

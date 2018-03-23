@@ -66,10 +66,24 @@
     <div id="bottom_bg">版权&copy;-中国动物疫病预防控制中心</div>
 </div>
 <div class="scroll">
-    <a href="javascript:;" class="per" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(1);"></a>
-    <a href="javascript:;" class="next" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(2);"></a>
+    <a href="javascript:;" class="per" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(2);"></a>
+    <a href="javascript:;" class="next" title="使用鼠标滚轴滚动侧栏" onclick="menuScroll(1);"></a>
 </div>
 
 </body>
-
+<script type="text/javascript">
+var index;
+var html_iframe = document.getElementById('rightMain');
+var interval = setInterval(function () {
+    var iframeDoc = html_iframe.contentDocument || html_iframe.contentWindow.document;
+    if(iframeDoc.readyState == 'complete' || iframeDoc.readyState == 'interactive'){
+    	if(index)
+    		layer.close(index);
+    }else{
+    		index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+    		
+    }
+    
+},300)
+</script>
 </html>

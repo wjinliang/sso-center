@@ -59,9 +59,9 @@
 					<c:forEach items="${page.list}" var="user" varStatus="status">
 						<tr class="tr">
 
-							<td class="td_center"><input type="checkbox"
+							<td class=""><input type="checkbox"
 								value='${user.sessionId }'></td>
-							<td class="td_center">
+							<td class="">
 								${status.count}</td>
 							<td>${user.userName}(${user.userLoginname})</td>
 							<td>${user.lastActivityDate}</td>

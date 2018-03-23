@@ -38,7 +38,7 @@
 					<c:forEach items="${page.list}" var="app" varStatus="status">
 						<tr class="tr">
 
-							<td class="td_center">
+							<td class="">
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${app.appName}</td>
 							<td><c:choose>

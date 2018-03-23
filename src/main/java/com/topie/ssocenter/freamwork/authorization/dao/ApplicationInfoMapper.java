@@ -12,4 +12,6 @@ public interface ApplicationInfoMapper extends Mapper<ApplicationInfo> {
 
 	List<ApplicationInfo> selectSynAppsByMergeUuid(String mergeUuid);
 
+	List<ApplicationInfo> selectOrgSynApps(Long id);
+
 }

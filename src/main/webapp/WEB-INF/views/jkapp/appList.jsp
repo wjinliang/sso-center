@@ -80,9 +80,9 @@
 					<c:forEach items="${page.list}" var="app" varStatus="status">
 						<tr class="tr">
 
-							<td class="td_center"><input type="checkbox"
+							<td class=""><input type="checkbox"
 								value='${app.id }'></td>
-							<td class="td_center">
+							<td class="">
 								${(page.pageNum-1)*page.pageSize+status.count}</td>
 							<td>${app.appName}</td>
 							<td>${app.appCode}</td>

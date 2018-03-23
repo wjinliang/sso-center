@@ -154,6 +154,36 @@ public class OrgAndUserController {
 		}
 		return orgLsh;
 	}
+	
+	@RequestMapping("auth")
+	public ModelAndView org_auth(Org org,
+			ModelAndView model) throws Exception{
+		model.addObject("backUrl", "./listOrgs?orgId="+org.getDivisionId());
+		setAuthList( org, model);
+		model.addObject("id", org.getId());
+		model.setViewName("/org/synAuth");
+		return model;
+	}
+	private void setAuthList(Org org, ModelAndView model) {
+		PageInfo<ApplicationInfo> upage = this.appService.selectOrgSynApps(org.getId());
+		if(upage.getTotal()==0){
+			model.addObject("page",upage);
+			return ;
+		}
+		PageInfo<ApplicationInfo> cupage = this.appService.selectCurrentUserSynApps();
+		Map map = new HashMap();
+		List list = new ArrayList();
+		for(ApplicationInfo app:upage.getList()){
+			for(ApplicationInfo capp:cupage.getList()){
+				if(app.getId().equals(capp.getId())){
+					list.add(app);
+				}
+			}
+		}
+		map.put("list", list);
+		map.put("total", list.size());
+		model.addObject("page",map);
+	}
 
 	@RequestMapping("/save")
 	public ModelAndView save(

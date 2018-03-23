@@ -160,8 +160,6 @@ var n = 1;
 function menuScroll(num) {
     var Scroll = $('.sideMenu');
     var ScrollP = $('.sideMenu').position();
-    /*alert(n);
-    alert(ScrollP.top);*/
     if (num == 1) {
         Scroll.animate({top: ScrollP.top - 38});
         n = n + 1;

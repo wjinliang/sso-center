@@ -37,7 +37,7 @@ public class SynLogServiceImpl extends BaseServiceImpl<SynLog,String> implements
 			c.andEqualTo("appId",log.getAppId());
 		}
 		if(!StringUtils.isEmpty(log.getSynResult())){
-			c.andEqualTo("synResult",log.getSynResult());
+			c.andLike("synResult","%"+log.getSynResult()+"%");
 		}
 		ex.setOrderByClause("syn_time desc");
 		List<SynLog> list = getMapper().selectByExample(ex);

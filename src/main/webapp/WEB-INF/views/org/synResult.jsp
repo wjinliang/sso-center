@@ -52,7 +52,7 @@
 								<c:forEach items="${resultList}" var="app" varStatus="status">
 									<tr class="tr">
 
-										<td class="td_center">
+										<td>
 											${status.count}</td>
 										<td>${app.appName}</td>
 										<td>${app.opType}</td>

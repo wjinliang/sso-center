@@ -50,13 +50,13 @@
 								</tr>
 								<c:if test="${page.total eq 0 }">
 									<tr class="tr">
-										<td class="td_center" colspan="4">您没有可操作的系统！</td>
+										<td class="" colspan="4">您没有可操作的系统！</td>
 									</tr>
 								</c:if>
 								<c:forEach items="${page.list}" var="app" varStatus="status">
 									<tr class="tr">
 
-										<td class="td_center">
+										<td>
 											${status.count}</td>
 										<td>${app.appName}</td>
 										<td>
@@ -73,10 +73,10 @@
 											</c:choose>
 										</td>
 										<td>
-											<c:if test="${app.isUserAuthorize}">
-												<a class="ext_btn" href="javascript:dialogPage('机构授权-${app.appName}','../../syn/ssoServiceBySession?xtbs=${app.appCode}&TYPE=0&ID=${id}');">授权</a>
+											<c:if test="${app.isOrgAuthorize}">
+												<a class="ext_btn" href="javascript:dialogPage('机构授权-${app.appName}','../syn/ssoServiceBySession?xtbs=${app.appCode}&TYPE=0&ID=${id}');">授权</a>
 											</c:if>
-											<c:if test="${!app.isUserAuthorize}">
+											<c:if test="${!app.isOrgAuthorize}">
 												该系统不需要授权
 											</c:if>
 										</td>

@@ -19,4 +19,6 @@ public interface ApplicationInfoService extends IService<ApplicationInfo,String>
 
 	FileEntity getAppFile(String appId);
 
+	PageInfo<ApplicationInfo> selectOrgSynApps(Long id);
+
 }
