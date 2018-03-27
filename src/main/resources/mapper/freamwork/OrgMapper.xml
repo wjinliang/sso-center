@@ -87,7 +87,7 @@
 		</foreach>
 	</if>
 	<if test="parentDivisionId!=null and parentDivisionId!=''">
-		t2.PARENT_ID = #{parentDivisionId}
+		AND t2.PARENT_ID = #{parentDivisionId}
 	</if>
 	</where>
 	ORDER BY ${example.orderByClause}
