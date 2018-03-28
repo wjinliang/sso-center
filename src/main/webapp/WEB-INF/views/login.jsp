@@ -14,6 +14,7 @@
 <script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-1.12.1.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/login/js/login.js"></script>
 </head>
 <script type="text/javascript">
@@ -55,7 +56,17 @@
 		$("a[class='acreditImg']").bind("click",function(){
 			$(this).find("img").attr("src","<%=basePath%>/security/web/captcha?"+new Date());
 			
-		})
+		});
+		layer.open({
+			  type:1,
+			  title: '通知公告',
+			  area: ['200px', '320px'],
+			  offset: 'r',
+			  shade:0,
+			  anim: 1,
+			  //closeBtn:0,
+			  content: '<p style="margin: 10px;">全国动物疫病防控与动物卫生监督工作云平台单点登录新版上线了，欢迎大家使用！</p>'
+			}); 
 	});
 </script>
 </html>
