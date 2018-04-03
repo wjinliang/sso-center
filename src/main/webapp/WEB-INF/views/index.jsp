@@ -17,6 +17,7 @@
 <script type="text/javascript" src="<%=basePath%>/assets/index/js/jquery-1.12.1.min.js"></script>
 <script type="text/javascript">  
 	var days=new  Array ("日", "一", "二", "三", "四", "五", "六");  
+	var oo=false;
 	function showDT() {  
 	  var currentDT = new Date();  
 	  var y,m,date,day,hs,ms,ss,theDateStr;  
@@ -38,10 +39,15 @@
 	  if (ms >= 0 && ms <= 9) {
 			ms = "0" + ms;
 		}
-	  theDateStr = y+"年"+  m +"月"+date+"日 星期"+days[day]+" "+hs+":"+ms; 
+	  var hm = ":";
+	  if(oo){
+		  hm = '<font style="color:#2d7bbb">:</font>';
+	  }
+	  oo=!oo;
+	  theDateStr = y+"年"+  m +"月"+date+"日 星期"+days[day]+" "+hs+hm+ms; 
 	  document.getElementById("showTime").innerHTML =theDateStr;  
 	  // setTimeout 在执行时,是在载入后延迟指定时间后,去执行一次表达式,仅执行一次  
-	  window.setTimeout(showDT, 500);  
+	  window.setTimeout(showDT, 1000);  
 	}  
 </script>
 <script type="text/javascript"></script>
