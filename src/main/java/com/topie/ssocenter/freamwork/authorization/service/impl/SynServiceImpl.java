@@ -61,9 +61,9 @@ public class SynServiceImpl implements SynService {
 
 	public String synStart(String appId, String infoCode, String opType) {
 		ApplicationInfo applicationInfo =appMapper.selectByPrimaryKey(appId);
-		if(1==1){
+		/*if(1==1){
 			return "000";
-		}
+		}*/
 		ServletRequestAttributes srAttrs = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest request = srAttrs.getRequest();
 		if (applicationInfo != null) {
@@ -216,7 +216,7 @@ public class SynServiceImpl implements SynService {
 	
 
 	private String swtichError(String notReadNum) {
-		String errorString = "其他异常";
+		String errorString = notReadNum;
 		if (notReadNum.equalsIgnoreCase("111")) {
 			errorString = "同步失败";
 			return errorString;
