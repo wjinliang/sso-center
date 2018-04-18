@@ -2,6 +2,7 @@
 
 <service name="synInfoService" targetNamespace="http://impl.service.app.com">  
     <description>数据获取服务接口</description>
+    <schema schemaNamespace="http://impl.service.app.com"/>
     <!-- 
      	在使用Java类生成WSDL文件时，WSDL文件中schema定义中的elementFormDefault默认是设置为qualified。
      	如果qualified为true，则响应消息中的所有元素都是受限的。但是有些时候我们并不需要这种行为，

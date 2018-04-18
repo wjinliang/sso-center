@@ -314,6 +314,10 @@ public class OrgAndUserController {
 					appCode = map.get("appCode").toString();
 				};
 			}
+			if(!(boolean) map.get("status")){//有操作失败
+				model.setViewName("/org/synResult");
+				return list;
+			}
 		}
 		if(redirect==0){//返回到列表页面
 			/*model.setViewName("redirect:form/edit?divisionId="+org.getDivisionId());*/
@@ -654,6 +658,10 @@ public class OrgAndUserController {
 					redirect++;
 					appCode = map.get("appCode").toString();
 				};
+			}
+			if(!(boolean) map.get("status")){//有操作失败
+				model.setViewName("/user/synResult");
+				return list;
 			}
 		}
 		if(redirect==0){//返回到列表页面

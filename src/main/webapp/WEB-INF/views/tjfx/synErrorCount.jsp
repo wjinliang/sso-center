@@ -43,7 +43,7 @@ var edata=[],ydata=[];
 					<c:forEach items="${list}" var="app" varStatus="status">
 						<tr class="tr">
 
-							<td>${app.month}</td>
+							<td>${app.msg}</td>
 							<td>${app.count}</td>
 							<script >
 								ydata.push("${app.msg}");

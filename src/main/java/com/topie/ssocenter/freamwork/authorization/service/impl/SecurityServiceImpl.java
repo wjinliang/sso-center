@@ -51,7 +51,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Map<String, Collection<ConfigAttribute>> getResourceMap() {
-        Map<String, Collection<ConfigAttribute>> resourceMap = new HashMap<>();
+        Map<String, Collection<ConfigAttribute>> resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
 //        Map<String, Collection<ConfigAttribute>> resourceMapcache = MenuCache.getInstense().getSecurityMenuMapCache();
 //        if(resourceMapcache!=null) return resourceMapcache;
         List<Map> roleFunctions = roleService.findUserRoleMatchUpFunctions();

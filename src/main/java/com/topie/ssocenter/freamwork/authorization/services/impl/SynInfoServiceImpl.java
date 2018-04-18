@@ -24,7 +24,6 @@ public class SynInfoServiceImpl implements SynInfoService{
 	private DivisionService divisionService;
 	@Override
 	public String hello(String username) {
-		// TODO Auto-generated method stub
 		return "hello"+username;
 	}
 
