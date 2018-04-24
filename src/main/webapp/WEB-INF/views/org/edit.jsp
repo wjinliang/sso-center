@@ -47,7 +47,7 @@
 	                  <input type="hidden" name="seq" class="input-text lh30" value="${org.seq }" size="40">
 					<input type="text" readonly="true" name="divisionName" class="input-text lh30" value="${division.name }" size="40">
                   </td>
-                  <td class="td_right">机构类型<span class="red">*</span>：</td>
+                  <td class="td_right">机构级别<span class="red">*</span>：</td>
                   <td>
                   
                     <span class="fl">
@@ -83,6 +83,22 @@
                 <tr>
                   <td class="td_right">传真：</td><td><input type="text" name="faxNo" value="${org.faxNo}" class="input-text lh30" size="40"></td>
                   <td class="td_right">电话：</td><td><input type="text" name="phoneNo" value="${org.phoneNo}" class="input-text lh30" size="40"></td>
+                </tr>
+                <tr>
+                  <td class="td_right">机构类型：</td>
+                  <td>
+                  	<span class="fl">
+                      <div class="select_border"> 
+                        <div class="select_containers "> 
+                  			<select name="orgType" id="orgType" class="select">
+								<option value="" ></option>
+								<option value="1"  <c:if test="${org.orgType=='1'}">selected="selected" </c:if>>行政机构</option>
+								<option value="2"  <c:if test="${org.orgType=='2'}">selected="selected" </c:if>>监督机构</option>
+							</select>
+							</div>
+						</div>
+					</span>
+                  </td>
                 </tr>
                 <tr>
                   <td class="td_right">同步到系统：</td>

@@ -58,6 +58,9 @@ public class Org {
 
     @Column(name = "phone_no")
     private String phoneNo;
+    
+    @Column(name = "org_type")
+    private String orgType;
 
     /**
      * @return id
@@ -310,6 +313,15 @@ public class Org {
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
     }
+    
+
+	public String getOrgType() {
+		return orgType;
+	}
+
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
 
 	@Override
 	public String toString() {
@@ -321,6 +333,7 @@ public class Org {
 				+ ", createUser=" + createUser + ", systemId=" + systemId
 				+ ", postalCode=" + postalCode + ", postalAddress="
 				+ postalAddress + ", faxNo=" + faxNo + ", phoneNo=" + phoneNo
+				+ ", orgType=" + orgType
 				+ "]";
 	}
     

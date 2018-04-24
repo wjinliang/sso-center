@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.ValueFilter;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
@@ -59,7 +60,7 @@ public class SynInfoServiceImpl implements SynInfoService{
 			map.put("address", user.getAddress());
 			map.put("email", user.getEmail());
 			map.put("mobile", user.getMobile());
-			return  JSON.toJSONString(map);
+			return  JSON.toJSONString(map,filter);
 		}catch(Exception e){
 			return null;
 		}
@@ -69,7 +70,7 @@ public class SynInfoServiceImpl implements SynInfoService{
 	public String getOrgInfo(Long orgId) {
 		try{
 			Org org  = this.orgService.selectByKey(orgId);
-			return JSON.toJSONString(org);
+			return JSON.toJSONString(org,filter);
 		}catch(Exception e){
 			return null;
 		}
@@ -85,10 +86,19 @@ public class SynInfoServiceImpl implements SynInfoService{
 	public String getDivisionInfo(String divisionId) {
 		try{
 			Division divison  = this.divisionService.selectByKey(divisionId);
-			return  JSON.toJSONString(divison);
+			return  JSON.toJSONString(divison,filter);
 		}catch(Exception e){
 			return null;
 		}
 	}
+	
+	private static ValueFilter filter = new ValueFilter() {
+	    @Override
+	    public Object process(Object obj, String s, Object v) {
+	        if (v == null)
+	            return "";
+	        return v;
+	    }
+	};
 
 }

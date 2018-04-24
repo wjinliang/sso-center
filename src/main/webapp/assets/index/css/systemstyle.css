@@ -38,6 +38,7 @@ html, body {
     -moz-transition: all 1s ease-in-out;
     -o-transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;
+    border:transparent;
 	}
 .systemList li>p a:hover{color:#effd7b;}
 .protect{ color:#ccc; font-size:14px;}

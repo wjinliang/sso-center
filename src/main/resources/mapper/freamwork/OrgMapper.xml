@@ -23,6 +23,7 @@
     <result column="postal_address" property="postalAddress" jdbcType="VARCHAR" />
     <result column="fax_no" property="faxNo" jdbcType="VARCHAR" />
     <result column="phone_no" property="phoneNo" jdbcType="VARCHAR" />
+    <result column="org_type" property="orgType" jdbcType="VARCHAR" />
   </resultMap>
   
   <select id="selectMaxCode" resultType="String">

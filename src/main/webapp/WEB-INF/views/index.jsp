@@ -50,6 +50,11 @@
 	  window.setTimeout(showDT, 1000);  
 	}  
 </script>
+<!--[if lt ie9]>
+<style>
+	.news-con .titbg1, .news-con .titbg2{background:#d7f1fe !important;}
+</style>
+<![endif]-->
 <script type="text/javascript"></script>
 </head>
 
@@ -95,7 +100,7 @@
                 </div>	
             </div>
         </div>
-    	<div class="right">
+    	<div class="right" style="-ms-behavior:url(<%=basePath%>/assets/index/css/backgroundsize.min.htc)">
         	 <c:set var="synAppList" value="${d:gCAS()}"></c:set>
         	<ul class="systemList systemList${ fn:length(synAppList)} clearfix">
         	<c:forEach items="${synAppList}" var="app" varStatus="status">
