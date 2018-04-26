@@ -60,8 +60,11 @@ public class SynInfoServiceImpl implements SynInfoService{
 			map.put("address", user.getAddress());
 			map.put("email", user.getEmail());
 			map.put("mobile", user.getMobile());
-			return  JSON.toJSONString(map,filter);
+			//return  JSON.toJSONString(map,filter);
+			return  JSON.toJSONString(map);
 		}catch(Exception e){
+			System.err.println("接口获取用户异常,userId:"+userId);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -70,8 +73,11 @@ public class SynInfoServiceImpl implements SynInfoService{
 	public String getOrgInfo(Long orgId) {
 		try{
 			Org org  = this.orgService.selectByKey(orgId);
-			return JSON.toJSONString(org,filter);
+			return JSON.toJSONString(org);
+			//return JSON.toJSONString(org,filter);
 		}catch(Exception e){
+			System.err.println("接口获取机构异常，orgId:"+orgId);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -86,8 +92,11 @@ public class SynInfoServiceImpl implements SynInfoService{
 	public String getDivisionInfo(String divisionId) {
 		try{
 			Division divison  = this.divisionService.selectByKey(divisionId);
-			return  JSON.toJSONString(divison,filter);
+			//return  JSON.toJSONString(divison,filter);
+			return  JSON.toJSONString(divison);
 		}catch(Exception e){
+			System.err.println("接口获取区划异常，divisionId："+divisionId);
+			e.printStackTrace();
 			return null;
 		}
 	}

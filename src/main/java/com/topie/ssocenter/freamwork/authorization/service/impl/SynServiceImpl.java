@@ -11,14 +11,17 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.ServiceException;
 
+import org.apache.axis.AxisProperties;
 import org.apache.axis.client.Call;
 import org.apache.axis.encoding.XMLType;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.rpc.client.RPCServiceClient;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,10 +42,11 @@ import com.topie.ssocenter.freamwork.authorization.model.SynLog;
 import com.topie.ssocenter.freamwork.authorization.model.SynOrg;
 import com.topie.ssocenter.freamwork.authorization.model.SynUser;
 import com.topie.ssocenter.freamwork.authorization.service.SynService;
+import com.topie.ssocenter.freamwork.authorization.utils.SSLIgnoreErrorProtocolSocketFactory;
 
 @Service
 public class SynServiceImpl implements SynService {
-	
+
 	@Autowired
 	private ApplicationInfoMapper appMapper;
 	@Autowired
@@ -53,27 +57,28 @@ public class SynServiceImpl implements SynService {
 	private SynDivisionMapper synDivisionMapper;
 	@Autowired
 	private SynLogMapper synLogMapper;
-	
+
 	@Value("${liantongIP}")
 	String liantongIP;
 	@Value("${yidongIP}")
 	String yidongIP;
 
 	public String synStart(String appId, String infoCode, String opType) {
-		ApplicationInfo applicationInfo =appMapper.selectByPrimaryKey(appId);
-		/*if(1==1){
-			return "000";
-		}*/
-		ServletRequestAttributes srAttrs = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		ApplicationInfo applicationInfo = appMapper.selectByPrimaryKey(appId);
+		/*
+		 * if(1==1){ return "000"; }
+		 */
+		ServletRequestAttributes srAttrs = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
 		HttpServletRequest request = srAttrs.getRequest();
 		if (applicationInfo != null) {
 			String synType = applicationInfo.getSynType();
 			if (synType.equals("axis1")) {
-				return synAxis1(request,applicationInfo, infoCode, opType);
+				return synAxis1(request, applicationInfo, infoCode, opType);
 			} else if (synType.equals("axis2")) {
-				return synAxis2(request,applicationInfo, infoCode, opType);
+				return synAxis2(request, applicationInfo, infoCode, opType);
 			} else if (synType.equals("http")) {
-				return synHttp(request,applicationInfo, infoCode, opType);
+				return synHttp(request, applicationInfo, infoCode, opType);
 			}
 			return "此系统同步借口尚未实现！";
 		} else {
@@ -81,13 +86,13 @@ public class SynServiceImpl implements SynService {
 		}
 	}
 
-	private String synHttp(HttpServletRequest request,ApplicationInfo applicationInfo, String infoCode,
-			String opType) {
+	private String synHttp(HttpServletRequest request,
+			ApplicationInfo applicationInfo, String infoCode, String opType) {
 		String notReadNum;
 		// 1.构造HttpClient的实例
 		HttpClient httpClient = new HttpClient();
 		httpClient.getParams().setContentCharset("GBK");
-		String url = getAppPath(request,applicationInfo);
+		String url = getAppPath(request, applicationInfo);
 
 		// 2.构造PostMethod的实例
 		PostMethod postMethod = new PostMethod(url);
@@ -121,16 +126,25 @@ public class SynServiceImpl implements SynService {
 
 	}
 
-	private String synAxis2(HttpServletRequest request,ApplicationInfo applicationInfo, String infoCode,
-			String opType) {
-		
-		String webServiceURL = getAppPath(request,applicationInfo);
+	private String synAxis2(HttpServletRequest request,
+			ApplicationInfo applicationInfo, String infoCode, String opType) {
+
+		String webServiceURL = getAppPath(request, applicationInfo);
 		String qName = applicationInfo.getPackagename().trim();
 		String notReadNum;
 		try {
 			RPCServiceClient serviceClient;
 			serviceClient = new RPCServiceClient();
 			Options options = serviceClient.getOptions();
+			if (webServiceURL.startsWith("https")) {
+				Protocol protocol = null;
+				SSLIgnoreErrorProtocolSocketFactory socketfactory = null;
+				socketfactory = new SSLIgnoreErrorProtocolSocketFactory();
+				URL url = new URL(webServiceURL);
+				protocol = new Protocol("https", socketfactory, url.getPort());
+				options.setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER,
+						protocol);
+			}
 			options.setProperty(
 					org.apache.axis2.transport.http.HTTPConstants.CONNECTION_TIMEOUT,
 					new Integer(480000000));
@@ -150,19 +164,21 @@ public class SynServiceImpl implements SynService {
 			if (!notReadNum.equalsIgnoreCase("000")) {
 				notReadNum = swtichError(notReadNum);
 			}
-		} catch (RemoteException e) {
+		} catch (RemoteException | MalformedURLException e) {
 			e.printStackTrace();
 			notReadNum = "远程服务调用异常";
 		}
 		return notReadNum;
 	}
 
-	private String synAxis1(HttpServletRequest request,ApplicationInfo applicationInfo, String infoCode,
-			String opType) {
-		String webServiceURL = getAppPath(request,applicationInfo);
+	private String synAxis1(HttpServletRequest request,
+			ApplicationInfo applicationInfo, String infoCode, String opType) {
+		String webServiceURL = getAppPath(request, applicationInfo);
 		String notReadNum;
 		// 创建Service实例
 		org.apache.axis.client.Service service = new org.apache.axis.client.Service();
+		AxisProperties.setProperty("axis.socketSecureFactory",
+				"org.apache.axis.components.net.SunFakeTrustSocketFactory");
 		// 通过Service实例创建Call实例
 		Call call;
 		try {
@@ -212,8 +228,6 @@ public class SynServiceImpl implements SynService {
 		}
 		return notReadNum;
 	}
-
-	
 
 	private String swtichError(String notReadNum) {
 		String errorString = notReadNum;
@@ -322,6 +336,10 @@ public class SynServiceImpl implements SynService {
 			errorString = "唯一标识对应的角色不存在";
 			return errorString;
 		}
+		if (notReadNum.equalsIgnoreCase("999")) {
+			errorString = "机构类型未设置";
+			return errorString;
+		}
 		if (notReadNum.equalsIgnoreCase("1001")) {
 			errorString = "格式错误";
 			return errorString;
@@ -393,20 +411,21 @@ public class SynServiceImpl implements SynService {
 
 	/**
 	 * 通过当前访问得IP 获取要访问的应用网络类型
+	 * 
 	 * @param request
 	 * @param app
 	 * @return
 	 */
 	private String getAppPath(HttpServletRequest request, ApplicationInfo app) {
-		String path1 =  app.getSynPath1();
-		if(path1==null || path1.equals("")){
+		String path1 = app.getSynPath1();
+		if (path1 == null || path1.equals("")) {
 			return app.getSynPath();
 		}
 		String ip = request.getServerName();
-		if(ip!=null && ip.equalsIgnoreCase(liantongIP)){
+		if (ip != null && ip.equalsIgnoreCase(liantongIP)) {
 			return app.getSynPath();
 		}
-		if(ip!=null && ip.equalsIgnoreCase(yidongIP)){
+		if (ip != null && ip.equalsIgnoreCase(yidongIP)) {
 			return path1;
 		}
 		return app.getSynPath();
@@ -415,25 +434,25 @@ public class SynServiceImpl implements SynService {
 	@Override
 	public void save(SynOrg synOrg) {
 		this.synOrgMapper.insert(synOrg);
-		
+
 	}
 
 	@Override
 	public void save(SynUser synUser) {
 		this.synUserMapper.insert(synUser);
-		
+
 	}
 
 	@Override
 	public void save(SynDivision synDivision) {
 		this.synDivisionMapper.insert(synDivision);
-		
+
 	}
 
 	@Override
 	public void save(SynLog synLog) {
 		this.synLogMapper.insert(synLog);
-		
+
 	}
 
 	@Override
@@ -446,20 +465,23 @@ public class SynServiceImpl implements SynService {
 	@Override
 	public List<SynUser> selectUserSynInfo(String code) {
 		Example example = new Example(SynUser.class);
-		example.createCriteria().andEqualTo("userId",code);
+		example.createCriteria().andEqualTo("userId", code);
 		return this.synUserMapper.selectByExample(example);
 	}
 
 	@Override
 	public int deleteSynOrg(String orgId, String appId) {
 		Example ex = new Example(SynOrg.class);
-		ex.createCriteria().andEqualTo("orgId",orgId).andEqualTo("appId", appId);
+		ex.createCriteria().andEqualTo("orgId", orgId)
+				.andEqualTo("appId", appId);
 		return synOrgMapper.deleteByExample(ex);
 	}
+
 	@Override
 	public int deleteSynUser(String userId, String appId) {
 		Example ex = new Example(SynUser.class);
-		ex.createCriteria().andEqualTo("userId",userId).andEqualTo("appId", appId);
+		ex.createCriteria().andEqualTo("userId", userId)
+				.andEqualTo("appId", appId);
 		return synUserMapper.deleteByExample(ex);
 	}
 }
