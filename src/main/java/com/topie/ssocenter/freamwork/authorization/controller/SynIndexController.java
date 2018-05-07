@@ -84,7 +84,7 @@ public class SynIndexController {
 						appPath = appPath + "&" + string + "=" + parameter;
 					}
 				}
-				//System.out.println(appPath);
+				System.out.println("访问地址："+appPath);
 				model.setViewName("redirect:"+appPath);
 			} else {
 				model.addObject("msg","该系统单点地址为空，请联系管理员！");

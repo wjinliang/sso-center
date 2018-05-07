@@ -160,7 +160,9 @@ public class OrgAndUserController {
 			ModelAndView model) throws Exception{
 		model.addObject("backUrl", "./listOrgs?orgId="+org.getDivisionId());
 		setAuthList( org, model);
-		model.addObject("id", org.getId());
+		//加密
+		String uuid = SimpleCrypto.encrypt(seed, org.getId()+"");
+		model.addObject("id", uuid);
 		model.setViewName("/org/synAuth");
 		return model;
 	}
@@ -324,9 +326,14 @@ public class OrgAndUserController {
 			model.setViewName("redirect:listOrgs?divisionId="+org.getDivisionId());
 		}
 		if(redirect==1){
-			model.addObject("redirect", "../syn/ssoServiceBySession?xtbs="+appCode
-					+"&TYPE="+
-					R.ORG_AUTHORIZE+"&ID="+org.getId());
+			try {
+				model.addObject("redirect", "../syn/ssoServiceBySession?xtbs="+appCode
+						+"&TYPE="+
+						R.ORG_AUTHORIZE+"&ID="+SimpleCrypto.encrypt(seed, org.getId()+""));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			/*model.setViewName("redirect:"
 					+ "../syn/ssoServiceBySession?xtbs="+appCode
 					+"&TYPE="+
@@ -513,6 +520,7 @@ public class OrgAndUserController {
 		user.setLocked(false);
 		user.setAccountExpired(true);
 		user.setPasswordExpired(true);
+		user.setEnabled(true);
 		user.setCreateDate(DmDateUtil.Current());
 		user.setCreateUser(SecurityUtils.getCurrentUserName());
 		this.userAccountService.save(user);
@@ -531,7 +539,9 @@ public class OrgAndUserController {
 			ModelAndView model) throws Exception{
 		model.addObject("backUrl", "../listUsers?orgId="+user.getOrgId());
 		setAuthList( user, model);
-		model.addObject("id", user.getCode());
+		//加密
+		String uuid = SimpleCrypto.encrypt(seed, user.getCode());
+		model.addObject("id", uuid);
 		model.setViewName("/user/synAuth");
 		return model;
 	}
@@ -668,9 +678,14 @@ public class OrgAndUserController {
 			model.setViewName("redirect:/orgAndUser/listUsers?orgId="+user.getOrgId());
 		}
 		if(redirect==1){
-			model.addObject("redirect","/syn/ssoServiceBySession?xtbs="+appCode
-					+"&TYPE="+
-					R.USER_AUTHORIZE+"&ID="+user.getCode());
+			try {
+				model.addObject("redirect","/syn/ssoServiceBySession?xtbs="+appCode
+						+"&TYPE="+
+						R.USER_AUTHORIZE+"&ID="+SimpleCrypto.encrypt(seed,user.getCode()));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			/*model.setViewName("redirect:"
 					+ "/syn/ssoServiceBySession?xtbs="+appCode
 					+"&TYPE="+
@@ -810,6 +825,8 @@ public class OrgAndUserController {
 		}
 		user.setSynpassword(encryptPassword);
 		user.setLocked(false);
+		user.setAccountExpired(true);
+		user.setPasswordExpired(true);
 		this.userAccountService.updateAll(user);
 		return ResponseUtil.success();
 	}

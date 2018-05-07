@@ -231,7 +231,7 @@
 			zTree.expandNode(node, true, false);//指定选中ID节点展开  
 		}
 		function repassword(userId){
-			layer.prompt({title: "请输入要重置的密码！", formType: 1},function(val, index){  
+			layer.prompt({title: "请输入要重置的密码！", formType: 0,value:"1password!"},function(val, index){  
 				    var tel = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={} :";'<>?,.\/]).{8,30}$/;
 				    if(!tel.test(val)){
 				    	layer.alert("必须字母数字符号混合且大于8位");
