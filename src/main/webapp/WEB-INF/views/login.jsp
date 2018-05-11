@@ -9,7 +9,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
-<title>全国动物疫病防控与动物卫生监督工作云平台单点登录</title>
+<title>动物疫病防控及动物卫生监督云平台单点登录</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/login/css/load.css">
 <script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-1.12.1.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
@@ -24,7 +24,7 @@
 </script>
 <body>
 	<div class="login">
-    	<div class="login-top"><div style="text-align:center; padding-top:50px;"><img src="<%=basePath%>/assets/login/img/load.png" height="62"></div></div>
+    	<div class="login-top"><div style="text-align:center; padding-top:50px;"><img src="<%=basePath%>/assets/login/img/load.png" height="62" style="margin-left:60px;"></div></div>
         <div class="loginDiv">
         	
             <div class="login-con">

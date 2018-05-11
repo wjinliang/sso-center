@@ -212,14 +212,24 @@ public class OrgAndUserController {
 			orgService.save(org);
 			List<Map> resultList = doTongBu("41",org,synAppIds,model);
 			model.addObject("org", org);
-			model.addObject("id", org.getId());
+			try {
+				model.addObject("id", SimpleCrypto.encrypt(seed, org.getId()+""));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return model;
 		}
 		//更新
 		this.orgService.updateNotNull(org);
 		doTongBu("42",org,synAppIds,model);
 		model.addObject("org", org);
-		model.addObject("id", org.getId());
+		try {
+			model.addObject("id", SimpleCrypto.encrypt(seed, org.getId()+""));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return model;
 	}
 
@@ -504,7 +514,7 @@ public class OrgAndUserController {
 			}
 			List<Map> list = doTongBu("12", user, synAppIds, model);
 			this.updateUserSystem(user);//更新用户所属系统
-			model.addObject("id", user.getCode());
+			model.addObject("id", SimpleCrypto.encrypt(seed,user.getCode()));
 			return model;
 		}
 		//新增
@@ -531,7 +541,7 @@ public class OrgAndUserController {
 		}
 		List<Map> list = doTongBu("11", user, synAppIds, model);
 		updateUserSystem(user);//更新用户所属系统
-		model.addObject("id", user.getCode());
+		model.addObject("id",SimpleCrypto.encrypt(seed,user.getCode()));
 		return model;
 	}
 	@RequestMapping("user/auth")
@@ -679,7 +689,7 @@ public class OrgAndUserController {
 		}
 		if(redirect==1){
 			try {
-				model.addObject("redirect","/syn/ssoServiceBySession?xtbs="+appCode
+				model.addObject("redirect","../../syn/ssoServiceBySession?xtbs="+appCode
 						+"&TYPE="+
 						R.USER_AUTHORIZE+"&ID="+SimpleCrypto.encrypt(seed,user.getCode()));
 			} catch (Exception e) {

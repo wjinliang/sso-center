@@ -42,6 +42,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 </head>
 <body >
+<h1>没有权限访问！ <a href="javascript:window.history.go(1);">返回</a></h1>
 </body>
 <!-- END BODY -->
 </html>

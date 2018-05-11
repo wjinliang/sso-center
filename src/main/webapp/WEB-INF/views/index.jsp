@@ -12,7 +12,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
-<title>全国动物疫病防控与动物卫生监督工作云平台单点登录</title>
+<title>动物疫病防控及动物卫生监督云平台单点登录</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/index/css/systemstyle.css">
 <script type="text/javascript" src="<%=basePath%>/assets/index/js/jquery-1.12.1.min.js"></script>
 <script type="text/javascript">  
