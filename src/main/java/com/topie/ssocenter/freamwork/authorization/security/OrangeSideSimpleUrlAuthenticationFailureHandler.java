@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -62,6 +63,7 @@ public class OrangeSideSimpleUrlAuthenticationFailureHandler
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         try {
+        	checkTryCount(request,exception);
             if (RequestUtil.isAjax(request)) {
                 writeJson(response, exception);
                 saveException(request, exception);
@@ -92,7 +94,29 @@ public class OrangeSideSimpleUrlAuthenticationFailureHandler
 
     }
 
-    private void writeJson(HttpServletResponse response, AuthenticationException exception)
+    private void checkTryCount(HttpServletRequest request, AuthenticationException exception) {
+    	String errMsg = exception.getMessage();
+    	if(!errMsg.equals("密码不正确"))return;
+		String username = (String)request.getAttribute(OrangeSideUsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY);
+		HttpSession session = request.getSession();
+		Object o = session.getAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username);
+		if(o==null){
+			session.setAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username, 1);
+		}else{
+			int error = Integer.valueOf(o.toString());
+			if(maxPasswordErrorCount-error<=3){
+				exception = new  DisabledException("密码错误，再输入"+(maxPasswordErrorCount-error)+"次错误，账号将被锁定");
+			}
+			if(error>maxPasswordErrorCount){
+				exception = new  DisabledException("登录错误次数超过"+maxPasswordErrorCount+"次，账号已锁定");
+				//TODO update
+				
+			}
+			session.setAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username, error+1);
+		}
+	}
+
+	private void writeJson(HttpServletResponse response, AuthenticationException exception)
             throws IOException {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("success", false);

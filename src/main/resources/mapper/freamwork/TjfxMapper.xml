@@ -261,7 +261,9 @@
   </select>
   
   <select id="getSynErrorCount" resultType="java.util.Map">
-  	 select SUBSTR(t.syn_result,LOCATE("：" ,syn_result)+1) as msg,count(id) as count from syn_log t GROUP BY SUBSTR(t.syn_result,LOCATE("：" ,syn_result)+1)
+  	 select REVERSE(SUBSTR(REVERSE(syn_result),1,LOCATE("：" ,REVERSE(syn_result))-1))
+ 		as msg,count(id) as count from syn_log t GROUP BY 
+		REVERSE(SUBSTR(REVERSE(syn_result),1,LOCATE("：" ,REVERSE(syn_result))-1)),LOCATE("：" ,REVERSE(syn_result))
   </select>
   <select id="getLoginTime" resultType="java.util.Map">
   	 select SUBSTR(date, 12,2 ) as time,COUNT(id) as count from t_log t where  t.TYPE='0' group by SUBSTR(date, 12,2)

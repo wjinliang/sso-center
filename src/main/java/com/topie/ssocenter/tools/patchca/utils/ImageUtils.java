@@ -1,17 +1,17 @@
 package com.topie.ssocenter.tools.patchca.utils;
 
-import com.topie.ssocenter.tools.patchca.background.SingleColorBackgroundFactory;
-import com.topie.ssocenter.tools.patchca.color.SingleColorFactory;
-import com.topie.ssocenter.tools.patchca.encoder.EncoderHelper;
-import com.topie.ssocenter.tools.patchca.filter.predefined.CurvesRippleFilterFactory;
-import com.topie.ssocenter.tools.patchca.service.Captcha;
-import com.topie.ssocenter.tools.patchca.service.ConfigurableCaptchaService;
+import java.awt.Color;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
-import java.awt.*;
-import java.io.IOException;
+import com.topie.ssocenter.tools.patchca.background.SingleColorBackgroundFactory;
+import com.topie.ssocenter.tools.patchca.color.SingleColorFactory;
+import com.topie.ssocenter.tools.patchca.filter.predefined.RippleFilterFactory;
+import com.topie.ssocenter.tools.patchca.service.Captcha;
+import com.topie.ssocenter.tools.patchca.service.ConfigurableCaptchaService;
+import com.topie.ssocenter.tools.patchca.word.AdaptiveRandomWordFactory;
 
 /**
  * Created by cgj on 2016/4/11.
@@ -27,8 +27,11 @@ public class ImageUtils {
         response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();
+        AdaptiveRandomWordFactory  rw= new AdaptiveRandomWordFactory();
+        rw.setCharacters("acdefhjkmnpstuwxy34578");
+        cs.setWordFactory(rw);
         cs.setColorFactory(new SingleColorFactory(new Color(25, 60, 170)));
-        cs.setFilterFactory(new CurvesRippleFilterFactory(cs.getColorFactory()));
+        cs.setFilterFactory(new RippleFilterFactory());
         cs.setBackgroundFactory(new SingleColorBackgroundFactory(new Color(221, 227, 236)));
         Captcha captcha = cs.getCaptcha();
         ImageIO.write(captcha.getImage(), "png", response.getOutputStream());
