@@ -1,5 +1,9 @@
 package com.topie.ssocenter.freamwork.authorization.security;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -7,8 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/13 说明：
@@ -18,6 +21,7 @@ public class OrangeSideUsernamePasswordAuthenticationFilter extends AbstractAuth
 
     public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "j_username";
     public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "j_password";
+    public static final String SPRING_SECURITY_FORM_CAPTCHCA_KEY = "j_captcha";
 
     /**
      * @deprecated If you want to retain the username, cache it in a customized {@code
@@ -43,6 +47,7 @@ public class OrangeSideUsernamePasswordAuthenticationFilter extends AbstractAuth
         if (postOnly && !request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
+        checkCaptcha(request);
 
         String username = obtainUsername(request);
         String password = obtainPassword(request);
@@ -65,7 +70,16 @@ public class OrangeSideUsernamePasswordAuthenticationFilter extends AbstractAuth
         return this.getAuthenticationManager().authenticate(authRequest);
     }
 
-    /**
+    private void checkCaptcha(HttpServletRequest request) {
+    	Object p = request.getParameter(SPRING_SECURITY_FORM_CAPTCHCA_KEY);
+    	if(p==null)throw new AuthenticationServiceException("请输入验证码");
+		String pa= (String)p;
+		HttpSession session = request.getSession();
+		String pache = (String)session.getAttribute(OrangeSideSecurityConstant.CAPTCHA_SESSION_KEY);
+		if(!SecurityUtils.matchString(pa,pache))throw new AuthenticationServiceException("验证码错误");
+	}
+
+	/**
      * Enables subclasses to override the composition of the password, such as by including
      * additional values and a separator.<p>This might be used for example if a postcode/zipcode was
      * required in addition to the password. A delimiter such as a pipe (|) should be used to

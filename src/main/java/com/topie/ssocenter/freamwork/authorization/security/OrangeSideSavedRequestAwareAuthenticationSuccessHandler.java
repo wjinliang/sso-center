@@ -58,7 +58,7 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
             logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
             decideRedirect(request, response, targetUrl);
         } finally {
-            clearAttributes(request);
+            clearAttributes(request,authentication);
             logLoginSuccess(authentication, request);
         }
     }
@@ -81,7 +81,7 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
             return;
         }
         decideRedirect(request, response, targetUrl);
-        clearAttributes(request);
+        clearAttributes(request,authentication);
     }
 
     private void logLoginSuccess(Authentication authentication, HttpServletRequest request) {
@@ -193,8 +193,24 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
         session.removeAttribute(OrangeSideSecurityConstant.CAPTCHA_SESSION_KEY);
     }
 
-    protected void clearAttributes(HttpServletRequest request) {
+    protected void clearAttributes(HttpServletRequest request,Authentication authentication) {
         clearAuthenticationAttributes(request);
         clearCaptcha(request);
+        clertErrorCount(request,authentication);
     }
+
+	private void clertErrorCount(HttpServletRequest request,Authentication authentication) {
+		 HttpSession session = request.getSession(false);
+	        if (session == null) {
+	            return;
+	        }
+	        String username = "";
+	        if (authentication.getPrincipal() instanceof OrangeSideSecurityUser) {
+	            username = ((OrangeSideSecurityUser) authentication.getPrincipal()).getUsername();
+	        } else {
+	            username = authentication.getPrincipal().toString();
+	        }
+	        session.removeAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username);
+		
+	}
 }

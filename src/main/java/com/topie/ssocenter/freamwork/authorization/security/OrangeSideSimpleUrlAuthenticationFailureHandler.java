@@ -20,8 +20,11 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.util.Assert;
 
+import com.topie.ssocenter.common.utils.AppUtil;
 import com.topie.ssocenter.common.utils.RequestUtil;
 import com.topie.ssocenter.common.utils.ResponseUtil;
+import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/9 说明：
@@ -63,7 +66,7 @@ public class OrangeSideSimpleUrlAuthenticationFailureHandler
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         try {
-        	checkTryCount(request,exception);
+        	exception = checkTryCount(request,exception);
             if (RequestUtil.isAjax(request)) {
                 writeJson(response, exception);
                 saveException(request, exception);
@@ -94,26 +97,32 @@ public class OrangeSideSimpleUrlAuthenticationFailureHandler
 
     }
 
-    private void checkTryCount(HttpServletRequest request, AuthenticationException exception) {
+    private AuthenticationException checkTryCount(HttpServletRequest request, AuthenticationException exception) {
     	String errMsg = exception.getMessage();
-    	if(!errMsg.equals("密码不正确"))return;
-		String username = (String)request.getAttribute(OrangeSideUsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY);
+    	if(!errMsg.equals("密码不正确"))return exception;
+		String username = (String)request.getParameter(OrangeSideUsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY);
 		HttpSession session = request.getSession();
 		Object o = session.getAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username);
 		if(o==null){
 			session.setAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username, 1);
 		}else{
 			int error = Integer.valueOf(o.toString());
+			session.setAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username, error+1);
 			if(maxPasswordErrorCount-error<=3){
 				exception = new  DisabledException("密码错误，再输入"+(maxPasswordErrorCount-error)+"次错误，账号将被锁定");
 			}
-			if(error>maxPasswordErrorCount){
+			if(error>=maxPasswordErrorCount){
 				exception = new  DisabledException("登录错误次数超过"+maxPasswordErrorCount+"次，账号已锁定");
-				//TODO update
+				session.removeAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username);
+				UserAccountService userService = (UserAccountService) AppUtil.getBean("userService");
+				UserAccount user = userService.findUserAccountByLoginName(username);
+				if(user==null) return new  DisabledException("用户不存在");
+				user.setLocked(true);
+				userService.updateNotNull(user);
 				
 			}
-			session.setAttribute(OrangeSideSecurityConstant.USER_TRY_COUNT_PREFIX+username, error+1);
 		}
+		return exception;
 	}
 
 	private void writeJson(HttpServletResponse response, AuthenticationException exception)

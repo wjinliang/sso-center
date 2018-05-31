@@ -124,7 +124,13 @@
 	                 </span>
                   </td>
                  </tr>
-                
+                <tr>
+                  <td class="td_right">排序：</td>
+                  <td class="">
+                  	<input type="text" name="seq" value="${appInfo.seq }" class="input-text lh30" size="40">
+                  </td>
+                 
+                 </tr>
                  <tr>
                    <td class="td_right">&nbsp;</td>
                    <td class="">
