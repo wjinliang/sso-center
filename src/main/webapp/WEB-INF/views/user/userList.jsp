@@ -116,7 +116,8 @@
 									<th width="30">#</th>
 									<th>用户名(登录名)</th>
 									<th>所在机构</th>
-									<th>最后登录时间</th>
+									<th>所属系统</th>
+									<!-- <th>最后登录时间</th> -->
 									<th>操作</th>
 								</tr>
 								<c:forEach items="${page.list}" var="user" varStatus="status">
@@ -133,7 +134,10 @@
 										</c:set>
 										${uorg.name}
 										</td>
-										<td>${user.lastlogintime }</td>
+										<td>
+										  ${user.systemId}
+										</td>
+										<%-- <td>${user.lastlogintime }</td> --%>
 										<td>
 											<c:set var="act" value="0" ></c:set>    
 											<c:forEach items="${apps}" var="ap" varStatus="status" >

@@ -137,4 +137,26 @@
 			AND t.`NAME` LIKE CONCAT('%',#{user.name},'%')
     	</if>
     </select>
+    
+    
+    <select id="selectUserSystem" resultMap="BaseResultMap">
+		SELECT u.`CODE`,GROUP_CONCAT(a.app_name) as system_id from t_user_account u 
+		LEFT JOIN syn_user su on u.code=su.user_id 
+		LEFT JOIN app_applicationinfo a ON a.id=su.app_id 
+		<where>
+			<if test="userId!=null and userId!=''">
+				and u.`CODE`=#{userId}
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				and syn_time &gt;= #{startTime}
+			</if>
+		</where>
+	 	GROUP BY u.`CODE`
+    </select>
+    <update id="updateSystemIdByPrimaryKey">
+    	UPDATE `t_user_account` 
+    	SET `system_id`=#{systemId} 
+    	WHERE `CODE`=#{code}
+    
+    </update>
 </mapper>

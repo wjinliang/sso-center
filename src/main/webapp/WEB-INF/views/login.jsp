@@ -10,12 +10,14 @@
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
 <title>动物疫病防控及动物卫生监督云平台单点登录</title>
-<link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/login/css/load.css">
-<script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-1.12.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/login/css/load.css?v1">
+<script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
-    <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
-<script type="text/javascript" src="<%=basePath%>/assets/login/js/login.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/login/js/base64.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/login/js/login.js?v1"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/js/commonAction.js?v1"></script>
 </head>
 <script type="text/javascript">
         if (self!=top){
@@ -47,16 +49,14 @@
                 </div>
             </div>
         </div>
+        <div class="help"><a href="#">用户操作手册下载</a></div>
         <div class="login-footer">版权&copy;-中国动物疫病预防控制中心</div>
     </div>
 </body>
 <script type="text/javascript">
 	
 	$(function(){
-		$("a[class='acreditImg']").bind("click",function(){
-			$(this).find("img").attr("src","<%=basePath%>/security/web/captcha?"+new Date());
-			
-		});
+		
 		layer.open({
 			  type:1,
 			  title: '通知公告',
@@ -65,8 +65,17 @@
 			  shade:0,
 			  anim: 1,
 			  //closeBtn:0,
-			  content: '<p style="margin: 10px;">全国动物疫病防控与动物卫生监督工作云平台单点登录新版上线了，欢迎大家使用！</p>'
+			  content: '<p style="margin: 10px;">动物疫病防控及动物卫生监督云平台单点登录新版上线了，欢迎大家使用！</p>'
 			}); 
+		 $("a[class='acreditImg']").bind("click",function(){
+				$(this).find("img").attr("src","<%=basePath%>/security/web/captcha?t="+new Date().getTime());
+				
+		});
+        $(".help a").bind("click",function(){
+			var url = "<%=basePath%>/KE/download/1528897195747";
+			download(url);
+			
+		});
 	});
 </script>
 </html>

@@ -288,10 +288,14 @@ function getAction(url,success){
 		
 	};
 	function download(href) {
+		layer.load(1);
+
         var xhr = new XMLHttpRequest();
         xhr.open('GET', href, true);
         xhr.responseType = 'arraybuffer';
         xhr.onload = function () {
+    		//此处关闭
+    		  layer.closeAll('loading');
             if (this.status === 200) {
                 var filename = "";
                 var disposition = xhr.getResponseHeader('Content-Disposition');

@@ -9,7 +9,17 @@
 				
 			},
 		    submitHandler: function(form) {
-		      form.submit();
+		    	var cloneForm = $(form).clone();
+		    	$(document.body).append(cloneForm);
+		    	cloneForm.hide();
+		    	var b = new Base64();  
+		    	var password = cloneForm.find('input[name="j_password"]');
+		    	var jp = password.val();
+		        password.val(b.encode(b.encode(jp)));
+		        var username = cloneForm.find('input[name="j_username"]');
+		    	var ju = username.val(); 
+		        username.val(b.encode(ju));
+		        cloneForm.submit();
 		    }
 		});
 		var validator = $(form).validate({
@@ -32,5 +42,6 @@
 
     $(document).ready(function () {
         initLogin("#loginForm");
+       
     });
 })(jQuery, window, document);

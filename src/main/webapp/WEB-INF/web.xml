@@ -16,8 +16,35 @@
         <param-name>webAppRootKey</param-name>
         <param-value>/</param-value>
     </context-param>
-
-
+		<!-- 不安全的HTTP方法解决 -->
+		<security-constraint>
+            <web-resource-collection>
+                <web-resource-name>fortune</web-resource-name>
+                <url-pattern>/*</url-pattern>
+                <http-method>PUT</http-method>
+                <http-method>DELETE</http-method>
+                <http-method>HEAD</http-method>
+                <http-method>OPTIONS</http-method>
+                <http-method>TRACE</http-method>
+            </web-resource-collection>
+            <auth-constraint></auth-constraint>
+        </security-constraint>
+  	<!-- <filter> 
+		<filter-name>httpHeaderSecurity</filter-name> 
+		<filter-class>
+		org.apache.catalina.filters.HttpHeaderSecurityFilter
+		</filter-class> 
+			<init-param>  
+	        <param-name>antiClickJackingOption</param-name>  
+	        <param-value>SAMEORIGIN</param-value>  
+	    </init-param> 
+		<async-supported>true</async-supported>  
+	</filter> 
+	<filter-mapping>
+		<filter-name>httpHeaderSecurity</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>  -->
   <filter>
      <filter-name>XssSqlFilter</filter-name>
      <filter-class>com.topie.ssocenter.freamwork.authorization.security.XssFilter</filter-class>

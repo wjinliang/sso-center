@@ -43,8 +43,10 @@
                         <option value="/api/deleteSynDivision">删除区划同步记录</option> 
                         <option value="/api/mvOrg">机构修改所属区划</option> 
                         <option value="/api/mvDivision">区划修改所属区划</option> 
+                        <option value="/api/updateDivision">区划修改isDelete0,1</option> 
                         <option value="/api/addRole">用户添加角色</option> 
                         <option value="/api/deleteRole">用户删除角色</option> 
+                        <option value="/api/updateUserSystem">更新用户所属系统</option> 
                         </select> 
                         </div> 
                       </div> 

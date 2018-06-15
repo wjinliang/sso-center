@@ -292,6 +292,28 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		return u;
 		
 	}
+
+	@Override
+	public void updateUserSystem(String id, String startTime) {
+		Integer pageNum=1;
+		Integer pageSize =10000;
+		boolean f = true;
+		do{
+			PageHelper.startPage(pageNum, pageSize);
+			List<UserAccount> list = userMapper.selectUserSystem(id,startTime);
+			PageInfo<UserAccount> page = new PageInfo<UserAccount>(list);
+			updateSystemId(page.getList());
+			f = page.isHasNextPage();
+			pageNum++;
+		}while(f);
+	}
+
+	private void updateSystemId(List<UserAccount> list) {
+		for(UserAccount user:list){
+			userMapper.updateSystemIdByPrimaryKey(user);
+		}
+		
+	}
 	
 	
 }

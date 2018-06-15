@@ -41,6 +41,7 @@ public class DivisionServiceImpl extends BaseServiceImpl<Division,String> implem
 		example.setOrderByClause("seq asc");
 		
 		criteria.andEqualTo("parentId", id);
+		criteria.andNotEqualTo("isdelete", 1);
 		return getMapper().selectByExample(example);
 	}
 

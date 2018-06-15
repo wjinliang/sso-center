@@ -18,6 +18,7 @@ import com.topie.ssocenter.freamwork.authorization.model.SynUser;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.SynService;
+import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.service.UserRoleService;
 
 @Controller
@@ -32,6 +33,8 @@ public class ApiController {
 	private SynService synService;
 	@Autowired
 	private UserRoleService userRoleService;
+	@Autowired
+	private UserAccountService userAccountService;
 	
 	@RequestMapping("/page")
 	public Object page(){
@@ -138,6 +141,25 @@ public class ApiController {
 	@ResponseBody
 	public Object deleteRole(String id,String appId){
 		userRoleService.deleteUserAccountRole(id, appId);
+		return ResponseUtil.success();
+	}
+	
+	@RequestMapping("updateUserSystem")
+	@ResponseBody
+	public Object updateUserSystem(String id,String appId){
+		long start = System.currentTimeMillis();
+		userAccountService.updateUserSystem(id, appId);
+		System.out.println(System.currentTimeMillis()-start);
+		return ResponseUtil.success();
+	}
+	@RequestMapping("/updateDivision")
+	@ResponseBody
+	public Object updateDivision(
+			String id,Integer appId) {
+		Division d = new Division();
+		d.setId(id);
+		d.setIsdelete(appId);
+		this.divisionService.updateNotNull(d);
 		return ResponseUtil.success();
 	}
 	

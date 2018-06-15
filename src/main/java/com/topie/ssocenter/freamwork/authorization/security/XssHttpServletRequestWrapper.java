@@ -3,6 +3,8 @@ package com.topie.ssocenter.freamwork.authorization.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.springframework.web.util.HtmlUtils;
+
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {  
     public XssHttpServletRequestWrapper(HttpServletRequest servletRequest) {
         super(servletRequest);
@@ -32,12 +34,10 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
             return null;
         return cleanXSS(value);
     }
+    
     private String cleanXSS(String value) {
-                //You'll need to remove the spaces from the html entities below
-        value = value.replaceAll("eval\\((.*)\\)", "");
-        value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
-        value = value.replaceAll("script", "");
-        return value;
-    }
+    	value = HtmlUtils.htmlEscape(value);  
+		return value;
+	}
 
 } 

@@ -22,8 +22,10 @@ import com.topie.ssocenter.common.utils.DmDateUtil;
 import com.topie.ssocenter.common.utils.RequestUtil;
 import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.freamwork.authorization.model.Log;
+import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.LogService;
 import com.topie.ssocenter.freamwork.authorization.service.SecurityService;
+import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 
 /**
@@ -96,10 +98,25 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
               ip );
         String content = username+"[ip:"+ip+"]登录成功";
         insertLog("登录系统成功",content,"");
+        updateUserLastLoginTime(username);
+        
     }
 
 
-    private void insertLog(String title,String content,String nll) {
+    private void updateUserLastLoginTime(String username) {
+    	OrangeSideSecurityUser user = SecurityUtils.getCurrentSecurityUser(); 
+    	if(user==null){
+      		 return;
+      	 }
+    	user.getId();
+    	UserAccountService userService =(UserAccountService) AppUtil.getBean("userService");
+    	UserAccount u = userService.selectByKey(user.getId());
+    	u.setLastlogintime(DmDateUtil.Current());
+    	userService.updateNotNull(u);
+		
+	}
+
+	private void insertLog(String title,String content,String nll) {
    	 Log log = new Log();  
    	 //获取登录管理员 
    	 OrangeSideSecurityUser user = SecurityUtils.getCurrentSecurityUser(); 

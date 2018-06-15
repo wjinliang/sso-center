@@ -79,4 +79,10 @@ public interface UserAccountService extends IService<UserAccount,String> {
 	 *  u.put("result", 操作成功);
 	 */
 	Map synOneUser(UserAccount user, String appId, String typeCode, String typeName);
+	/**
+	 * 更新用户所属系统
+	 * @param id
+	 * @param startTime
+	 */
+	void updateUserSystem(String id, String startTime);
 }

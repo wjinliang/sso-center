@@ -32,4 +32,13 @@ public interface UserAccountMapper extends Mapper<UserAccount> {
 	 * @return
 	 */
 	List<UserAccount> selectToSynUserByAppId(@Param("user")UserAccount user,@Param("appId") String appId);
+	/**
+	 * 
+	 * @param id user.code = 
+	 * @param startTime syn.synTime >
+	 * @return
+	 */
+	List<UserAccount> selectUserSystem(@Param("userId")String id, @Param("startTime")String startTime);
+
+	void updateSystemIdByPrimaryKey(UserAccount user);
 }

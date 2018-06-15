@@ -1,5 +1,8 @@
 package com.topie.ssocenter.freamwork.authorization.security;
 
+import java.util.Base64;
+import java.util.Base64.Decoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -16,143 +19,181 @@ import com.topie.ssocenter.freamwork.authorization.utils.SecurityUtils;
 /**
  * 工程：os-app 创建人 : ChenGJ 创建时间： 2015/9/13 说明：
  */
-public class OrangeSideUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    //~ Static fields/initializers =====================================================================================
+public class OrangeSideUsernamePasswordAuthenticationFilter extends
+		AbstractAuthenticationProcessingFilter {
+	// ~ Static fields/initializers
+	// =====================================================================================
 
-    public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "j_username";
-    public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "j_password";
-    public static final String SPRING_SECURITY_FORM_CAPTCHCA_KEY = "j_captcha";
+	public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "j_username";
+	public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "j_password";
+	public static final String SPRING_SECURITY_FORM_CAPTCHCA_KEY = "j_captcha";
 
-    /**
-     * @deprecated If you want to retain the username, cache it in a customized {@code
-     * AuthenticationFailureHandler}
-     */
-    @Deprecated
-    public static final String SPRING_SECURITY_LAST_USERNAME_KEY = "SPRING_SECURITY_LAST_USERNAME";
+	/**
+	 * @deprecated If you want to retain the username, cache it in a customized
+	 *             {@code AuthenticationFailureHandler}
+	 */
+	@Deprecated
+	public static final String SPRING_SECURITY_LAST_USERNAME_KEY = "SPRING_SECURITY_LAST_USERNAME";
 
-    private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
-    private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
+	private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
+	private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
 
-    private boolean postOnly = true;
+	private boolean postOnly = true;
 
-    //~ Constructors ===================================================================================================
+	// ~ Constructors
+	// ===================================================================================================
 
-    public OrangeSideUsernamePasswordAuthenticationFilter() {
-        super("/j_spring_security_check");
-    }
+	public OrangeSideUsernamePasswordAuthenticationFilter() {
+		super("/j_spring_security_check");
+	}
 
-    //~ Methods ========================================================================================================
+	// ~ Methods
+	// ========================================================================================================
 
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (postOnly && !request.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-        }
-        checkCaptcha(request);
+	public Authentication attemptAuthentication(HttpServletRequest request,
+			HttpServletResponse response) throws AuthenticationException {
+		if (postOnly && !request.getMethod().equals("POST")) {
+			throw new AuthenticationServiceException(
+					"Authentication method not supported: "
+							+ request.getMethod());
+		}
+		checkCaptcha(request);
 
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+		String username = obtainUsername(request);
+		String password = obtainPassword(request);
 
-        if (username == null) {
-            username = "";
-        }
+		if (username == null) {
+			username = "";
+		}
 
-        if (password == null) {
-            password = "";
-        }
+		if (password == null) {
+			password = "";
+		}
 
-        username = username.trim();
+		username = username.trim();
+		try {
+			Decoder base64 = Base64.getDecoder();
+			username = new String(base64.decode(username.getBytes()));
+			password = new String(base64.decode(base64.decode(password.getBytes())));
+		} catch (Exception e) {
+		}
 
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
+				username, password);
 
-        // Allow subclasses to set the "details" property
-        setDetails(request, authRequest);
+		// Allow subclasses to set the "details" property
+		setDetails(request, authRequest);
 
-        return this.getAuthenticationManager().authenticate(authRequest);
-    }
+		return this.getAuthenticationManager().authenticate(authRequest);
+	}
 
-    private void checkCaptcha(HttpServletRequest request) {
-    	Object p = request.getParameter(SPRING_SECURITY_FORM_CAPTCHCA_KEY);
-    	if(p==null)throw new AuthenticationServiceException("请输入验证码");
-		String pa= (String)p;
+	private void checkCaptcha(HttpServletRequest request) {
+		Object p = request.getParameter(SPRING_SECURITY_FORM_CAPTCHCA_KEY);
+		if (p == null)
+			throw new AuthenticationServiceException("请输入验证码");
+		String pa = (String) p;
 		HttpSession session = request.getSession();
-		String pache = (String)session.getAttribute(OrangeSideSecurityConstant.CAPTCHA_SESSION_KEY);
-		if(!SecurityUtils.matchString(pa,pache))throw new AuthenticationServiceException("验证码错误");
+		String pache = (String) session
+				.getAttribute(OrangeSideSecurityConstant.CAPTCHA_SESSION_KEY);
+		if (!SecurityUtils.matchString(pa, pache))
+			throw new AuthenticationServiceException("验证码错误");
 	}
 
 	/**
-     * Enables subclasses to override the composition of the password, such as by including
-     * additional values and a separator.<p>This might be used for example if a postcode/zipcode was
-     * required in addition to the password. A delimiter such as a pipe (|) should be used to
-     * separate the password and extended value(s). The <code>AuthenticationDao</code> will need to
-     * generate the expected password in a corresponding manner.</p>
-     *
-     * @param request so that request attributes can be retrieved
-     * @return the password that will be presented in the <code>Authentication</code> request token
-     * to the <code>AuthenticationManager</code>
-     */
-    protected String obtainPassword(HttpServletRequest request) {
-        return request.getParameter(passwordParameter);
-    }
+	 * Enables subclasses to override the composition of the password, such as
+	 * by including additional values and a separator.
+	 * <p>
+	 * This might be used for example if a postcode/zipcode was required in
+	 * addition to the password. A delimiter such as a pipe (|) should be used
+	 * to separate the password and extended value(s). The
+	 * <code>AuthenticationDao</code> will need to generate the expected
+	 * password in a corresponding manner.
+	 * </p>
+	 *
+	 * @param request
+	 *            so that request attributes can be retrieved
+	 * @return the password that will be presented in the
+	 *         <code>Authentication</code> request token to the
+	 *         <code>AuthenticationManager</code>
+	 */
+	protected String obtainPassword(HttpServletRequest request) {
+		return request.getParameter(passwordParameter);
+	}
 
-    /**
-     * Enables subclasses to override the composition of the username, such as by including
-     * additional values and a separator.
-     *
-     * @param request so that request attributes can be retrieved
-     * @return the username that will be presented in the <code>Authentication</code> request token
-     * to the <code>AuthenticationManager</code>
-     */
-    protected String obtainUsername(HttpServletRequest request) {
-        return request.getParameter(usernameParameter);
-    }
+	/**
+	 * Enables subclasses to override the composition of the username, such as
+	 * by including additional values and a separator.
+	 *
+	 * @param request
+	 *            so that request attributes can be retrieved
+	 * @return the username that will be presented in the
+	 *         <code>Authentication</code> request token to the
+	 *         <code>AuthenticationManager</code>
+	 */
+	protected String obtainUsername(HttpServletRequest request) {
+		return request.getParameter(usernameParameter);
+	}
 
-    /**
-     * Provided so that subclasses may configure what is put into the authentication request's
-     * details property.
-     *
-     * @param request     that an authentication request is being created for
-     * @param authRequest the authentication request object that should have its details set
-     */
-    protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
-        authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
-    }
+	/**
+	 * Provided so that subclasses may configure what is put into the
+	 * authentication request's details property.
+	 *
+	 * @param request
+	 *            that an authentication request is being created for
+	 * @param authRequest
+	 *            the authentication request object that should have its details
+	 *            set
+	 */
+	protected void setDetails(HttpServletRequest request,
+			UsernamePasswordAuthenticationToken authRequest) {
+		authRequest.setDetails(authenticationDetailsSource
+				.buildDetails(request));
+	}
 
-    /**
-     * Sets the parameter name which will be used to obtain the username from the login request.
-     *
-     * @param usernameParameter the parameter name. Defaults to "j_username".
-     */
-    public void setUsernameParameter(String usernameParameter) {
-        Assert.hasText(usernameParameter, "Username parameter must not be empty or null");
-        this.usernameParameter = usernameParameter;
-    }
+	/**
+	 * Sets the parameter name which will be used to obtain the username from
+	 * the login request.
+	 *
+	 * @param usernameParameter
+	 *            the parameter name. Defaults to "j_username".
+	 */
+	public void setUsernameParameter(String usernameParameter) {
+		Assert.hasText(usernameParameter,
+				"Username parameter must not be empty or null");
+		this.usernameParameter = usernameParameter;
+	}
 
-    /**
-     * Sets the parameter name which will be used to obtain the password from the login request..
-     *
-     * @param passwordParameter the parameter name. Defaults to "j_password".
-     */
-    public void setPasswordParameter(String passwordParameter) {
-        Assert.hasText(passwordParameter, "Password parameter must not be empty or null");
-        this.passwordParameter = passwordParameter;
-    }
+	/**
+	 * Sets the parameter name which will be used to obtain the password from
+	 * the login request..
+	 *
+	 * @param passwordParameter
+	 *            the parameter name. Defaults to "j_password".
+	 */
+	public void setPasswordParameter(String passwordParameter) {
+		Assert.hasText(passwordParameter,
+				"Password parameter must not be empty or null");
+		this.passwordParameter = passwordParameter;
+	}
 
-    /**
-     * Defines whether only HTTP POST requests will be allowed by this filter. If set to true, and
-     * an authentication request is received which is not a POST request, an exception will be
-     * raised immediately and authentication will not be attempted. The
-     * <tt>unsuccessfulAuthentication()</tt> method will be called as if handling a failed
-     * authentication. <p> Defaults to <tt>true</tt> but may be overridden by subclasses.
-     */
-    public void setPostOnly(boolean postOnly) {
-        this.postOnly = postOnly;
-    }
+	/**
+	 * Defines whether only HTTP POST requests will be allowed by this filter.
+	 * If set to true, and an authentication request is received which is not a
+	 * POST request, an exception will be raised immediately and authentication
+	 * will not be attempted. The <tt>unsuccessfulAuthentication()</tt> method
+	 * will be called as if handling a failed authentication.
+	 * <p>
+	 * Defaults to <tt>true</tt> but may be overridden by subclasses.
+	 */
+	public void setPostOnly(boolean postOnly) {
+		this.postOnly = postOnly;
+	}
 
-    public final String getUsernameParameter() {
-        return usernameParameter;
-    }
+	public final String getUsernameParameter() {
+		return usernameParameter;
+	}
 
-    public final String getPasswordParameter() {
-        return passwordParameter;
-    }
+	public final String getPasswordParameter() {
+		return passwordParameter;
+	}
 }

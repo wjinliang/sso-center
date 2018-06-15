@@ -15,6 +15,7 @@
 <title>动物疫病防控及动物卫生监督云平台单点登录</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/index/css/systemstyle.css">
 <script type="text/javascript" src="<%=basePath%>/assets/index/js/jquery-1.12.1.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
 <script type="text/javascript">  
 	var days=new  Array ("日", "一", "二", "三", "四", "五", "六");  
 	var oo=false;
