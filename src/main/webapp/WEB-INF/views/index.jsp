@@ -51,7 +51,7 @@
 	  window.setTimeout(showDT, 1000);  
 	}  
 </script>
-<!--[if lt ie9]>
+<!--[if lt IE 9]>
 <style>
 	.news-con .titbg1, .news-con .titbg2{background:#d7f1fe !important;}
 </style>

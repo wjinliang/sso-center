@@ -146,6 +146,7 @@ public class DivisionController {
 				String id = UUIDUtil.getUUID();
 				division.setCreatetime(DmDateUtil.Current());
 				division.setId(id);
+				division.setIsdelete(0);
 				o = this.divisionService.selectByKey(division.getParentId());
 				if(o!=null)
 					division.setLevel(o.getLevel()+1);

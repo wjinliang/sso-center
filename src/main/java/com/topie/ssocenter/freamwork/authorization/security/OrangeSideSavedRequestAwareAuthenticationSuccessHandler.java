@@ -112,6 +112,7 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
     	UserAccountService userService =(UserAccountService) AppUtil.getBean("userService");
     	UserAccount u = userService.selectByKey(user.getId());
     	u.setLastlogintime(DmDateUtil.Current());
+    	u.setLogincount(u.getLogincount()==null?1:u.getLogincount()+1);
     	userService.updateNotNull(u);
 		
 	}

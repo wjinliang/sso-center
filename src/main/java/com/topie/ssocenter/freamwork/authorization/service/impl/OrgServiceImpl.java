@@ -172,7 +172,7 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 				//c.andIn("synSystemId", listSYSIDS);//无效
 			}*/
 		}
-		ex.setOrderByClause("seq asc");
+		ex.setOrderByClause("code asc");
 		PageHelper.startPage(pageNum, pageSize);
 		List<Org> list = orgMapper.selectByExampleEx(ex,listSYSIDS,parentDivisionId);
 		return new PageInfo<Org>(list);
@@ -223,11 +223,19 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		if(user.getOrgId()==null){
 			return ResponseUtil.emptyPage();
 		}
+		
 		Example ex = new Example(UserAccount.class);
 		Criteria ca = ex.createCriteria();
 		ca.andEqualTo("isDelete",false);
 		if(user.getName()!=null){
 			ca.andLike("name", "%"+user.getName() +"%");
+			
+			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
+			Org o = this.getMapper().selectByPrimaryKey(orgId);
+			if(o==null){//如果当前用户的机构不存在   返回空
+				return ResponseUtil.emptyPage();
+			}
+			org.setDivisionId(o.getDivisionId());//设置
 			Division d = divisionService.selectByKey(org.getDivisionId());
 			String dCode = d.getCode()+"";
 			//d.getLevel();
@@ -262,11 +270,14 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 				ca.andEqualTo("loginname", user.getLoginname());
 			}
 		}else{		
-			ca.andEqualTo("orgId", user.getOrgId());
+			//ca.andEqualTo("orgId", user.getOrgId());
 			if(user.getLoginname()!=null){
 				ca.andEqualTo("loginname", user.getLoginname());
+			}else{
+				ca.andEqualTo("orgId", user.getOrgId());
 			}
 		}
+		ex.setOrderByClause("loginname asc");
 		PageHelper.startPage(pageNum, pageSize);
 		List<UserAccount> list = this.userService.selectByExample(ex);
 		return new PageInfo<UserAccount>(list);

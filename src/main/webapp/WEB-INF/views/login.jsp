@@ -12,6 +12,9 @@
 <title>动物疫病防控及动物卫生监督云平台单点登录</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/login/css/load.css?v1">
 <script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-3.3.1.min.js"></script>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="<%=basePath%>/assets/js/jquery.min.js"></script>
+<![endif]-->
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/jquery.validate/additional-methods.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>

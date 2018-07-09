@@ -1,8 +1,8 @@
 package com.topie.ssocenter.freamwork.authorization.security;
 
-import org.springframework.security.authentication.AuthenticationDetailsSource;
-
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 
 public class OrangeSideCaptchaAuthenticationDetailsSource
         implements AuthenticationDetailsSource<HttpServletRequest, OrangeSideCaptchaAuthenticationDetails> {

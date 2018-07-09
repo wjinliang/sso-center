@@ -71,6 +71,7 @@ public class IndexController {
     	String id = SecurityUtils.getCurrentSecurityUser().getId();
     	user.setCode(id);
     	userService.updateNotNull(user);
+    	//TODO 自动同步
     	UserAccount userAccount = userService.selectByKey(id);
     	model.addObject("userAccount", userAccount);
     	model.setViewName("user/info");
