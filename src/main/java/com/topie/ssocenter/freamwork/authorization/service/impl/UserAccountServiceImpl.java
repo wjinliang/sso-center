@@ -314,6 +314,16 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		}
 		
 	}
+
+	@Override
+	public UserAccount selectUserByXtbs(String mergeUuid,String appId) {
+		UserAccount user = new UserAccount();
+		user.setMergeUuid(mergeUuid);
+		List<UserAccount> list = userMapper.selectSynUserByAppId(user,appId);
+		if(list.size()>0)
+			return list.get(0);
+		return null;
+	}
 	
 	
 }

@@ -45,6 +45,10 @@ public class IndexController {
     public String root() {
         return "redirect:index";
     }
+    @RequestMapping("/login")
+    public String login() {
+        return "redirect:index";
+    }
 
     @RequestMapping("/index")
     public String index(Model model) {

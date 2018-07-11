@@ -85,4 +85,6 @@ public interface UserAccountService extends IService<UserAccount,String> {
 	 * @param startTime
 	 */
 	void updateUserSystem(String id, String startTime);
+
+	UserAccount selectUserByXtbs(String mergeUuid,String appId);
 }

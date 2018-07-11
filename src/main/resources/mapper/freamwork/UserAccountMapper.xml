@@ -122,6 +122,9 @@
     	<if test="user.name!=null and user.name!=''">
 			AND t.`NAME` LIKE CONCAT('%',#{user.name},'%')
     	</if>
+    	<if test="user.mergeUuid!=null and user.mergeUuid!=''">
+			AND t.merge_uuid LIKE #{user.mergeUuid}
+    	</if>
     </select>
     
      <select id="selectToSynUserByAppId" resultMap="BaseResultMap">

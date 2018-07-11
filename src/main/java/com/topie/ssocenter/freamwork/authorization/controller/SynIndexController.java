@@ -18,6 +18,7 @@ import com.topie.ssocenter.common.utils.ResponseUtil;
 import com.topie.ssocenter.freamwork.authorization.model.ApplicationInfo;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
+import com.topie.ssocenter.freamwork.authorization.security.OrangeSideSecurityUser;
 import com.topie.ssocenter.freamwork.authorization.service.ApplicationInfoService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
@@ -65,7 +66,14 @@ public class SynIndexController {
 			model.setViewName("/error/500");
 			return model;
 		}
-		String uuid = SecurityUtils.getCurrentSecurityUser().getId();
+		OrangeSideSecurityUser user = SecurityUtils.getCurrentSecurityUser();
+		String uuid = user.getId();
+		if(user.getMergeUuid()!=null&&!user.getMergeUuid().equals("")){
+			UserAccount u = userService.selectUserByXtbs(user.getMergeUuid(),app.getId());
+			if(u!=null)
+				uuid=u.getCode();
+		}
+		
 			uuid = SimpleCrypto.encrypt(seed, uuid);
 			String appPath = getAppPath(request,app);
 			if (appPath != null && !appPath.equals("")) {
