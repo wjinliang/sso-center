@@ -63,10 +63,14 @@
 							<form id="form1" action="save" method="post" class="jqtransform">
 				               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
 				                 <tr>
+				                  <td class="td_right">区划父ID<span class="red">*</span>：</td>
+				                  <td class=""> 
+				                    <input type="text" name="parentId" class="input-text lh30" size="40">
+				                  </td></tr>
+				                 <tr>
 				                  <td class="td_right">区划全称<span class="red">*</span>：</td>
 				                  <td class=""> 
 				                  <input type="hidden" name="id">
-				                  <input type="hidden" name="parentId">
 				                  
 				                    <input type="text" name="fullname" class="input-text lh30" size="40">
 				                  </td></tr>

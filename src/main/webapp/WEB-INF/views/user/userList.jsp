@@ -122,23 +122,6 @@
 								</tr>
 								<c:forEach items="${page.list}" var="user" varStatus="status">
 									<tr class="tr">
-
-										<td class=""><input type="checkbox"
-											value='${user.code }'></td>
-										<td class="">
-											${(page.pageNum-1)*page.pageSize+status.count}</td>
-										<td><a
-											href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
-												${user.name}(${user.loginname })</a></td>
-										<td><c:set var="uorg" value="${d:gOBID(user.orgId)}">
-										</c:set>
-										${uorg.name}
-										</td>
-										<td>
-										  ${user.systemId}
-										</td>
-										<%-- <td>${user.lastlogintime }</td> --%>
-										<td>
 											<c:set var="act" value="0" ></c:set>    
 											<c:forEach items="${apps}" var="ap" varStatus="status" >
 										      <c:if test="${fn:contains(user.systemId,ap.appName)}">
@@ -148,6 +131,32 @@
 										      	<c:set var="act" value="1" ></c:set>  
 										      </c:if> 
 											</c:forEach>
+
+										<td class=""><input type="checkbox"
+											value='${user.code }'></td>
+										<td class="">
+											${(page.pageNum-1)*page.pageSize+status.count}</td>
+										<td>
+											<c:if test="${act =='0'}">
+												<a
+													href="javascript:viewPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+													${user.name}(${user.loginname })</a>
+											</c:if>
+											<c:if test="${act =='1'}">
+												<a
+													href="javascript:openPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">
+													${user.name}(${user.loginname })</a>
+											</c:if>
+										</td>
+										<td><c:set var="uorg" value="${d:gOBID(user.orgId)}">
+										</c:set>
+										${uorg.name}
+										</td>
+										<td>
+										  ${user.systemId}
+										</td>
+										<%-- <td>${user.lastlogintime }</td> --%>
+										<td>
 											<c:if test="${act =='0'}">
 												<a class="ext_btn" href="javascript:viewPage('user/edit?code=${user.code }&orgId=${user.orgId }&divisionId=${searchModelOrg.divisionId }');">查看</a>
 											</c:if>

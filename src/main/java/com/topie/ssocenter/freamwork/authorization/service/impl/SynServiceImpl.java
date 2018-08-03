@@ -109,6 +109,7 @@ public class SynServiceImpl implements SynService {
 			httpClient.executeMethod(postMethod);// 200
 			// 5.读取内容
 			notReadNum = postMethod.getResponseBodyAsString().trim();
+			notReadNum = notReadNum.replace("\"", "");
 			if (!notReadNum.equalsIgnoreCase("000")) {
 				notReadNum = swtichError(notReadNum);
 			}
@@ -403,6 +404,30 @@ public class SynServiceImpl implements SynService {
 		}
 		if (notReadNum.equalsIgnoreCase("304")) {
 			errorString = "更新组织没有区划";
+			return errorString;
+		}
+		if (notReadNum.equalsIgnoreCase("104")) {
+			errorString = "";
+			return errorString;
+		}
+		if (notReadNum.equalsIgnoreCase("10101")) {
+			errorString = "请求参数有误";
+			return errorString;
+		}
+		if (notReadNum.equalsIgnoreCase("10500")) {
+			errorString = "服务器内部错误";
+			return errorString;
+		}
+		if (notReadNum.equalsIgnoreCase("10404")) {
+			errorString = "请求资源不存在";
+			return errorString;
+		}
+		if (notReadNum.equalsIgnoreCase("20404")) {
+			errorString = "操作码不存在";
+			return errorString;
+		}
+		if (notReadNum.equalsIgnoreCase("30404")) {
+			errorString = "用户不存在";
 			return errorString;
 		}
 
