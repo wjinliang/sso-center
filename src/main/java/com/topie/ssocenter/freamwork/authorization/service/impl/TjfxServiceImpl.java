@@ -55,7 +55,11 @@ public class TjfxServiceImpl implements TjfxService {
 		String type=" count(t.`NAME`) ";
 		String isDelete="0";
 		String systemId=app.getAppName()==null?"test":app.getAppName();
-		return this.tjfxMapper.selectBase(type,isDelete,systemId);
+		Map map = new HashMap();
+		map.put("type", type);
+		map.put("isDelete", isDelete);
+		map.put("systemId", systemId);
+		return this.tjfxMapper.selectBase(map);
 	}
 
 	@Override
@@ -63,7 +67,11 @@ public class TjfxServiceImpl implements TjfxService {
 		String type=" sum(t.`LOGINCOUNT`) ";
 		String isDelete="0";
 		String systemId=app.getAppName()==null?"test":app.getAppName();
-		return this.tjfxMapper.selectBase(type,isDelete,systemId);
+		Map map = new HashMap();
+		map.put("type", type);
+		map.put("isDelete", isDelete);
+		map.put("systemId", systemId);
+		return this.tjfxMapper.selectBase(map);
 	}
 
 	@Override
@@ -71,7 +79,23 @@ public class TjfxServiceImpl implements TjfxService {
 		String type=" count(t.`NAME`) ";
 		String isDelete="1";
 		String systemId=app.getAppName()==null?"test":app.getAppName();
-		return this.tjfxMapper.selectBase(type,isDelete,systemId);
+		Map map = new HashMap();
+		map.put("type", type);
+		map.put("isDelete", isDelete);
+		map.put("systemId", systemId);
+		return this.tjfxMapper.selectBase(map);
+	}
+	@Override
+	public List<Map> getUserNoLoginDivision(ApplicationInfo app) {
+		String type=" count(t.`NAME`) ";
+		String isDelete="0";
+		String systemId=app.getAppName()==null?"test":app.getAppName();
+		Map map = new HashMap();
+		map.put("type", type);
+		map.put("isDelete", isDelete);
+		map.put("systemId", systemId);
+		map.put("lastLoginTime", "2");
+		return this.tjfxMapper.selectBase(map);
 	}
 
 	@Override

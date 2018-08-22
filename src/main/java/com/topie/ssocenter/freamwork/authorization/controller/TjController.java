@@ -52,7 +52,7 @@ public class TjController {
 		PageInfo<ApplicationInfo> page = appService.findApplicationInfoList(1, 100, new ApplicationInfo());
 		model.addObject("appPage", page);
 		if(StringUtils.isEmpty(app.getAppName())){
-			app.setAppName(page.getList().get(0).getAppName());
+			app.setAppName(page.getList().get(0).getId());
 		}
 		model.addObject(R.SEARCHMODEL, app);
 		List<Map> list = tjfxService.getUserCountForDivision(app);
@@ -73,7 +73,7 @@ public class TjController {
 		PageInfo<ApplicationInfo> page = appService.findApplicationInfoList(1, 100, new ApplicationInfo());
 		model.addObject("appPage", page);
 		if(StringUtils.isEmpty(app.getAppName())){
-			app.setAppName(page.getList().get(0).getAppName());
+			app.setAppName(page.getList().get(0).getId());
 		}
 		model.addObject(R.SEARCHMODEL, app);
 		List<Map> list = tjfxService.getUserLonginCountForDivision(app);
@@ -94,12 +94,31 @@ public class TjController {
 		PageInfo<ApplicationInfo> page = appService.findApplicationInfoList(1, 100, new ApplicationInfo());
 		model.addObject("appPage", page);
 		if(StringUtils.isEmpty(app.getAppName())){
-			app.setAppName(page.getList().get(0).getAppName());
+			app.setAppName(page.getList().get(0).getId());
 		}
 		model.addObject(R.SEARCHMODEL, app);
 		List<Map> list = tjfxService.getUserDelCountForDivision(app);
 		model.addObject(R.PAGE, list);
 		model.setViewName("/tjfx/qhuserdl");
+		return model;
+	}/**
+	 * 各个区划 用户未登录个数 统计
+	 * @param model
+	 * @param app
+	 * @return
+	 */
+	@RequestMapping("/tjyh/qhwdlyh")
+	public ModelAndView qhwdlyh(ModelAndView model,ApplicationInfo
+			app){
+		PageInfo<ApplicationInfo> page = appService.findApplicationInfoList(1, 100, new ApplicationInfo());
+		model.addObject("appPage", page);
+		if(StringUtils.isEmpty(app.getAppName())){
+			app.setAppName(page.getList().get(0).getId());
+		}
+		model.addObject(R.SEARCHMODEL, app);
+		List<Map> list = tjfxService.getUserNoLoginDivision(app);
+		model.addObject(R.PAGE, list);
+		model.setViewName("/tjfx/qhwdlyh");
 		return model;
 	}
 	@RequestMapping("/tjyh/download")
@@ -119,6 +138,10 @@ public class TjController {
 		if(type.equals("3")){
 			list = this.tjfxService.getUserDelCountForDivision(app);
 			name = "各个区划用户删除数量统计";
+		}
+		if(type.equals("3")){
+			list = this.tjfxService.getUserNoLoginDivision(app);
+			name = "各个区划用户未登录统计";
 		}
 		String fileName = systemId+name;
 		OutputStream fOut = null;

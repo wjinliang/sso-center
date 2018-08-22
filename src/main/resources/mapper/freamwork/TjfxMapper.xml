@@ -1,8 +1,227 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.topie.ssocenter.freamwork.authorization.dao.TjfxMapper" >
-  
   <select id="selectBase" resultType="java.util.Map">
+  	SELECT
+			t.`NAME` `divisionName`,
+			IFNULL(sheng.cc, 0) shengcount,
+			IFNULL(shi.cc, 0) shicount,
+			IFNULL(xian.cc, 0) xiancount,
+			IFNULL(xiang.cc, 0) xiangcount,
+			IFNULL(cun.cc, 0) cuncount
+		FROM
+			(
+				SELECT
+					c.`NAME`
+				FROM
+					(
+						SELECT
+							`NAME`
+						FROM
+							t_division
+						WHERE
+							`level` = 1
+					) c
+			) t
+		LEFT JOIN (
+			SELECT
+				${type} AS cc,
+				d.`NAME`
+			FROM
+				t_user_account t
+			LEFT JOIN syn_user syn ON syn.user_id=t.`CODE`
+			LEFT JOIN t_org o ON t.org_id = o.id
+			LEFT JOIN t_division d ON d.ID = o.division_id
+			WHERE
+				d.`level` = 1
+			AND syn.app_id = #{systemId}
+			AND t.is_delete = #{isDelete}
+			<if test="lastLoginTime!=null">
+				AND t.LASTLOGINTIME is null
+			</if>
+			GROUP BY
+				d.id
+			ORDER BY
+				cc ASC
+		) AS sheng ON t.`NAME` = sheng.`NAME`
+		LEFT JOIN (
+			SELECT
+				sum(cc) cc,
+				d.`NAME`
+			FROM
+				(
+					SELECT
+						SUM(cc) AS cc,
+						d.PARENT_ID
+					FROM
+						(
+							SELECT
+								${type} AS cc,
+								d.PARENT_ID AS PARENT_ID
+							FROM
+								t_user_account t
+							LEFT JOIN syn_user syn ON syn.user_id=t.`CODE`
+							LEFT JOIN t_org o ON t.org_id = o.id
+							LEFT JOIN t_division d ON d.ID = o.division_id
+							WHERE
+								d.`level` = 3
+							AND syn.app_id = #{systemId}
+							AND t.is_delete = #{isDelete}
+							<if test="lastLoginTime!=null">
+								AND t.LASTLOGINTIME is null
+							</if>
+							GROUP BY
+								d.PARENT_ID
+						) a
+					LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+					GROUP BY
+						d.PARENT_ID
+				) a
+			LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+			GROUP BY
+				d.`NAME`
+			ORDER BY
+				d.`NAME`
+		) AS xian ON t.`name` = xian.`name`
+		LEFT JOIN (
+			SELECT
+				sum(cc) cc,
+				d.`NAME`
+			FROM
+				(
+					SELECT
+						sum(cc) AS cc,
+						d.PARENT_ID
+					FROM
+						(
+							SELECT
+								SUM(cc) AS cc,
+								d.PARENT_ID
+							FROM
+								(
+									SELECT
+										${type} AS cc,
+										d.PARENT_ID AS PARENT_ID
+									FROM
+										t_user_account t
+									LEFT JOIN syn_user syn ON syn.user_id=t.`CODE`
+									LEFT JOIN t_org o ON t.org_id = o.id
+									LEFT JOIN t_division d ON d.ID = o.division_id
+									WHERE
+										d.`level` = 4
+									AND syn.app_id = #{systemId}
+									AND t.is_delete = #{isDelete}
+									<if test="lastLoginTime!=null">
+										AND t.LASTLOGINTIME is null
+									</if>
+									GROUP BY
+										d.PARENT_ID
+								) a
+							LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+							GROUP BY
+								d.PARENT_ID
+						) a
+					LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+					GROUP BY
+						d.PARENT_ID
+				) a
+			LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+			GROUP BY
+				d.`NAME`
+			ORDER BY
+				d.`NAME`
+		) AS xiang ON xiang.`NAME` = t.`NAME`
+		LEFT JOIN (
+			SELECT
+				sum(cc) cc,
+				d.`NAME`
+			FROM
+				(
+					SELECT
+						sum(cc) AS cc,
+						d.PARENT_ID
+					FROM
+						(
+							SELECT
+								sum(cc) AS cc,
+								d.PARENT_ID
+							FROM
+								(
+									SELECT
+										SUM(cc) AS cc,
+										d.PARENT_ID
+									FROM
+										(
+											SELECT
+												${type} AS cc,
+												d.PARENT_ID AS PARENT_ID
+											FROM
+												t_user_account t
+											LEFT JOIN syn_user syn ON syn.user_id=t.`CODE`
+											LEFT JOIN t_org o ON t.org_id = o.id
+											LEFT JOIN t_division d ON d.ID = o.division_id
+											WHERE
+												d.`level` = 5
+											AND syn.app_id = #{systemId}
+											AND t.is_delete = #{isDelete}
+											<if test="lastLoginTime!=null">
+												AND t.LASTLOGINTIME is null
+											</if>
+											GROUP BY
+												d.PARENT_ID
+										) a
+									LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+									GROUP BY
+										d.PARENT_ID
+								) a
+							LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+							GROUP BY
+								d.PARENT_ID
+						) a
+					LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+					GROUP BY
+						d.PARENT_ID
+				) a
+			LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+			GROUP BY
+				d.`NAME`
+			ORDER BY
+				d.`NAME`
+		) AS cun ON cun.`NAME` = t.`NAME`
+		LEFT JOIN (
+			SELECT
+				sum(cc) cc,
+				d.`NAME`
+			FROM
+				(
+					SELECT
+						${type} AS cc,
+						d.PARENT_ID AS PARENT_ID
+					FROM
+						t_user_account t
+					LEFT JOIN syn_user syn ON syn.user_id=t.`CODE`
+					LEFT JOIN t_org o ON t.org_id = o.id
+					LEFT JOIN t_division d ON d.ID = o.division_id
+					WHERE
+						d.`level` = 2
+					AND syn.app_id = #{systemId}
+					AND t.is_delete = #{isDelete}
+					<if test="lastLoginTime!=null">
+						AND t.LASTLOGINTIME is null
+					</if>
+					GROUP BY
+						d.PARENT_ID
+				) a
+			LEFT JOIN t_division d ON d.ID = a.PARENT_ID
+			GROUP BY
+				d.`NAME`
+			ORDER BY
+				d.`NAME`
+		) AS shi ON t.`NAME` = shi.`NAME`
+		ORDER BY
+			shengcount DESC 
+  </select>
+  <!-- <select id="selectBase" resultType="java.util.Map">
 		SELECT
 			t.`NAME` `divisionName`,
 			IFNULL(sheng.cc, 0) shengcount,
@@ -201,7 +420,7 @@
 		) AS shi ON t.`NAME` = shi.`NAME`
 		ORDER BY
 			shengcount DESC 
-  </select>
+  </select>-->
   <!-- <seq id="dsf">
   			select t.`NAME` `divisionName`,IFNULL(sheng.cc,0) shengcount,IFNULL(shi.cc,0) shicount,IFNULL(xian.cc,0) xiancount,IFNULL(xiang.cc,0) xiangcount,IFNULL(cun.cc,0) cuncount FROM
 				 (SELECT c.`NAME` FROM (SELECT `NAME` FROM t_division WHERE `level`=1) c) t LEFT JOIN"

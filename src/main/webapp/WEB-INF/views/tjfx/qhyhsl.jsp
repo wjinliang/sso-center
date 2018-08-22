@@ -44,7 +44,7 @@ var xAxisData=[],shengData=[],shiData=[],xianData=[],xiangData=[],cunData=[];
 											<div class="select_containers ">
 												<select name="appName" class="select">
 													<c:forEach items="${appPage.list}" var="app" varStatus="status">
-														<option <c:if test="${app.appName eq searchModel.appName}">selected</c:if> value="${app.appName }">${app.appName }</option>						
+														<option <c:if test="${app.id eq searchModel.appName}"><c:set value="${app.appName }" var="appName" />selected</c:if> value="${app.id }">${app.appName }</option>						
 													</c:forEach>
 												</select>
 											</div>
@@ -173,7 +173,7 @@ $(function(){
 		        }
 		    },
 		    title: {
-		        text: '${searchModel.appName}-全国各地用户数量统计',
+		        text: '${appName}-全国各地用户数量统计',
 		        subtext: ''
 		    },
 		    legend: {
