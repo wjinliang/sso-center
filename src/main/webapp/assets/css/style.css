@@ -65,7 +65,7 @@ html { *padding:125px 0 25px 0;}
 }
 
 #photo_info #base_info{
-	width: 210px;
+	width: 325px;
 	height: 81px;
 	background: url('../images/user_info.png') 0px 0px no-repeat;
 }

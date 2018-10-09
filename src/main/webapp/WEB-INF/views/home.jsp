@@ -39,11 +39,12 @@
             </div>
             <div id="base_info" class="fr">
                 <div class="help_info">
-                    <a href="javascript:void();" id="hp" style="color:#fff">${d:gUN() }</a>
-                    <a href="<%=basePath%>/security/logout" id="out" style="color:#fff">退出</a>
+                    <a href="javascript:void();" id="hp" style="color:#fff"> ${d:gON() }-${d:gUN() }</a>
                 </div>
                 <div class="info_center">
-                    ${d:gON() }
+                    <a href="./index" id="index" style="color:#fff">返回主页</a>&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;
+                    <a href="<%=basePath%>/security/logout" id="out" style="color:#fff">退出登录</a>
+                   
 <!--                     <span id="nt">通知</span><span><a href="#" id="notice">3</a></span> -->
                 </div>
             </div>
