@@ -166,12 +166,19 @@
 	<script type="text/javascript">
 	var zNodes =${divisionStr};
 	var COOKIE_LASRNODEID = "LAST_DIVISION_ID_7_";
+	var TYPE = COOKIE_LASRNODEID+"TYPE";
+	var LEVEL = COOKIE_LASRNODEID+"LEVEL";
+	var BIGDIVISION = COOKIE_LASRNODEID+"BIGDIVISION";
+	var SEQ = COOKIE_LASRNODEID+"SEQ";
+	var CODE = COOKIE_LASRNODEID+"CODE";
+	var PID = COOKIE_LASRNODEID+"PID";
 	var zTree;
 	var autoEx = true;
 	jQuery(document).ready(function() {
 		$.fn.zTree.init($("#divisionTree"), settingMenu, zNodes);
 		zTree = $.fn.zTree.getZTreeObj("divisionTree");
 		setTimeout("autoEx=false;",3000);
+		initForm();
 		for(var i =0;i<2;i++){
 			var currentTableId = $.cookie(COOKIE_LASRNODEID+i);
 			var node = zTree.getNodeByParam('id', currentTableId);//获取id为1的点  
@@ -207,7 +214,16 @@
 			      bigDivision:{required:true},
 			      type:{required:true}
 			},
-			messages:{code:{remote:"编码重复，请重新填写！"}}
+			messages:{code:{remote:"编码重复，请重新填写！"}},
+			submitHandler:function(form){
+				$.cookie(SEQ,$(form).find('input[name="seq"]').val());
+				$.cookie(TYPE,$(form).find('select[name="type"]').val());
+				$.cookie(CODE,$(form).find('input[name="code"]').val());
+				$.cookie(PID,$(form).find('input[name="parentId"]').val());
+				$.cookie(BIGDIVISION,$(form).find('select[name="bigdivision"]').val());
+				$.cookie(LEVEL,$(form).find('select[name="level"]').val());
+				form.submit();
+			}
 		});
 	});
 	var zTree;
@@ -453,6 +469,20 @@ function newDivsion(pid){
 	form1[0].reset();
 	form1.find("input[name='parentId']").val(pid);	
 	form1.find("input[name='id']").val('');	
+	form1.find('select[name="type"]').val($.cookie(TYPE));
+	form1.find('select[name="bigdivision"]').val($.cookie(BIGDIVISION));
+	form1.find('select[name="level"]').val($.cookie(LEVEL));
+	form1.find('input[name="seq"]').val(parseInt($.cookie(SEQ))+1);
+}
+function initForm(){
+
+	form1.find('select[name="type"]').val($.cookie(TYPE));
+	form1.find('input[name="code"]').val($.cookie(CODE));
+	form1.find('input[name="parentId"]').val($.cookie(PID));
+	form1.find('select[name="bigdivision"]').val($.cookie(BIGDIVISION));
+	form1.find('select[name="level"]').val($.cookie(LEVEL));
+	form1.find('input[name="seq"]').val(parseInt($.cookie(SEQ))+1);
+	
 }
 function editDivsion(id){
 	setTitle('编辑');

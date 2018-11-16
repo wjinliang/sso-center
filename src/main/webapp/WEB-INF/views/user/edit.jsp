@@ -193,7 +193,7 @@
 jQuery.validator.addMethod("isPassword", function(value, element) {    
     var tel = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={} :";'<>?,.\/]).{8,30}$/;
     return this.optional(element) || (tel.test(value));
-}, "必须字母数字符号混合且大于8位");
+}, "必须字母数字和符号三种混合且大于8位");
 $().ready(function() {
 	// 提交时验证表单
 	var validator = $("#form1").validate({

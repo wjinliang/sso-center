@@ -444,7 +444,30 @@ input.ext_btn_big,button.ext_btn_big{
 .col_1 {
   width: 8.33333333%;
 }
-
+.input-icon{
+	position: relative;
+}
+i.fa{
+	padding: 15px 15px;
+    z-index: 2;
+    position: absolute;
+    /* top: 79px; */
+    bottom: 2px;
+    /* left: 3px; */
+    line-height: 30px;
+    display: inline-block;
+    font-size: 16px;
+    left: auto;
+    right: 27px;
+}
+i.fa.fa-eye{
+	background:url(../images/eye.png) no-repeat;
+	background-size:25px;
+}
+i.fa.fa-eyes{
+	background:url(../images/eyes.png) no-repeat;
+	background-size:25px;
+}
 
 
 

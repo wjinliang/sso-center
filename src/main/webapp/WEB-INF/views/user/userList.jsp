@@ -120,7 +120,7 @@
 									<!-- <th>最后登录时间</th> -->
 									<th>操作</th>
 								</tr>
-								<c:forEach items="${page.list}" var="user" varStatus="status">
+								<c:forEach items="${page.list}" var="user" varStatus="status1">
 									<tr class="tr">
 											<c:set var="act" value="0" ></c:set>    
 											<c:forEach items="${apps}" var="ap" varStatus="status" >
@@ -135,7 +135,7 @@
 										<td class=""><input type="checkbox"
 											value='${user.code }'></td>
 										<td class="">
-											${(page.pageNum-1)*page.pageSize+status.count}</td>
+											${(page.pageNum-1)*page.pageSize+status1.count}</td>
 										<td>
 											<c:if test="${act =='0'}">
 												<a
@@ -247,7 +247,7 @@
 			layer.prompt({title: "请输入要重置的密码！", formType: 0,value:"1password!"},function(val, index){  
 				    var tel = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={} :";'<>?,.\/]).{8,30}$/;
 				    if(!tel.test(val)){
-				    	layer.alert("必须字母数字符号混合且大于8位");
+				    	layer.alert("必须字母数字和符号三种混合且大于8位");
 				    	return false;
 				    }
 					commitRep(val,userId);

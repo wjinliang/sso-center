@@ -220,22 +220,27 @@
 								cellpadding="0" cellspacing="0">
 								<tr>
 									<td class="td_right">原密码：</td>
-									<td class=""> <input
-										type="password" name="oldPassword" class="input-text lh30"
+									<td class="input-icon"> <input
+										type="text" name="oldPassword" class="input-text lh30"
 										value="" size="40"></td>
 									
 								</tr>
 								<tr>
 									<td class="td_right">新密码：</td>
-									<td class=""> <input
+									<td class="input-icon"> <input
 										type="password" name="newPassword" class="input-text lh30"
 										value="" size="40"></td>
-									
+									<!-- <td class="input-icon"  style="display:none;"> <input
+										type="text" name="newPassword111" class="input-text lh30"
+										value="" size="40"><i class="fa fa-eyes"/></td> -->
 								</tr>
 								<tr>
 									<td class="td_right">确认密码：</td>
-									<td class=""> <input type="password" name="checkpwd" class="input-text lh30"
+									<td class="input-icon"> <input type="password" name="checkpwd" class="input-text lh30"
 										value="" size="40"></td>
+									<!-- <td class="input-icon" style="display:none;"> 
+										<input type="text" name="checkpwd111" class="input-text lh30"
+										value="" size="40"><i class="fa fa-eyes"/></td> -->
 									
 								</tr>
 								<tr>
@@ -268,7 +273,7 @@
 						function(value, element) {
 							var tel = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={} :";'<>?,.\/]).{8,30}$/;
 							return this.optional(element) || (tel.test(value));
-						}, "必须字母数字符号混合且大于8位");
+						}, "必须字母/数字/符号三种混合且大于8位");
 		$().ready(function() {
 			// 提交时验证表单
 			var validator = $("#form1").validate({
@@ -317,6 +322,19 @@
 		        othis.addClass('layui-this').siblings().removeClass("layui-this");
 		        main.eq(index).show().siblings().hide();
 		      });
+		      
+		     /*  $('.input-icon').find('i').bind("click",function(){
+		    	  var that = $(this);
+		    	  if(that.is(".fa-eyes")){
+		    		  that.parent().hide();
+		    		  that.parent().prev().show();
+		    	  }
+		    	  if(that.is(".fa-eye")){
+		    		  that.parent().hide();
+		    		  that.parent().next().show();
+		    	  }
+		    	  
+		      }) */
 		      
 		});
 		var msg="${infomsg}";
