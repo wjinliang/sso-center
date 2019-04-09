@@ -156,6 +156,24 @@ public class JKApplicationInfoController {
 					return ResponseUtil.success(statusCode);
 				}
 		}
+		public static void main(String[] args) {
+			HttpClient httpclient = new HttpClient();
+			httpclient.getHttpConnectionManager().getParams()
+					.setConnectionTimeout(2500);
+			httpclient.getHttpConnectionManager().getParams().setSoTimeout(2500);
+			String url = "https://111.205.51.13/dwybnew/ssoLogin.jsp";
+			GetMethod getMethod = new GetMethod(url);
+			getMethod.getParams().setParameter("http.method.retry-handler",
+					new DefaultHttpMethodRetryHandler());
+			int statusCode = 0;
+			try {
+				statusCode = httpclient.executeMethod(getMethod);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println(statusCode);
+		}
 		@RequestMapping({ "/ping" })
 		@ResponseBody
 		public Object ping(ModelAndView model,

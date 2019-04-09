@@ -36,6 +36,8 @@ public class SecurityServiceImpl implements SecurityService {
         UserAccount user = userService.findUserAccountByLoginName(loginName);
         if (user == null) {
             return null;
+        }if(user.getIsDelete()){
+        	return null;
         }
         Collection<GrantedAuthority> userGrantedAuthorities = new ArrayList<GrantedAuthority>();
         List<String> grantedAuthorities = userService.findUserAccountRoleByUserAccountId(user.getCode());

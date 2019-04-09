@@ -84,8 +84,16 @@
 			var id = $("input[name='id']").val();
 			var appId = $("input[name='appId']").val();
 			$.post(url,{id:id,appId:appId},function(res){
-				if(res.code==200){
-					layer.alert("操作成功");
+				if(url==root+"/api/addSynUser"){
+					$.post(root+"/api/updateUserSystem",{id:id,appId:""},function(res){
+						if(res.code==200){
+							layer.alert("操作成功");
+						}
+					});
+				}else{
+					if(res.code==200){
+						layer.alert("操作成功");
+					}
 				}
 			});
 			

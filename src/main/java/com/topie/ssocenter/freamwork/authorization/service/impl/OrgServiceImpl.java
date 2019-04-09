@@ -227,9 +227,10 @@ public class OrgServiceImpl extends BaseServiceImpl<Org,Long> implements OrgServ
 		Example ex = new Example(UserAccount.class);
 		Criteria ca = ex.createCriteria();
 		ca.andEqualTo("isDelete",false);
-		if(user.getName()!=null){
-			ca.andLike("name", "%"+user.getName() +"%");
-			
+		if(user.getName()!=null||user.getLoginname()!=null){
+			if(user.getName()!=null){
+				ca.andLike("name", "%"+user.getName() +"%");
+			}
 			Long orgId = SecurityUtils.getCurrentSecurityUser().getOrgId();
 			Org o = this.getMapper().selectByPrimaryKey(orgId);
 			if(o==null){//如果当前用户的机构不存在   返回空

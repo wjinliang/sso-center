@@ -129,7 +129,7 @@ public class OrgAndUserController {
 	}
 
 	private Long getSeq(Division division) {
-		String divisionCode = division.getCode().toString();
+		String divisionCode = division.getCode().toString().replaceAll("[a-z,A-Z]", "");
 		if(divisionCode.length()>6){
 			divisionCode = divisionCode.substring(0,6);
 		}
@@ -142,7 +142,7 @@ public class OrgAndUserController {
 	}
 
 	private String  getOrgCode(Division division){
-		String divisionCode = division.getCode().toString();
+		String divisionCode = division.getCode().toString().replaceAll("[a-z,A-Z]", "");
 		if(divisionCode.length()>6){
 			divisionCode = divisionCode.substring(0,6);
 		}

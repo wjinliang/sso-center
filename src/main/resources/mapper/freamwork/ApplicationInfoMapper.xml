@@ -30,14 +30,14 @@
   	(
 	SELECT app_id FROM syn_user u  WHERE u.user_id = #{userId}
 	) 
-	and a.status = '1' order by seq asc
+	and a.STATUS &lt;&gt; '0' order by seq asc
   </select>
   <select id="selectOrgSynApps" resultMap="BaseResultMap">
   select a.* from app_applicationinfo a  WHERE a.id in
   	(
 	SELECT app_id FROM syn_org u  WHERE u.org_id = #{id}
 	) 
-	and a.status = '1' order by seq asc
+	and a.STATUS &lt;&gt; '0' order by seq asc
   </select>
   
   <select id="selectSynAppsByMergeUuid" resultMap="BaseResultMap">
