@@ -156,6 +156,17 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		sha.setEncodeHashAsBase64(false);
 		user.setPassword(sha.encodePassword(dePassword, null));
 		getMapper().updateByPrimaryKeySelective(user);
+		//更新密码后同步到系统  //目前仅限追溯
+		List<SynUser> listInfo = synService.selectUserSynInfo(user.getCode());//已经同步过的APP
+		String appId="402881e854e6aca40154e6ca00f50006";//追溯
+		for(SynUser synUser:listInfo){
+			if(synUser.getAppId().equals(appId)){
+				Map u = synOneUser(user,appId,"12","更新");
+				
+			}
+		}
+			
+		
 	}
 
 	@Override

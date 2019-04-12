@@ -838,6 +838,15 @@ public class OrgAndUserController {
 		user.setAccountExpired(true);
 		user.setPasswordExpired(true);
 		this.userAccountService.updateAll(user);
+		//更新密码后同步到系统  //目前仅限追溯
+		List<SynUser> listInfo = synService.selectUserSynInfo(user.getCode());//已经同步过的APP
+		String appId="402881e854e6aca40154e6ca00f50006";//追溯
+		for(SynUser synUser:listInfo){
+			if(synUser.getAppId().equals(appId)){
+				Map u = userAccountService.synOneUser(user,appId,"12","更新密码");
+				
+			}
+		}
 		return ResponseUtil.success();
 	}
 	
