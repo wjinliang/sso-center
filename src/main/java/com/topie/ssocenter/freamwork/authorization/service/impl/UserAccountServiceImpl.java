@@ -161,7 +161,7 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 		String appId="402881e854e6aca40154e6ca00f50006";//追溯
 		for(SynUser synUser:listInfo){
 			if(synUser.getAppId().equals(appId)){
-				Map u = synOneUser(user,appId,"12","更新");
+				Map u = synOneUser(user,appId,"12","更新密码");
 				
 			}
 		}

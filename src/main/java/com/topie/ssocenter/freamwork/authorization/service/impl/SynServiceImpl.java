@@ -208,6 +208,9 @@ public class SynServiceImpl implements SynService {
 							XMLType.XSD_STRING, ParameterMode.IN);
 				}
 			}
+			call.setUseSOAPAction(true);
+			call.setSOAPActionURI(applicationInfo.getPackagename()+"SynchronizedInfo");
+			call.setReturnType(XMLType.XSD_STRING); 
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("opType", opType);
 			jsonObject.put("infoCode", infoCode);
