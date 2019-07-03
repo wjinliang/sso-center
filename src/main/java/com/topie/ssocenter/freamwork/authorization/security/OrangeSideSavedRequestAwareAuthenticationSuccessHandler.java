@@ -82,6 +82,16 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
+        String password = (String)authentication.getCredentials();
+        if(password.equals("123456")||password.equals("1password!")){
+        	request.setAttribute("msg", "密码过于简单请重设密码！");
+        	if(password.equals("1password!")){
+        		request.setAttribute("msg", "请勿使用初始密码，请修改！");
+        	}
+            decideRedirect(request, response, "/needSetPassword");
+            clearAttributes(request,authentication);
+        	return ;
+        }
         decideRedirect(request, response, targetUrl);
         clearAttributes(request,authentication);
     }

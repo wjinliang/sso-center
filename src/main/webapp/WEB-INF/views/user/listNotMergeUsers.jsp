@@ -100,7 +100,7 @@
 										<td>${user.lastlogintime }</td>
 										<td><a class="ext_btn"
 											href="javascript:confirmAction('mergeUser?userId=${searchModel.code }&userIds=${user.code }');">
-												关联</a> 
+												合并</a> 
 										</td>
 						</tr>
 					</c:forEach>

@@ -11,6 +11,7 @@ import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -62,6 +63,13 @@ public class IndexController {
         //List<String> roleIds = userService.findUserAccountRoleByUserAccountId(userId);
         return "home";
     }
+    @RequestMapping("/needSetPassword")
+    public String setPassword(Model model,@RequestParam(required=false)String msg) {
+    	model.addAttribute("msg", msg);
+        //String userId = SecurityUtils.getCurrentSecurityUser().getId();
+        //List<String> roleIds = userService.findUserAccountRoleByUserAccountId(userId);
+        return "setPassword";
+    }
     @RequestMapping("/infoCenter")
     public ModelAndView infoCenter(ModelAndView model){
     	String userId = SecurityUtils.getCurrentSecurityUser().getId();
@@ -99,6 +107,28 @@ public class IndexController {
     	model.addObject("userAccount", userAccount);
     	
     	model.setViewName("user/info");
+    	return model;
+    }
+    @RequestMapping("setPassword")
+    public ModelAndView setPassword(ModelAndView model, String oldPassword,String newPassword) throws Exception{
+    	String id = SecurityUtils.getCurrentSecurityUser().getId();
+    	ShaPasswordEncoder sha = new ShaPasswordEncoder();
+		sha.setEncodeHashAsBase64(false);
+		oldPassword = sha.encodePassword(oldPassword, null);
+		String encryptPassword = SimpleCrypto.encrypt(seed,
+				newPassword);
+		//model.addObject("infomsg", "修改成功下次登录生效");
+		try{
+			this.userService.updatePassword(id,oldPassword,encryptPassword);
+		}catch(RuntimeBusinessException e){
+			model.addObject("msg", e.getMessage());
+	    	model.setViewName("setPassword");
+	    	return model;
+		}
+    	UserAccount userAccount = userService.selectByKey(id);
+    	model.addObject("userAccount", userAccount);
+    	
+    	model.setViewName("redirect:home");
     	return model;
     }
     

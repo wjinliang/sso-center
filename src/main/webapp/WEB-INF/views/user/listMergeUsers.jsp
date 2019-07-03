@@ -59,8 +59,8 @@
 				</div>
 				
 				<div id="button" class="mt10">
-			<input type="button" onclick="javascript:dialogPage('添加关联','gotoMergeUser?code=${searchModel.code}',function(){window.location.reload();});" name="button" class="btn btn82 btn_add"
-				value="关联">
+			<input type="button" onclick="javascript:dialogPage('合并用户','gotoMergeUser?code=${searchModel.code}',function(){window.location.reload();});" name="button" class="btn btn82 btn_add"
+				value="合并">
        		<input type="button" onclick="javascript:openPage('listUsers?orgId=${searchModel_org.id }&divisionId=${searchModel_org.divisionId }');" name="button" class="btn btn82 btn_back" value="返回"> 
 		<!-- <input type="button" name="button"
 				class="btn btn82 btn_count" value="统计">
@@ -100,7 +100,7 @@
 										<td>${user.lastlogintime }</td>
 										<td><a class="ext_btn"
 											href="javascript:confirmAction('deleteMerge?userid=${user.code }');">
-												取消关联</a> 
+												取消合并</a> 
 										</td>
 						</tr>
 					</c:forEach>

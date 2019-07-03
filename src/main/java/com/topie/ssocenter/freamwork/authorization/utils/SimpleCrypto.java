@@ -23,12 +23,12 @@ public class SimpleCrypto {
 		return new String(result);
 	}
 	public static void main(String[] args) throws Exception {
-		String encrypt = encrypt("zcpt@123456", "c1719caca9c74040a586206900af54e3");
+		String encrypt = encrypt("zcpt@123456", "c1719caca9c586206900af54e3");
 //		ShaPasswordEncoder sha = new ShaPasswordEncoder();
 //		sha.setEncodeHashAsBase64(false);
 //		String opsw = sha.encodePassword("lab@1234", null);
 		System.out.println("id:"+encrypt);//+"\tpassword:"+opsw);
-		String e = decrypt("zcpt@123456", "B48E9F162FF7BF73C10F372090B74EFC");//"9342CF90A50217A15B7200AB6EE37B4B");
+		String e = decrypt("zcpt@123456", "8DD9FB4FF1B07E203529DEE6CDBF7119");//"9342CF90A50217A15B7200AB6EE37B4B");
 										  //8BF0A06251E39A7BB8C166091C5474F8
 		
 		//ss();
