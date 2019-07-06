@@ -15,6 +15,7 @@
 <title><c:if test="${type eq 'notice'}">通知公告</c:if><c:if test="${type eq 'download'}">资料下载</c:if>-${notice.title }</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/index/css/systemstyle.css">
 <script type="text/javascript" src="<%=basePath%>/assets/index/js/jquery-1.12.1.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/assets/plugin/layer/layer.js"></script>
 <script type="text/javascript">  
 	var days=new  Array ("日", "一", "二", "三", "四", "五", "六");  
 	function showDT() {  

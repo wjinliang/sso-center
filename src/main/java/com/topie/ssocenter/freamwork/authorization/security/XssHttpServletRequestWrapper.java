@@ -11,6 +11,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
     public String[] getParameterValues(String parameter) {
       String[] values = super.getParameterValues(parameter);
+      if(parameter.equals("content"))return values;
       if (values==null)  {
                   return null;
           }
@@ -23,6 +24,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
     public String getParameter(String parameter) {
           String value = super.getParameter(parameter);
+          if(parameter.equals("content"))return value;
           if (value == null) {
                  return null;
                   }
