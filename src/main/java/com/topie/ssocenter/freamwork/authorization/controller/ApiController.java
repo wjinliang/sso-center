@@ -152,6 +152,15 @@ public class ApiController {
 		System.out.println(System.currentTimeMillis()-start);
 		return ResponseUtil.success();
 	}
+	
+	@RequestMapping("updateUserOrg")
+	@ResponseBody
+	public Object updateUserOrg(String id,String appId){
+		long start = System.currentTimeMillis();
+		userAccountService.updateUserOrg(id, appId);
+		System.out.println(System.currentTimeMillis()-start);
+		return ResponseUtil.success();
+	}
 	@RequestMapping("/updateDivision")
 	@ResponseBody
 	public Object updateDivision(

@@ -335,6 +335,15 @@ public class UserAccountServiceImpl extends BaseServiceImpl<UserAccount,String>
 			return list.get(0);
 		return null;
 	}
+
+	@Override
+	public void updateUserOrg(String id, String orgId) {
+		UserAccount user = new UserAccount();
+		user.setCode(id);
+		user.setOrgId(Long.valueOf(orgId));
+		userMapper.updateByPrimaryKeySelective(user);
+		
+	}
 	
 	
 }

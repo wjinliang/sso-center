@@ -68,7 +68,8 @@
 			  shade:0,
 			  anim: 1,
 			  //closeBtn:0,
-			  content: '<p style="margin: 10px;">动物疫病防控及动物卫生监督云平台单点登录新版上线了，欢迎大家使用！</p>'
+			  content: '<p style="margin: 10px;">农业农村部牲畜耳标管理APP（安卓版）上线了，欢迎大家下载使用！</br>'
+			  			+'<a href="/upload/erbiao_app_file.zip" target="_blank">牲畜耳标管理软件下载安装教程</a></p>'
 			}); 
 		 $("a[class='acreditImg']").bind("click",function(){
 				$(this).find("img").attr("src","<%=basePath%>/security/web/captcha?t="+new Date().getTime());
