@@ -85,6 +85,17 @@ public class SynServiceImpl implements SynService {
 			return "此系统尚未注册！";
 		}
 	}
+	public static void main(String[] args) {
+		ApplicationInfo app = new ApplicationInfo();
+		app.setAppCode("123");
+		app.setAppPath("");
+		app.setParamName("jsonStr");
+		app.setPackagename("http://tempuri.org/");
+		app.setSynPath("http://111.205.51.8:8888/SSOsynInfoService/synInfoService.asmx?wsdl");
+		app.setSynType("axis1");
+		String s = new SynServiceImpl().synAxis1(null, app, "1487230895619", "11");
+		System.out.print("result："+s);
+	}
 
 	private String synHttp(HttpServletRequest request,
 			ApplicationInfo applicationInfo, String infoCode, String opType) {

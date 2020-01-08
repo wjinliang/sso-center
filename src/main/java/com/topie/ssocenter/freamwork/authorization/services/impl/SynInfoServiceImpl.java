@@ -1,18 +1,22 @@
 package com.topie.ssocenter.freamwork.authorization.services.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.serializer.ValueFilter;
 import com.topie.ssocenter.freamwork.authorization.model.Division;
+import com.topie.ssocenter.freamwork.authorization.model.DivisionSystem;
 import com.topie.ssocenter.freamwork.authorization.model.Org;
 import com.topie.ssocenter.freamwork.authorization.model.UserAccount;
 import com.topie.ssocenter.freamwork.authorization.service.DivisionService;
+import com.topie.ssocenter.freamwork.authorization.service.DivisionSystemService;
 import com.topie.ssocenter.freamwork.authorization.service.OrgService;
 import com.topie.ssocenter.freamwork.authorization.service.UserAccountService;
 import com.topie.ssocenter.freamwork.authorization.services.SynInfoService;
@@ -25,13 +29,15 @@ public class SynInfoServiceImpl implements SynInfoService{
 	private OrgService orgService;
 	@Autowired
 	private DivisionService divisionService;
+	@Autowired
+	private DivisionSystemService divisionSystemService;
 	@Override
 	public String hello(String username) {
 		return "hello"+username;
 	}
 
 	@Override
-	public String getUserInfo(String userId) {
+	public String getUserInfo(String userId,String appkey) {
 		try{
 			UserAccount user  = this.userAccountService.selectByKey(userId);
 			Map map = new HashMap();
@@ -77,7 +83,7 @@ public class SynInfoServiceImpl implements SynInfoService{
 	}
 
 	@Override
-	public String getOrgInfo(Long orgId) {
+	public String getOrgInfo(Long orgId,String appkey) {
 		try{
 			Org org  = this.orgService.selectByKey(orgId);
 			Map map = new HashMap();
@@ -101,6 +107,7 @@ public class SynInfoServiceImpl implements SynInfoService{
 			map.put("systemId", org.getSystemId());
 			map.put("type", org.getType());
 			JsonConfig fillter = new JsonConfig();
+			setDivisionCode(org.getDivisionId(),appkey,map);
 			JSONObject json = JSONObject.fromObject(map,fillter);
 			System.out.println("jsonStr:"+json.toString());
 			return  json.toString();
@@ -112,14 +119,29 @@ public class SynInfoServiceImpl implements SynInfoService{
 		}
 	}
 
+	private void setDivisionCode(String divisionId, String appkey, Map map) {
+		if(StringUtils.isEmpty(appkey)){return;}
+		DivisionSystem divisionSystem = new DivisionSystem();
+		divisionSystem.setDivisionId(divisionId);
+		divisionSystem.setSystemId(appkey);
+		List<DivisionSystem> list = divisionSystemService.findPage(1, 2, divisionSystem).getList();
+		if(list.size()>0){
+			String code = list.get(0).getNewDivisionCode();
+			if(StringUtils.isNotEmpty(code)){
+				map.put("divisionCode",code);
+			}
+		}
+		
+	}
+
 	@Override
-	public String getRoleInfo(String roleId) {
+	public String getRoleInfo(String roleId,String appkey) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getDivisionInfo(String divisionId) {
+	public String getDivisionInfo(String divisionId,String appkey) {
 		try{
 			Division divison  = this.divisionService.selectByKey(divisionId);
 			//return  JSON.toJSONString(divison,filter);

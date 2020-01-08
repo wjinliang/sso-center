@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topie.ssocenter.freamwork.authorization.dao.DivisionSystemMapper" >
+  <resultMap id="BaseResultMap" type="com.topie.ssocenter.freamwork.authorization.model.DivisionSystem" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="system_id" property="systemId" jdbcType="VARCHAR" />
+    <result column="division_id" property="divisionId" jdbcType="VARCHAR" />
+    <result column="division_code" property="divisionCode" jdbcType="VARCHAR" />
+    <result column="division_name" property="divisionName" jdbcType="VARCHAR" />
+    <result column="new_division_code" property="newDivisionCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>
