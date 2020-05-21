@@ -9,7 +9,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="renderer" content="webkit">
-<title>动物疫病防控及动物卫生监督云平台单点登录</title>
+<title>兽医卫生综合信息平台单点登录</title>
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/assets/login/css/load.css?v1">
 <script type="text/javascript" src="<%=basePath%>/assets/login/js/jquery-3.3.1.min.js"></script>
 <!--[if lte IE 8]>

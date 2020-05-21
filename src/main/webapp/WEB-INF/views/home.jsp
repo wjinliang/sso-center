@@ -27,7 +27,7 @@
 <!--[if lt IE 9]>
 <script src="<%=basePath%>/assets/js/IE9.js"></script>
 <![endif]-->
-    <title>动物疫病防控及动物卫生监督云平台单点登录</title>
+    <title>兽医卫生综合信息平台单点登录</title>
 </head>
 <body>
 <div class="top">

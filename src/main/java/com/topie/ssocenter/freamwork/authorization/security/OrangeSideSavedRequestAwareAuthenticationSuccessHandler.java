@@ -83,17 +83,68 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
             return;
         }
         String password = (String)authentication.getCredentials();
-        if(password.equals("123456")||password.equals("1password!")){
-        	request.setAttribute("msg", "密码过于简单请重设密码！");
-        	if(password.equals("1password!")){
-        		request.setAttribute("msg", "请勿使用初始密码，请修改！");
-        	}
-            decideRedirect(request, response, "/needSetPassword");
+        if(password.equals("123456")||
+        		password.equals("1password!")||
+        		!checkPasswordRule(password)){
+	        if(password.equals("123456")){
+	        	request.setAttribute("msg", "密码过于简单请重设密码！");
+	        }else if(password.equals("1password!")){
+	    		request.setAttribute("msg", "请勿使用初始密码，请修改！");
+	    	}else{
+	    		request.setAttribute("msg", "密码复杂度不符合要求，请使用字母、特殊符号和数字三种组合！");
+	    	}
+    	
+        	decideRedirect(request, response, "/needSetPassword");
             clearAttributes(request,authentication);
         	return ;
         }
         decideRedirect(request, response, targetUrl);
         clearAttributes(request,authentication);
+    }
+  //数字
+    public static final String REG_NUMBER = ".*\\d+.*";
+    //大小写字母
+    public static final String REG_CASE = ".*[a-zA-Z]+.*";
+    //小写字母
+    public static final String REG_UPPERCASE = ".*[A-Z]+.*";
+    //大写字母
+    public static final String REG_LOWERCASE = ".*[a-z]+.*";
+    //特殊符号(~!@#$%^&*()_+|<>,.?/:;'[]{}\)
+    public static final String REG_SYMBOL = ".*[~!@#$%^&*()_+|<>,.?/:;'\\[\\]{}\"]+.*";
+
+    public static boolean checkPasswordRule(String password,String username){
+    	 
+        //密码为空及长度大于8位小于30位判断
+        if (password == null || password.length() <8 || password.length()>30) return false;
+ 
+        int i = 0;
+ 
+        if (password.matches(REG_NUMBER)) i++;
+        if (password.matches(REG_CASE))i++;
+        if (password.matches(REG_SYMBOL)) i++;
+ 
+        boolean contains = password.contains(username);
+ 
+        if (i  < 3 || contains)  return false;
+ 
+        return true;
+    }
+
+    public static boolean checkPasswordRule(String password){
+    	 
+        //密码为空及长度大于8位小于30位判断
+        if (password == null || password.length() <8 || password.length()>30) return false;
+ 
+        int i = 0;
+ 
+        if (password.matches(REG_NUMBER)) i++;
+        if (password.matches(REG_CASE))i++;
+        if (password.matches(REG_SYMBOL)) i++;
+
+ 
+        if (i  < 3 )  return false;
+ 
+        return true;
     }
 
     private void logLoginSuccess(Authentication authentication, HttpServletRequest request) {
