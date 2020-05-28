@@ -109,7 +109,7 @@ public class OrangeSideSavedRequestAwareAuthenticationSuccessHandler
     public static final String REG_UPPERCASE = ".*[A-Z]+.*";
     //大写字母
     public static final String REG_LOWERCASE = ".*[a-z]+.*";
-    //特殊符号(~!@#$%^&*()_+|<>,.?/:;'[]{}\)
+    //特殊符号(~!@#$%^&*()_+|<>,.?/:;'[]{}\)	   [~!@#$%^&*()_+`\-={} :";'<>?,.\/]
     public static final String REG_SYMBOL = ".*[~!@#$%^&*()_+|<>,.?/:;'\\[\\]{}\"]+.*";
 
     public static boolean checkPasswordRule(String password,String username){

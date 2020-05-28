@@ -82,7 +82,7 @@
 	.addMethod(
 			"isPassword",
 			function(value, element) {
-				var tel = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={} :";'<>?,.\/]).{8,30}$/;
+				var tel = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\={} :";'<>?,.\/\[\]]).{8,30}$/;
 				if(value=='1password!'){
 					layer.alert("请勿使用初始密码！");
 					return false;
